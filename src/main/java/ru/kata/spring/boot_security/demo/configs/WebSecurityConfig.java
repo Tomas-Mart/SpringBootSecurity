@@ -16,6 +16,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -42,7 +43,8 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index", "/favicon.ico", "/css/**", "/js/**", "/images/**").permitAll()
+                .antMatchers("/", "/index", "/login", "/favicon.ico",
+                        "/css/**", "/js/**", "/images/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
@@ -71,18 +73,28 @@ public class WebSecurityConfig {
     public CommandLineRunner initData() {
         return args -> {
             if (userRepository.count() == 0 && roleRepository.count() == 0) {
+                // Создаем и сохраняем роли
                 Role adminRole = new Role("ROLE_ADMIN");
                 Role userRole = new Role("ROLE_USER");
                 roleRepository.saveAll(List.of(adminRole, userRole));
 
-                User admin = new User("admin", passwordEncoder().encode("admin"));
-                admin.getRoles().add(adminRole);
-                admin.getRoles().add(userRole);
+                // Создаем администратора (с двумя ролями)
+                User admin = new User();
+                admin.setUsername("admin");
+                admin.setPassword(passwordEncoder().encode("admin"));
+                admin.setRoles(Collections.singleton(adminRole));
+                userRepository.save(admin);
 
-                User regularUser = new User("user", passwordEncoder().encode("user"));
-                regularUser.getRoles().add(userRole);
+                // Создаем обычного пользователя
+                User user = new User();
+                user.setUsername("user");
+                user.setPassword(passwordEncoder().encode("user"));
+                user.setRoles(Collections.singleton(userRole));
+                userRepository.save(user);
 
-                userRepository.saveAll(List.of(admin, regularUser));
+                System.out.println("Initial users created:");
+                System.out.println("Admin: login=admin, password=admin");
+                System.out.println("User: login=user, password=user");
             }
         };
     }
