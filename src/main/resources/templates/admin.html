@@ -23,6 +23,7 @@
                 <span sec:authentication="principal.username"></span>
             </span>
             <form th:action="@{/logout}" method="post" class="d-inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn btn-sm btn-outline-danger">
                     <i class="bi bi-box-arrow-right"></i> Logout
                 </button>
@@ -36,6 +37,7 @@
         </div>
         <div class="card-body">
             <form th:action="@{/admin/create}" method="post" th:object="${newUser}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Username</label>
@@ -72,11 +74,11 @@
                         <td th:text="${user.id}"></td>
                         <td th:text="${user.username}"></td>
                         <td>
-                                <span th:each="role : ${user.roles}"
-                                      class="badge me-1"
-                                      th:class="${role.name == 'ROLE_ADMIN'} ? 'bg-danger' : 'bg-secondary'"
-                                      th:text="${role.name}">
-                                </span>
+                            <span th:each="role : ${user.roles}"
+                                  class="badge me-1"
+                                  th:class="${role.name == 'ROLE_ADMIN'} ? 'bg-danger' : 'bg-secondary'"
+                                  th:text="${role.name}">
+                            </span>
                         </td>
                         <td>
                             <div class="d-flex gap-2">
@@ -86,6 +88,7 @@
                                     <i class="bi bi-pencil"></i> Edit
                                 </button>
                                 <form th:action="@{/admin/delete/${user.id}}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                     <button type="submit" class="btn btn-sm btn-danger action-btn"
                                             onclick="return confirm('Delete this user?')">
                                         <i class="bi bi-trash"></i> Delete
@@ -106,6 +109,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form th:action="@{/admin/update}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="modal-header">
                     <h5 class="modal-title">Edit User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
