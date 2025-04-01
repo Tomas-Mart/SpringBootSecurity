@@ -1,12 +1,13 @@
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\controllers\AdminController.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\services\UserService.java
+C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\repositories\UserRepository.java
+C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\services\UserDetailsServiceImpl.java
+C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\controllers\UserController.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\models\Role.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\models\User.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\SpringBootSecurityDemoApplication.java
-C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\repositories\UserRepository.java
+C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\repositories\RoleRepository.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\services\UserServiceImpl.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\configs\SuccessUserHandler.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\configs\WebSecurityConfig.java
-C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\services\UserDetailsServiceImpl.java
 C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\configs\MvcConfig.java
-C:\Users\Ami\IdeaProjects\SpringBootSecurity\src\main\java\ru\kata\spring\boot_security\demo\controllers\UserController.java

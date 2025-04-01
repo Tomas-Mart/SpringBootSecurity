@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.models.Role;
 import java.util.List;
 
 public interface UserService {
@@ -10,4 +12,6 @@ public interface UserService {
     void saveUser(User user);
     void updateUser(User user);
     void deleteUser(Long id);
+    void addRoleToUser(Long userId, Role role)
+    throws UsernameNotFoundException, IllegalArgumentException;
 }

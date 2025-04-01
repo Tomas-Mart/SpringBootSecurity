@@ -1,12 +1,15 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -30,7 +33,8 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String password) {
         this.username = username;
@@ -39,7 +43,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return roles == null ? Collections.emptyList() :
+                roles.stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -96,7 +103,20 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public void addRole(Role role) {
-        roles.add(role);
+    public boolean hasRole(Role role) {
+        return roles != null && roles.contains(role);
+    }
+
+    public boolean addRole(Role role) {
+        if (role != null) {
+            return roles.add(role);
+        }
+        return false;
+    }
+
+    public void addRoles(Set<Role> roles) {
+        if (roles != null) {
+            this.roles.addAll(roles);
+        }
     }
 }

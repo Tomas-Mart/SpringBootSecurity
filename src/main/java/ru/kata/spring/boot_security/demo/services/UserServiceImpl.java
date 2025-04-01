@@ -1,8 +1,10 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import java.util.List;
@@ -57,5 +59,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void addRoleToUser(Long userId, Role role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Role cannot be null");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+        if (user.getRoles().contains(role)) {
+            throw new IllegalArgumentException("User already has this role");
+        }
+        user.addRole(role);
+        userRepository.save(user);
     }
 }
