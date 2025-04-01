@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Admin Panel</title>
+    <!-- Подключаем только нужные CSS -->
+    <link rel="stylesheet" th:href="@{/css/auth-styles.css}">
+</head>
+<body>
+<h1>Admin Panel</h1>
+<!-- Таблица пользователей -->
+<table>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.username}"></td>
+        <td>
+            <form th:action="@{/admin/update}" method="post">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <input type="text" name="username" th:value="${user.username}">
+                <button type="submit">Update</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<!-- Форма создания -->
+<form th:action="@{/admin/create}" method="post" th:object="${newUser}">
+    <input type="text" th:field="*{username}" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <button type="submit">Create</button>
+</form>
+
+<div th:replace="~{/templates/fragments/logout-section :: logout}"></div>
+</body>
+</html>
