@@ -42,7 +42,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // Отключаем CSRF для упрощения (можно включить для production)
+                .csrf().and() // Отключаем CSRF для упрощения (можно включить для production)
                 .authorizeRequests()
                 .antMatchers("/", "/index", "/login", "/favicon.ico",
                         "/css/**", "/js/**", "/images/**").permitAll()
