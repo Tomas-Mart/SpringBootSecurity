@@ -1,14 +1,11 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -20,9 +17,15 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Username cannot be empty")
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
     @Column(nullable = false)
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
+            message = "Password must contain at least one digit, one lowercase, one uppercase letter, one special character and no whitespace")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -31,6 +34,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @NotEmpty(message = "User must have at least one role")
     private Set<Role> roles = new HashSet<>();
 
     public User() {

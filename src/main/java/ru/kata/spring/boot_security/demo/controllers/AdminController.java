@@ -3,9 +3,12 @@ package ru.kata.spring.boot_security.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
@@ -21,18 +24,30 @@ public class AdminController {
     @GetMapping
     public String adminPanel(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("newUser", new User()); // Для формы создания
+        model.addAttribute("newUser", new User());
         return "admin";
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute User user) {
+    public String createUser(@ModelAttribute("newUser") @Valid User user,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("users", userService.getAllUsers());
+            return "admin";
+        }
         userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute User user) {
+    public String updateUser(@ModelAttribute @Valid User user,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("users", userService.getAllUsers());
+            return "admin";
+        }
         userService.updateUser(user);
         return "redirect:/admin";
     }
