@@ -51,7 +51,7 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login") // Указываем нашу кастомную страницу входа
+                .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .successHandler((request, response, authentication) -> {
                     if (authentication.getAuthorities().stream()
@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                     }
                 })
                 .permitAll()
-                    .loginProcessingUrl("/perform_login") // URL для обработки формы входа
+                .loginProcessingUrl("/perform_login") // URL для обработки формы входа
                 .defaultSuccessUrl("/user", true) // Перенаправление после успешного входа
                 .failureUrl("/login?error=true") // Перенаправление при ошибке
                 .permitAll()
