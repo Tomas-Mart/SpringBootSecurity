@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
@@ -27,8 +28,13 @@ public class UserController {
         User user = userService.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User not found with username: " + userDetails.getUsername()));
-
         model.addAttribute("user", user);
+        return "user";
+    }
+
+    @GetMapping("/profile/{id}")
+    public String showUserProfile(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.getUserById(id));
         return "user";
     }
 }
