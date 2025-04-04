@@ -7,21 +7,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @Controller
+@RequestMapping
 public class MainController {
 
     private final UserService userService;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public MainController(UserService userService,
+                          RoleService roleService,
                           PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -39,7 +46,15 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(@RequestParam(value = "error", required = false) Boolean error,
+                                @RequestParam(value = "logout", required = false) Boolean logout,
+                                Model model) {
+        if (Boolean.TRUE.equals(error)) {
+            model.addAttribute("error", "Неверный логин или пароль");
+        }
+        if (Boolean.TRUE.equals(logout)) {
+            model.addAttribute("message", "Вы успешно вышли из системы");
+        }
         return "login";
     }
 
@@ -51,23 +66,37 @@ public class MainController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userForm", new User());
-        return "registration";
+        return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("userForm") @Valid User user,
-                               BindingResult result) {
+                               BindingResult result,
+                               Model model) {
+        // Проверка пароля
         if (user.getPassword() == null || user.getPassword().length() < 4) {
-            result.rejectValue("password", "error.password", "Password must be at least 4 characters");
+            result.rejectValue("password", "error.password", "Пароль должен содержать минимум 4 символа");
         }
+
+        // Проверка существования пользователя
         if (userService.existsByUsername(user.getUsername())) {
-            result.rejectValue("username", "error.username", "Username is already taken");
+            result.rejectValue("username", "error.username", "Этот логин уже занят");
         }
+
         if (result.hasErrors()) {
-            return "registration";
+            return "register";
         }
+
+        // Установка роли USER по умолчанию
+        Role userRole = roleService.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Роль USER не найдена"));
+        user.setRoles(Collections.singleton(userRole));
+
+        // Шифрование пароля и сохранение пользователя
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
-        return "redirect:/login";
+
+        model.addAttribute("success", "Регистрация прошла успешно! Теперь вы можете войти.");
+        return "redirect:/login?success";
     }
 }

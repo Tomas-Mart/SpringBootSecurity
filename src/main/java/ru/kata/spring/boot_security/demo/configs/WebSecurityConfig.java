@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                 .authenticationProvider(daoAuthenticationProvider())
                 .csrf().and()
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/", "/index", "/login", "/register", "/css/**").permitAll()
+                        .antMatchers("/", "/index", "/login", "/register", "/css/**", "/perform_register").permitAll()
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
@@ -73,7 +73,6 @@ public class WebSecurityConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
-
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
@@ -84,6 +83,7 @@ public class WebSecurityConfig {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/login").setViewName("login");
+                registry.addViewController("/register").setViewName("register");
             }
         };
     }
@@ -104,11 +104,13 @@ public class WebSecurityConfig {
 
             if (adminRole == null) {
                 adminRole = new Role();
+                adminRole.setName("ROLE_ADMIN");
                 roleRepository.save(adminRole);
             }
 
             if (userRole == null) {
                 userRole = new Role();
+                userRole.setName("ROLE_USER");
                 roleRepository.save(userRole);
             }
 
@@ -116,7 +118,7 @@ public class WebSecurityConfig {
                 User admin = new User();
                 admin.setUsername("admin");
                 admin.setPassword(passwordEncoder.encode("admin"));
-                admin.setRoles(Set.of(adminRole));
+                admin.setRoles(Set.of(adminRole, userRole));
                 userRepository.save(admin);
 
                 User user = new User();
