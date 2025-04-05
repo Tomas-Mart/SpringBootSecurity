@@ -12,6 +12,16 @@
         .action-btn { min-width: 80px; }
         .role-badge { font-size: 0.85rem; }
         .nav-link.active { font-weight: 500; }
+        /* Добавлен стиль для ссылок на пользователей */
+        .user-link {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .user-link:hover {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -103,7 +113,10 @@
                             <tbody>
                             <tr th:each="user : ${users}">
                                 <td th:text="${user.id}"></td>
-                                <td th:text="${user.username}"></td>
+                                <!-- Изменено: Добавлена ссылка на страницу пользователя -->
+                                <td>
+                                    <a th:href="@{'/user/' + ${user.id}}" class="user-link" th:text="${user.username}"></a>
+                                </td>
                                 <td>
                                     <span th:each="role : ${user.roles}"
                                           class="badge me-1"

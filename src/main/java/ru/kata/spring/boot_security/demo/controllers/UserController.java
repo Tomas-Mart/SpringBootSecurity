@@ -32,7 +32,7 @@ public class UserController {
         return "user";
     }
 
-    @GetMapping("/profile/{id}")
+    @GetMapping("/{id}")
     public String showUserProfile(@PathVariable Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         return "user";
