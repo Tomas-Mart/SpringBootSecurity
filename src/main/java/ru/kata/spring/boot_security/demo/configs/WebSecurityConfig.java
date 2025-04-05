@@ -1,7 +1,9 @@
 package ru.kata.spring.boot_security.demo.configs;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,6 +38,14 @@ public class WebSecurityConfig {
         this.roleRepository = roleRepository;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 
     @Bean
@@ -99,8 +109,8 @@ public class WebSecurityConfig {
     @Bean
     public CommandLineRunner initData() {
         return args -> {
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-            Role userRole = roleRepository.findByName("ROLE_USER");
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElse(null);
+            Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);
 
             if (adminRole == null) {
                 adminRole = new Role();

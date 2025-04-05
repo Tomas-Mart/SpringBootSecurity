@@ -45,6 +45,12 @@ public class MainController {
         return "index";
     }
 
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
     @GetMapping("/login")
     public String showLoginPage(@RequestParam(value = "error", required = false) Boolean error,
                                 @RequestParam(value = "logout", required = false) Boolean logout,
@@ -63,16 +69,9 @@ public class MainController {
         return "access-denied";
     }
 
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("userForm", new User());
-        return "register";
-    }
-
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("userForm") @Valid User user,
-                               BindingResult result,
-                               Model model) {
+    public String registerUser(@ModelAttribute("user") @Valid User user,
+                               BindingResult result) {
         // Проверка пароля
         if (user.getPassword() == null || user.getPassword().length() < 4) {
             result.rejectValue("password", "error.password", "Пароль должен содержать минимум 4 символа");
@@ -87,16 +86,18 @@ public class MainController {
             return "register";
         }
 
-        // Установка роли USER по умолчанию
-        Role userRole = roleService.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Роль USER не найдена"));
-        user.setRoles(Collections.singleton(userRole));
+        try {
+            Role userRole = roleService.findByName("ROLE_USER")
+                    .orElseThrow(() -> new RuntimeException("Роль USER не найдена"));
 
-        // Шифрование пароля и сохранение пользователя
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.saveUser(user);
+            user.setRoles(Collections.singleton(userRole));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userService.saveUser(user);
 
-        model.addAttribute("success", "Регистрация прошла успешно! Теперь вы можете войти.");
-        return "redirect:/login?success";
+            return "redirect:/login?success";
+        } catch (Exception e) {
+            result.reject("error.registration", "Ошибка при регистрации: " + e.getMessage());
+            return "register";
+        }
     }
 }

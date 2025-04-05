@@ -6,11 +6,12 @@ import ru.kata.spring.boot_security.demo.models.Role;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @EntityGraph(attributePaths = {"users"})
-    Role findByName(String name);
+    Optional<Role> findByName(String name);
 
     @EntityGraph(attributePaths = {"users"})
     List<Role> findAllByIdIn(Collection<Long> ids);

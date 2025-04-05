@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -20,20 +21,20 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true)
-    @NotEmpty(message = "Username cannot be empty")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @NotBlank(message = "{user.username.notblank}") // Вынесено в messages.properties
+    @Size(min = 3, max = 50, message = "{user.username.size}")
     private String username;
 
     @Column
-    @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 5, max = 21, message = "Password must be between 5 and 21 characters")
+    @NotBlank(message = "{user.password.notblank}")
+    @Size(min = 5, message = "{user.password.size}")
     private String password;
 
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ManyToMany(fetch = FetchType.LAZY)
-    @NotEmpty(message = "At least one role is required")
+    @NotEmpty(message = "{user.roles.notempty}")
+    @JoinTable(name = "users_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public User() {
@@ -49,16 +50,6 @@ public class User implements UserDetails {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override
@@ -81,8 +72,41 @@ public class User implements UserDetails {
         return true;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public boolean hasRole(String roleName) {
+        return roles != null && roles.stream()
+                .anyMatch(role -> role.getName().equals(roleName));
+    }
+
+    public boolean addRole(Role role) {
+        if (role == null) return false;
+        return roles.stream().noneMatch(r -> r.equals(role)) && roles.add(role);
+    }
+
+    public boolean addRoles(Set<Role> roles) {
+        if (roles == null) return false;
+        return this.roles.addAll(roles);
+    }
+
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     public void setId(Long id) {
@@ -97,30 +121,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public boolean hasRole(Role role) {
-        return roles != null && roles.contains(role);
-    }
-
-    public boolean addRole(Role role) {
-        if (role != null) {
-            return roles.add(role);
-        }
-        return false;
-    }
-
-    public void addRoles(Set<Role> roles) {
-        if (roles != null) {
-            this.roles.addAll(roles);
-        }
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -20,9 +20,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         if (roles.contains("ROLE_ADMIN")) {
-            response.sendRedirect("/admin");
+            response.sendRedirect("/admin/");
+        } else if (roles.contains("ROLE_USER")) {
+            response.sendRedirect("/user/");
         } else {
-            response.sendRedirect("/user");
+            response.sendRedirect("/");
         }
     }
 }

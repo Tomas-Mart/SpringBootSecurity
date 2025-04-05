@@ -36,6 +36,46 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void grantUserRole(Long userId, Role role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+
+        if (role == null) {
+            throw new IllegalArgumentException("Role cannot be null");
+        }
+
+        Role managedRole = roleRepository.findById(role.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Role not found"));
+
+        if (user.addRole(managedRole)) {
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void registerNewUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new IllegalStateException("Default role ROLE_USER not found"));
+
+        user.addRole(userRole);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean userHasRole(Long userId, String roleName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals(roleName));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -149,6 +189,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         user.addRole(managedRole);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void addRolesToUser(Long userId, Set<Role> roles) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Set<Role> managedRoles = new HashSet<>();
+        for (Role role : roles) {
+            Role managedRole = roleRepository.findById(role.getId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Role not found with id: " + role.getId()));
+            managedRoles.add(managedRole);
+        }
+
+        user.addRoles(managedRoles);
         userRepository.save(user);
     }
 
