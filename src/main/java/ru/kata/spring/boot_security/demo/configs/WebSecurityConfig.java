@@ -54,7 +54,7 @@ public class WebSecurityConfig {
                 .authenticationProvider(daoAuthenticationProvider())
                 .csrf().and()
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/", "/index", "/login", "/register", "/css/**", "/perform_register").permitAll()
+                        .antMatchers("/", "/index", "/login", "/css/**").permitAll()
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
@@ -93,7 +93,6 @@ public class WebSecurityConfig {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/login").setViewName("login");
-                registry.addViewController("/register").setViewName("register");
             }
         };
     }

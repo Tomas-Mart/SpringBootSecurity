@@ -227,4 +227,44 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 user.getAuthorities()
         );
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void createUserWithRoles(User user, List<Long> roleIds) {
+        if (existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Логин уже занят");
+        }
+
+        Set<Role> roles = new HashSet<>(roleRepository.findAllById(roleIds));
+        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserWithRoles(Long id, String username, String password, List<Long> roleIds) {
+        User user = getUserById(id);
+
+        if (!user.getUsername().equals(username) && existsByUsername(username)) {
+            throw new IllegalArgumentException("Логин уже занят");
+        }
+
+        user.setUsername(username);
+
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        Set<Role> roles = new HashSet<>(roleRepository.findAllById(roleIds));
+        user.setRoles(roles);
+
+        userRepository.save(user);
+    }
 }

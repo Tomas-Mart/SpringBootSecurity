@@ -1,4 +1,3 @@
-ru\kata\spring\boot_security\demo\controllers\UserApiController.class
 ru\kata\spring\boot_security\demo\controllers\UserController.class
 ru\kata\spring\boot_security\demo\configs\LoginSuccessHandler.class
 ru\kata\spring\boot_security\demo\configs\WebSecurityConfig.class
@@ -6,7 +5,6 @@ ru\kata\spring\boot_security\demo\configs\PasswordEncoderConfig.class
 ru\kata\spring\boot_security\demo\controllers\MainController.class
 ru\kata\spring\boot_security\demo\models\Role.class
 ru\kata\spring\boot_security\demo\models\User.class
-ru\kata\spring\boot_security\demo\controllers\UserApiController$UserUpdateRequest.class
 ru\kata\spring\boot_security\demo\controllers\AdminController.class
 ru\kata\spring\boot_security\demo\services\RoleServiceImpl.class
 ru\kata\spring\boot_security\demo\services\UserServiceImpl.class

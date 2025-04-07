@@ -1,36 +1,13 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.models.Role;
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.RoleService;
-import ru.kata.spring.boot_security.demo.services.UserService;
-
-import javax.validation.Valid;
-import java.util.Collections;
 
 @Controller
 @RequestMapping
 public class MainController {
-
-    private final UserService userService;
-    private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public MainController(UserService userService,
-                          RoleService roleService,
-                          PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @GetMapping("/")
     public String showWelcomePage(Authentication authentication, Model model) {
@@ -43,12 +20,6 @@ public class MainController {
             return "redirect:/user";
         }
         return "index";
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
     }
 
     @GetMapping("/login")
@@ -67,37 +38,5 @@ public class MainController {
     @GetMapping("/access-denied")
     public String showAccessDeniedPage() {
         return "access-denied";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") @Valid User user,
-                               BindingResult result) {
-        // Проверка пароля
-        if (user.getPassword() == null || user.getPassword().length() < 4) {
-            result.rejectValue("password", "error.password", "Пароль должен содержать минимум 4 символа");
-        }
-
-        // Проверка существования пользователя
-        if (userService.existsByUsername(user.getUsername())) {
-            result.rejectValue("username", "error.username", "Этот логин уже занят");
-        }
-
-        if (result.hasErrors()) {
-            return "register";
-        }
-
-        try {
-            Role userRole = roleService.findByName("ROLE_USER")
-                    .orElseThrow(() -> new RuntimeException("Роль USER не найдена"));
-
-            user.setRoles(Collections.singleton(userRole));
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userService.saveUser(user);
-
-            return "redirect:/login?success";
-        } catch (Exception e) {
-            result.reject("error.registration", "Ошибка при регистрации: " + e.getMessage());
-            return "register";
-        }
     }
 }
