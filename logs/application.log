@@ -1,4 +1,0 @@
-2025-04-03 00:39:06 [SpringApplicationShutdownHook] TRACE o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@49e0b123] for TypeConfiguration
-2025-04-03 00:39:10 [SpringApplicationShutdownHook] DEBUG o.h.type.spi.TypeConfiguration$Scope - Un-scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration$Scope@aed36e5] from SessionFactory [org.hibernate.internal.SessionFactoryImpl@49e0b123]
-2025-04-03 00:39:13 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - MyHikariPool - Shutdown initiated...
-2025-04-03 00:39:15 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - MyHikariPool - Shutdown completed.
