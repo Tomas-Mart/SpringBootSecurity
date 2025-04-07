@@ -4,11 +4,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,7 +19,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true)
-    @NotBlank(message = "{user.username.notblank}") // Вынесено в messages.properties
+    @NotBlank(message = "{user.username.notblank}")
     @Size(min = 3, max = 50, message = "{user.username.size}")
     private String username;
 
@@ -33,12 +31,11 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty(message = "{user.roles.notempty}")
     @JoinTable(name = "users_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User() {
-    }
+    public User() {}
 
     public User(String username, String password) {
         this.username = username;
@@ -120,7 +117,6 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     @Override
     public boolean equals(Object o) {

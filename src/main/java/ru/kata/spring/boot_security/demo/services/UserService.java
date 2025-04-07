@@ -4,7 +4,6 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.models.Role;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface UserService {
     Optional<User> findByUsername(String username);
@@ -12,7 +11,7 @@ public interface UserService {
     List<Role> getAllRoles();
     User getUserById(Long id);
     void deleteUser(Long id);
-    User saveUser(User user, List<Long> roleIds);
+    void saveUser(User user, List<Long> roleIds);
     void updateUserRoles(Long userId, List<Long> roleIds);
     boolean userHasRole(Long userId, String roleName);
 }

@@ -53,6 +53,9 @@ public class AdminController {
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("username", "error.username", e.getMessage());
             return prepareModel(model);
+        } catch (Exception e) {
+            bindingResult.reject("error.global", "An error occurred while saving the user.");
+            return prepareModel(model);
         }
         return "redirect:/admin";
     }

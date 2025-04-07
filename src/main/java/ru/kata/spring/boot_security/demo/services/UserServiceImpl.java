@@ -58,15 +58,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
-    public User saveUser(User user, List<Long> roleIds) {
-        if (findByUsername(user.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Username already exists");
+    public void saveUser(User user, List<Long> roleIds) {
+        List<Role> roles = roleRepository.findAllById(roleIds);
+        if (user.getId() == null) {
+            // Новый пользователь, сохраняем без проверки
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(new HashSet<>(roles));
+            userRepository.save(user);
+        } else {
+            // Обновление существующего пользователя
+            User existingUser = userRepository.findById(user.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+            existingUser.setUsername(user.getUsername());
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            existingUser.setRoles(new HashSet<>(roles));
+            userRepository.save(existingUser);
         }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        updateUserRoles(user.getId(), roleIds);
-        return userRepository.save(user);
     }
 
     @Override
