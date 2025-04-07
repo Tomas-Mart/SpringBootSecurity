@@ -10088,3 +10088,265 @@ java.io.EOFException: null
 2025-04-07 16:39:45.711 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
 2025-04-07 16:39:47.612 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029587612 sessioncount 1
 2025-04-07 16:39:47.612 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:40:15.722 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:40:15.723 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:40:45.734 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:40:45.735 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:40:47.634 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029647634 sessioncount 1
+2025-04-07 16:40:47.634 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:41:15.745 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:41:15.745 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:41:45.750 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:41:45.750 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:41:47.657 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029707657 sessioncount 1
+2025-04-07 16:41:47.658 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:42:15.752 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:42:15.753 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:42:45.763 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:42:45.764 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:42:47.682 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029767682 sessioncount 1
+2025-04-07 16:42:47.682 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:43:15.774 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:43:15.776 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:43:45.786 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:43:45.787 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:43:47.703 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029827703 sessioncount 1
+2025-04-07 16:43:47.704 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 1 expired sessions: 0
+2025-04-07 16:44:15.798 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:44:15.799 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:44:45.809 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:44:45.809 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:44:47.726 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029887726 sessioncount 1
+2025-04-07 16:44:47.726 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-Acceptor] o.apache.tomcat.util.threads.LimitLatch  : Counting up[http-nio-0.0.0.0-8080-Acceptor] latch=1
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [782]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] org.apache.tomcat.util.net.NioEndpoint   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read direct from socket: [737]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.coyote.http11.Http11InputBuffer      : Received [GET / HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+DNT: 1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru-RU,ru;q=0.9,en;q=0.8,ar;q=0.7
+Cookie: JSESSIONID=823203235EA711724AA00C4FAA8D46FB
+
+]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.t.util.http.Rfc6265CookieProcessor   : Cookies: Parsing b[]: JSESSIONID=823203235EA711724AA00C4FAA8D46FB
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.catalina.connector.CoyoteAdapter     :  Requested cookie session id is 823203235EA711724AA00C4FAA8D46FB
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.authenticator.AuthenticatorBase    : Security checking request GET /
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] org.apache.catalina.realm.RealmBase      :   No applicable constraints defined
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.authenticator.AuthenticatorBase    : Not subject to any constraint
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] s.s.w.c.SecurityContextPersistenceFilter : Set SecurityContextHolder to empty SecurityContext
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] org.apache.tomcat.util.http.Parameters   : Set encoding to UTF-8
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to ru.kata.spring.boot_security.demo.controllers.MainController#showWelcomePage(Authentication, Model)
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.7, */*;q=0.8]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.loader.WebappClassLoaderBase       : getResource(templates/index.html)
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.loader.WebappClassLoaderBase       :   Delegating to parent classloader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.loader.WebappClassLoaderBase       :   --> Returning 'file:/C:/Users/Ami/IdeaProjects/SpringBootSecurity/target/classes/templates/index.html'
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.loader.WebappClassLoaderBase       : getResourceAsStream(templates/index.html)
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.loader.WebappClassLoaderBase       :   Delegating to parent classloader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.c.loader.WebappClassLoaderBase       :   --> Returning stream from parent
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] w.c.HttpSessionSecurityContextRepository : Did not store anonymous SecurityContext
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] w.c.HttpSessionSecurityContextRepository : Did not store anonymous SecurityContext
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] s.s.w.c.SecurityContextPersistenceFilter : Cleared SecurityContextHolder to complete request
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [737]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] org.apache.tomcat.util.net.NioEndpoint   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read direct from socket: [0]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.a.coyote.http11.Http11InputBuffer      : Received []
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] o.apache.coyote.http11.Http11Processor   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Status in: [OPEN_READ], State out: [OPEN]
+2025-04-07 16:44:54.880 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-1] org.apache.tomcat.util.net.NioEndpoint   : Registered read interest for [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]]
+2025-04-07 16:44:59.327 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [737]
+2025-04-07 16:44:59.327 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] org.apache.tomcat.util.net.NioEndpoint   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read direct from socket: [785]
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.coyote.http11.Http11InputBuffer      : Received [GET /register HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+DNT: 1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru-RU,ru;q=0.9,en;q=0.8,ar;q=0.7
+Cookie: JSESSIONID=823203235EA711724AA00C4FAA8D46FB
+
+]
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.t.util.http.Rfc6265CookieProcessor   : Cookies: Parsing b[]: JSESSIONID=823203235EA711724AA00C4FAA8D46FB
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.catalina.connector.CoyoteAdapter     :  Requested cookie session id is 823203235EA711724AA00C4FAA8D46FB
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.c.authenticator.AuthenticatorBase    : Security checking request GET /register
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] org.apache.catalina.realm.RealmBase      :   No applicable constraints defined
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.c.authenticator.AuthenticatorBase    : Not subject to any constraint
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /register
+2025-04-07 16:44:59.328 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] s.s.w.c.SecurityContextPersistenceFilter : Set SecurityContextHolder to empty SecurityContext
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.s.s.w.s.HttpSessionRequestCache        : Loaded matching saved request http://localhost:8080/register
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] org.apache.tomcat.util.http.Parameters   : Set encoding to UTF-8
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.s.s.w.s.HttpSessionRequestCache        : Saved request http://localhost:8080/register to session
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.s.s.web.DefaultRedirectStrategy        : Redirecting to http://localhost:8080/login
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] w.c.HttpSessionSecurityContextRepository : Did not store empty SecurityContext
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] w.c.HttpSessionSecurityContextRepository : Did not store empty SecurityContext
+2025-04-07 16:44:59.329 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] s.s.w.c.SecurityContextPersistenceFilter : Cleared SecurityContextHolder to complete request
+2025-04-07 16:44:59.330 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [785]
+2025-04-07 16:44:59.330 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:44:59.330 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] org.apache.tomcat.util.net.NioEndpoint   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read direct from socket: [0]
+2025-04-07 16:44:59.331 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.a.coyote.http11.Http11InputBuffer      : Received []
+2025-04-07 16:44:59.331 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] o.apache.coyote.http11.Http11Processor   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Status in: [OPEN_READ], State out: [OPEN]
+2025-04-07 16:44:59.331 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-2] org.apache.tomcat.util.net.NioEndpoint   : Registered read interest for [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]]
+2025-04-07 16:44:59.334 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [785]
+2025-04-07 16:44:59.334 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:44:59.334 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] org.apache.tomcat.util.net.NioEndpoint   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read direct from socket: [782]
+2025-04-07 16:44:59.334 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.coyote.http11.Http11InputBuffer      : Received [GET /login HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+DNT: 1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Windows"
+Referer: http://localhost:8080/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ru-RU,ru;q=0.9,en;q=0.8,ar;q=0.7
+Cookie: JSESSIONID=823203235EA711724AA00C4FAA8D46FB
+
+]
+2025-04-07 16:44:59.335 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.t.util.http.Rfc6265CookieProcessor   : Cookies: Parsing b[]: JSESSIONID=823203235EA711724AA00C4FAA8D46FB
+2025-04-07 16:44:59.335 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.catalina.connector.CoyoteAdapter     :  Requested cookie session id is 823203235EA711724AA00C4FAA8D46FB
+2025-04-07 16:44:59.335 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.authenticator.AuthenticatorBase    : Security checking request GET /login
+2025-04-07 16:44:59.335 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] org.apache.catalina.realm.RealmBase      :   No applicable constraints defined
+2025-04-07 16:44:59.335 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.authenticator.AuthenticatorBase    : Not subject to any constraint
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /login
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] s.s.w.c.SecurityContextPersistenceFilter : Set SecurityContextHolder to empty SecurityContext
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /login
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] org.apache.tomcat.util.http.Parameters   : Set encoding to UTF-8
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/login", parameters={}
+2025-04-07 16:44:59.336 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to ru.kata.spring.boot_security.demo.controllers.MainController#showLoginPage(Boolean, Boolean, Model)
+2025-04-07 16:44:59.337 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/avif, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.7, */*;q=0.8]
+2025-04-07 16:44:59.337 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.loader.WebappClassLoaderBase       : getResource(templates/login.html)
+2025-04-07 16:44:59.337 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.loader.WebappClassLoaderBase       :   Delegating to parent classloader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa
+2025-04-07 16:44:59.338 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.loader.WebappClassLoaderBase       :   --> Returning 'file:/C:/Users/Ami/IdeaProjects/SpringBootSecurity/target/classes/templates/login.html'
+2025-04-07 16:44:59.338 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.loader.WebappClassLoaderBase       : getResourceAsStream(templates/login.html)
+2025-04-07 16:44:59.338 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.loader.WebappClassLoaderBase       :   Delegating to parent classloader jdk.internal.loader.ClassLoaders$AppClassLoader@1d44bcfa
+2025-04-07 16:44:59.338 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.c.loader.WebappClassLoaderBase       :   --> Returning stream from parent
+2025-04-07 16:44:59.339 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] w.c.HttpSessionSecurityContextRepository : Did not store anonymous SecurityContext
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] w.c.HttpSessionSecurityContextRepository : Did not store anonymous SecurityContext
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] s.s.w.c.SecurityContextPersistenceFilter : Cleared SecurityContextHolder to complete request
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [782]
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] org.apache.tomcat.util.net.NioEndpoint   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read direct from socket: [0]
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.a.coyote.http11.Http11InputBuffer      : Received []
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] o.apache.coyote.http11.Http11Processor   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Status in: [OPEN_READ], State out: [OPEN]
+2025-04-07 16:44:59.340 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-3] org.apache.tomcat.util.net.NioEndpoint   : Registered read interest for [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]]
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] o.a.coyote.http11.Http11InputBuffer      : Before fill(): parsingHeader: [true], parsingRequestLine: [true], parsingRequestLinePhase: [0], parsingRequestLineStart: [0], byteBuffer.position(): [0], byteBuffer.limit(): [0], end: [782]
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] o.a.tomcat.util.net.SocketWrapperBase    : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Read from buffer: [0]
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] o.apache.coyote.http11.Http11Processor   : Error parsing HTTP request header
+
+java.io.EOFException: null
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.fillReadBuffer(NioEndpoint.java:1346) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.read(NioEndpoint.java:1234) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.http11.Http11InputBuffer.fill(Http11InputBuffer.java:785) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:348) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:263) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:928) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1794) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] o.apache.coyote.http11.Http11Processor   : Error state [CLOSE_CONNECTION_NOW] reported while processing request
+
+java.io.EOFException: null
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.fillReadBuffer(NioEndpoint.java:1346) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.read(NioEndpoint.java:1234) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.http11.Http11InputBuffer.fill(Http11InputBuffer.java:785) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:348) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:263) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:928) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1794) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] o.apache.coyote.http11.Http11Processor   : Socket: [org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]], Status in: [OPEN_READ], State out: [CLOSED]
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] o.apache.tomcat.util.threads.LimitLatch  : Counting down[http-nio-0.0.0.0-8080-exec-4] latch=1
+2025-04-07 16:45:02.816 DEBUG 17432 --- [http-nio-0.0.0.0-8080-exec-4] org.apache.tomcat.util.net.NioEndpoint   : Calling [org.apache.tomcat.util.net.NioEndpoint@636d63ed].closeSocket([org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper@73107bb2:org.apache.tomcat.util.net.NioChannel@9672431:java.nio.channels.SocketChannel[connected local=/[0:0:0:0:0:0:0:1]:8080 remote=/[0:0:0:0:0:0:0:1]:59343]])
+2025-04-07 16:45:15.821 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:45:15.821 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:45:45.832 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:45:45.832 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:45:47.747 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744029947747 sessioncount 1
+2025-04-07 16:45:47.747 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:46:15.845 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:46:15.845 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:46:45.854 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:46:45.854 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:46:47.772 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744030007772 sessioncount 1
+2025-04-07 16:46:47.772 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:47:15.866 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:47:15.866 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:47:43.927 DEBUG 17432 --- [RMI Scheduler(0)] sun.rmi.dgc                              : RMI Scheduler(0): 2c872e092fbd14cf:-2c4febaf:196103d2129:-7fff
+2025-04-07 16:47:45.878 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:47:45.878 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:47:47.795 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744030067795 sessioncount 1
+2025-04-07 16:47:47.796 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:48:15.889 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:48:15.889 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:48:45.900 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:48:45.900 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:48:47.834 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744030127834 sessioncount 1
+2025-04-07 16:48:47.834 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:49:15.912 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:49:15.912 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:49:45.923 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:49:45.923 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:49:47.862 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744030187862 sessioncount 1
+2025-04-07 16:49:47.863 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:50:15.935 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:50:15.935 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:50:45.946 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:50:45.946 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:50:47.897 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744030247897 sessioncount 1
+2025-04-07 16:50:47.897 DEBUG 17432 --- [Catalina-utility-1] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:51:15.958 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:51:15.958 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:51:45.969 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:51:45.969 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
+2025-04-07 16:51:47.917 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : Start expire sessions StandardManager at 1744030307917 sessioncount 1
+2025-04-07 16:51:47.917 DEBUG 17432 --- [Catalina-utility-2] org.apache.catalina.session.ManagerBase  : End expire sessions StandardManager processingTime 0 expired sessions: 0
+2025-04-07 16:52:15.981 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Pool stats (total=10, active=0, idle=10, waiting=0)
+2025-04-07 16:52:15.982 DEBUG 17432 --- [SecurityDemoPool housekeeper] com.zaxxer.hikari.pool.HikariPool        : SecurityDemoPool - Fill pool skipped, pool is at sufficient level.
