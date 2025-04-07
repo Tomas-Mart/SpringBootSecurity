@@ -25,21 +25,19 @@ public class AdminController {
         this.userService = userService;
     }
 
-    // Главная страница админки
     @GetMapping
     public String adminPanel(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User currentUser = userService.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "Пользователь не найден: " + userDetails.getUsername()));
+                        "User not found: " + userDetails.getUsername()));
 
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", userService.getAllRoles());
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("newUser", new User()); // Для формы создания
+        model.addAttribute("newUser", new User());
         return "admin";
     }
 
-    // Создание пользователя
     @PostMapping("/create")
     public String createUser(@ModelAttribute("newUser") @Valid User user,
                              BindingResult bindingResult,
@@ -51,7 +49,7 @@ public class AdminController {
         }
 
         try {
-            userService.createUserWithRoles(user, roleIds);
+            userService.saveUser(user, roleIds);
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("username", "error.username", e.getMessage());
             return prepareModel(model);
@@ -59,29 +57,32 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    // Обновление пользователя
     @PostMapping("/update")
     public String updateUser(@RequestParam("id") Long id,
                              @RequestParam("username") String username,
                              @RequestParam(value = "password", required = false) String password,
-                             @RequestParam("roleIds") List<Long> roleIds) {
+                             @RequestParam("roles") List<Long> roleIds) {
 
-        userService.updateUserWithRoles(id, username, password, roleIds);
+        User user = userService.getUserById(id);
+        user.setUsername(username);
+
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(password);
+        }
+
+        userService.updateUserRoles(id, roleIds);
         return "redirect:/admin";
     }
 
-    // Удаление пользователя
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
 
-    // Подготовка модели для возврата на страницу
     private String prepareModel(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", userService.getAllRoles());
-        model.addAttribute("newUser", new User());
         return "admin";
     }
 }

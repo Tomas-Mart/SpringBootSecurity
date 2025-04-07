@@ -11,16 +11,8 @@ public interface UserService {
     List<User> getAllUsers();
     List<Role> getAllRoles();
     User getUserById(Long id);
-    void createUserWithRoles(User user, List<Long> roleIds);
-    void updateUserWithRoles(Long id, String username, String password, List<Long> roleIds);
-    void updateUser(User user, List<Long> roleIds);
     void deleteUser(Long id);
-    boolean existsByUsername(String username);
-
-    void saveUser(User user);
-    void addRoleToUser(Long userId, Role role);
-    void addRolesToUser(Long userId, Set<Role> roles);
+    User saveUser(User user, List<Long> roleIds);
+    void updateUserRoles(Long userId, List<Long> roleIds);
     boolean userHasRole(Long userId, String roleName);
-    void grantUserRole(Long userId, Role role);
-    void registerNewUser(User user);
 }
