@@ -1,4 +1,11 @@
+# Логи
 logs/
 *.log
+
+# Сборка
 target/
+build/
+
+# IDE
 .idea/
+*.iml

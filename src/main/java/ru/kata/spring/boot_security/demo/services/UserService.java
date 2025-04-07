@@ -13,12 +13,11 @@ public interface UserService {
     User getUserById(Long id);
     void createUserWithRoles(User user, List<Long> roleIds);
     void updateUserWithRoles(Long id, String username, String password, List<Long> roleIds);
+    void updateUser(User user, List<Long> roleIds);
     void deleteUser(Long id);
     boolean existsByUsername(String username);
 
-
     void saveUser(User user);
-    void updateUser(User user, List<Long> roleIds);
     void addRoleToUser(Long userId, Role role);
     void addRolesToUser(Long userId, Set<Role> roles);
     boolean userHasRole(Long userId, String roleName);
