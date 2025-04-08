@@ -38,6 +38,13 @@ public class AdminController {
         return "admin";
     }
 
+    @GetMapping("/users/{id}")
+    public String viewUser(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("isAdminView", true);
+        return "user"; // Используем тот же шаблон user.html
+    }
+
     @PostMapping("/create")
     public String createUser(@ModelAttribute("newUser") @Valid User user,
                              BindingResult bindingResult,

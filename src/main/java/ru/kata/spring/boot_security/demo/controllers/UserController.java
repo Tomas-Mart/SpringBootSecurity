@@ -31,10 +31,4 @@ public class UserController {
         model.addAttribute("user", user);
         return "user";
     }
-
-    @GetMapping("/{id}")
-    public String showUserProfile(@PathVariable Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "user";
-    }
 }
