@@ -25,7 +25,6 @@ public class AdminController {
         this.userService = userService;
     }
 
-    // Главная страница админки
     @GetMapping
     public String adminPanel(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User currentUser = userService.findByUsername(userDetails.getUsername())
@@ -35,11 +34,10 @@ public class AdminController {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", userService.getAllRoles());
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("newUser", new User()); // Для формы создания
+        model.addAttribute("newUser", new User());
         return "admin";
     }
 
-    // Создание пользователя
     @PostMapping("/create")
     public String createUser(@ModelAttribute("newUser") @Valid User user,
                              BindingResult bindingResult,
@@ -59,25 +57,25 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    // Обновление пользователя
     @PostMapping("/update")
     public String updateUser(@RequestParam("id") Long id,
-                             @RequestParam("username") String username,
-                             @RequestParam(value = "password", required = false) String password,
-                             @RequestParam("roleIds") List<Long> roleIds) {
+                             @RequestParam("firstName") String firstName,
+                             @RequestParam("lastName") String lastName,
+                             @RequestParam("age") Integer age,
+                             @RequestParam("email") String email,
+                             @RequestParam("roles") List<Long> roleIds,
+                             @RequestParam(value = "password", required = false) String password) {
 
-        userService.updateUserWithRoles(id, username, password, roleIds);
+        userService.updateUserWithRoles(id, firstName, lastName, age, email, roleIds, password);
         return "redirect:/admin";
     }
 
-    // Удаление пользователя
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
 
-    // Подготовка модели для возврата на страницу
     private String prepareModel(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", userService.getAllRoles());

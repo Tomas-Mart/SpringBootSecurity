@@ -1,9 +1,7 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,28 +18,49 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    @NotBlank(message = "{user.firstName.notblank}")
+    @Size(min = 2, max = 50, message = "{user.firstName.size}")
+    private String firstName;
+
+    @Column
+    @NotBlank(message = "{user.lastName.notblank}")
+    @Size(min = 2, max = 50, message = "{user.lastName.size}")
+    private String lastName;
+
+    @Column
+    @NotNull(message = "{user.age.notnull}")
+    @Min(value = 0, message = "{user.age.min}")
+    private Integer age;
+
+    @Email
     @Column(unique = true)
-    @NotBlank(message = "{user.username.notblank}") // Вынесено в messages.properties
-    @Size(min = 3, max = 50, message = "{user.username.size}")
-    private String username;
+    @NotBlank(message = "{user.email.notblank}")
+    @Size(min = 5, max = 100, message = "{user.email.size}")
+    private String email;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @NotEmpty(message = "{user.roles.notempty}")
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @Column
     @NotBlank(message = "{user.password.notblank}")
     @Size(min = 5, message = "{user.password.size}")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @NotEmpty(message = "{user.roles.notempty}")
-    @JoinTable(name = "users_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
     public User() {
     }
 
-    public User(String username, String password) {
-        this.username = username;
+    public User(Long id, String firstName, String lastName, Integer age, String email, Set<Role> roles, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.roles = roles;
         this.password = password;
     }
 
@@ -100,34 +119,61 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public String getPassword() {
+        return password;
     }
 
     @Override
-    public String getPassword() {
-        return password;
+    public String getUsername() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
     }
 
     @Override
@@ -139,7 +185,12 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

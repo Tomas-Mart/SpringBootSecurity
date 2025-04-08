@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="spring_boot_security@localhost" uuid="28fa5b28-1c22-490e-9981-b5e7af8f4898">
+    <data-source source="LOCAL" name="bootstrap@localhost" uuid="8301e3c3-cf2f-411c-87e2-cd0a9dcf763a">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/spring_boot_security</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/bootstrap</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

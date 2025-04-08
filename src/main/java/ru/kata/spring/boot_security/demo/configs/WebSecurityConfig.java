@@ -125,14 +125,20 @@ public class WebSecurityConfig {
 
             if (userRepository.count() == 0) {
                 User admin = new User();
-                admin.setUsername("admin");
+                admin.setEmail("admin@example.com");
                 admin.setPassword(passwordEncoder.encode("admin"));
+                admin.setAge(30);
+                admin.setFirstName("Admin");
+                admin.setLastName("Admin");
                 admin.setRoles(Set.of(adminRole, userRole));
                 userRepository.save(admin);
 
                 User user = new User();
-                user.setUsername("user");
+                user.setEmail("user@example.com");
                 user.setPassword(passwordEncoder.encode("user"));
+                user.setAge(30);
+                user.setFirstName("User");
+                user.setLastName("User");
                 user.setRoles(Set.of(userRole));
                 userRepository.save(user);
             }
