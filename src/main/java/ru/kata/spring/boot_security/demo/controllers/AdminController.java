@@ -27,6 +27,11 @@ public class AdminController {
 
     @GetMapping
     public String adminPanel(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        // Проверка прав администратора
+        if (!userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return "redirect:/user/profile";
+        }
         User currentUser = userService.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Пользователь не найден: " + userDetails.getUsername()));
@@ -36,6 +41,12 @@ public class AdminController {
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("newUser", new User());
         return "admin";
+    }
+
+    @GetMapping("/users/{id}")
+    public String showUserProfile(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.getUserById(id));
+        return "user";
     }
 
     @PostMapping("/create")
