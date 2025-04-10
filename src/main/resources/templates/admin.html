@@ -103,6 +103,13 @@
             display: flex;
             justify-content: center;
             width: 100%;
+            padding: 10px;
+            box-sizing: border-box; /* Чтобы padding не влиял на общую ширину */
+        }
+
+        .button-container button {
+            margin: 0 10px; /* Горизонтальные отступы */
+            padding: 10px 20px; /* Внутренние отступы кнопки */
         }
 
         .editing {
@@ -495,11 +502,11 @@
     </div>
 </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Инициализация выбора ролей
         initRoleSelection('form[th\\:object="${newUser}"]');
 
@@ -511,7 +518,7 @@
         });
 
         // Обработка кнопок удаления (делегирование событий)
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.classList.contains('delete-btn')) {
                 const userId = e.target.getAttribute('data-id') || e.target.getAttribute('th:data-id');
                 const firstName = e.target.getAttribute('data-firstname') || e.target.getAttribute('th:data-firstname');
@@ -539,7 +546,7 @@
         // Валидация формы создания пользователя
         const userForm = document.getElementById('userForm');
         if (userForm) {
-            userForm.addEventListener('submit', function(e) {
+            userForm.addEventListener('submit', function (e) {
                 validateRoles();
                 if (!this.checkValidity()) {
                     e.preventDefault();
@@ -551,7 +558,7 @@
         // Валидация других форм
         document.querySelectorAll('form').forEach(form => {
             if (form.id !== 'userForm' && form.id !== 'deleteForm') {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     const roleSelect = this.querySelector('select[name="roles"]');
                     if (roleSelect) {
                         validateRoleSelection(roleSelect);
@@ -577,7 +584,7 @@
         if (!select || !roleItems) return;
 
         roleItems.forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 toggleRoleSelection(this);
             });
 
@@ -592,7 +599,7 @@
         // Для модальных окон редактирования
         if (form.classList.contains('modal')) {
             const modal = new bootstrap.Modal(form);
-            form.addEventListener('shown.bs.modal', function() {
+            form.addEventListener('shown.bs.modal', function () {
                 roleItems.forEach(item => {
                     const roleId = item.getAttribute('data-roleid');
                     const option = Array.from(select.options).find(opt => opt.value === roleId);
