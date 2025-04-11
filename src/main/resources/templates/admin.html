@@ -452,14 +452,14 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Модальное окно удаления -->
+        <!-- Delete Modal -->
         <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -512,54 +512,91 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Role selection initialization
+        // Initialize role selection for the new user form
         initRoleSelection('#userForm');
 
-        // Delete button handling
+        // Initialize role selection for edit modals
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (!modal.id.includes('deleteUserModal')) {
+                initRoleSelection(modal);
+            }
+        });
+
+        // Handle delete button clicks
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                document.getElementById('deleteUserId').textContent = this.dataset.id;
-                document.getElementById('deleteUserFirstName').textContent = this.dataset.firstname;
-                document.getElementById('deleteUserLastName').textContent = this.dataset.lastname;
-                document.getElementById('deleteUserAge').textContent = this.dataset.age;
-                document.getElementById('deleteUserEmail').textContent = this.dataset.email;
-                document.getElementById('deleteUserRoles').textContent = this.dataset.roles;
-                document.getElementById('deleteForm').action = `/admin/delete/${this.dataset.id}`;
+                fillDeleteModal(this);
+                new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
             });
         });
 
-        // Form validation
+        // Validate form submission for new user
         document.getElementById('userForm').addEventListener('submit', function (e) {
-            const selectedRoles = Array.from(this.querySelectorAll('.role-item.selected'));
-            if (selectedRoles.length === 0) {
+            if (!validateRoles('#rolesSelect')) {
                 e.preventDefault();
-                document.getElementById('rolesError').style.display = 'block';
             }
         });
     });
 
     function initRoleSelection(formSelector) {
-        const form = document.querySelector(formSelector);
-        form.querySelectorAll('.role-item').forEach(item => {
+        const form = typeof formSelector === 'string'
+            ? document.querySelector(formSelector)
+            : formSelector;
+
+        if (!form) return;
+
+        const select = form.querySelector('select[name="roles"]');
+        const roleItems = form.querySelectorAll('.role-item');
+
+        if (!select || !roleItems) return;
+
+        roleItems.forEach(item => {
             item.addEventListener('click', function () {
-                const roleId = this.dataset.roleid;
-                const select = form.querySelector('select[name="roles"]');
+                const roleId = this.getAttribute('data-roleid');
                 const option = Array.from(select.options).find(opt => opt.value === roleId);
 
-                this.classList.toggle('selected');
-                option.selected = !option.selected;
+                if (option) {
+                    option.selected = !option.selected;
+                    this.classList.toggle('selected');
+                }
             });
+
+            // Initialize initial state
+            const roleId = item.getAttribute('data-roleid');
+            const option = Array.from(select.options).find(opt => opt.value === roleId);
+            item.classList.toggle('selected', option && option.selected);
         });
     }
 
     function toggleEditRoleSelection(element) {
-        const roleId = element.dataset.roleid;
+        const roleId = element.getAttribute('data-roleid');
         const form = element.closest('.modal-content');
         const select = form.querySelector('select[name="roles"]');
         const option = Array.from(select.options).find(opt => opt.value === roleId);
 
-        element.classList.toggle('selected');
-        option.selected = !option.selected;
+        if (option) {
+            option.selected = !option.selected;
+            element.classList.toggle('selected');
+        }
+    }
+
+    function validateRoles(selectId) {
+        const select = document.querySelector(selectId);
+        const errorElement = document.getElementById('rolesError');
+        const selectedOptions = Array.from(select.options).filter(opt => opt.selected);
+
+        errorElement.style.display = selectedOptions.length === 0 ? 'block' : 'none';
+        return selectedOptions.length > 0;
+    }
+
+    function fillDeleteModal(button) {
+        document.getElementById('deleteUserId').value = button.getAttribute('data-id');
+        document.getElementById('deleteUserFirstName').value = button.getAttribute('data-firstname');
+        document.getElementById('deleteUserLastName').value = button.getAttribute('data-lastname');
+        document.getElementById('deleteUserAge').value = button.getAttribute('data-age');
+        document.getElementById('deleteUserEmail').value = button.getAttribute('data-email');
+        document.getElementById('deleteUserRole').value = button.getAttribute('data-roles');
+        document.getElementById('deleteForm').action = `/admin/delete/${button.getAttribute('data-id')}`;
     }
 
     function highlightField(element) {
