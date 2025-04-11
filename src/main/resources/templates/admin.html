@@ -104,12 +104,12 @@
             justify-content: center;
             width: 100%;
             padding: 10px;
-            box-sizing: border-box; /* Чтобы padding не влиял на общую ширину */
+            box-sizing: border-box;
         }
 
         .button-container button {
-            margin: 0 10px; /* Горизонтальные отступы */
-            padding: 10px 20px; /* Внутренние отступы кнопки */
+            margin: 0 10px;
+            padding: 10px 20px;
         }
 
         .editing {
@@ -121,8 +121,8 @@
         }
 
         .role-items-container {
-            gap: 0; /* Убираем промежутки между элементами */
-            padding: 0; /* Убираем внутренние отступы контейнера */
+            gap: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             margin-top: 8px;
@@ -193,7 +193,7 @@
             max-width: 300px;
             width: 100%;
             text-align: left;
-            margin: 0 auto; /* Дополнительное центрирование */
+            margin: 0 auto;
         }
 
         .delete-modal .modal-body {
@@ -207,12 +207,14 @@
 
         .delete-modal .col-3 {
             font-weight: bold;
+            text-align: center;
         }
 
         .delete-modal .col-9 {
             padding: 8px;
             background-color: #f8f9fa;
             border-radius: 4px;
+            text-align: center;
         }
 
         #rolesError {
@@ -372,15 +374,12 @@
                                         <span th:text="${role.name.replace('ROLE_', '')}"></span>
                                     </div>
                                 </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
-                                    one role
-                                </div>
+                                <div class="error-message" id="rolesError" style="display: none;">Please select at least one role</div>
                             </div>
 
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <div class="button-container">
-                                <button type="submit" class="btn btn-success" onclick="resetHighlight()">Add new user
-                                </button>
+                                <button type="submit" class="btn btn-success" onclick="validateRoles()">Add new user</button>
                             </div>
                         </form>
                     </div>
@@ -388,7 +387,7 @@
             </div>
         </div>
 
-        <!-- Модальные окна редактирования для каждого пользователя -->
+        <!-- Edit Modals -->
         <div th:each="user : ${users}" th:attr="id='editModal' + ${user.id}" class="modal fade" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -428,19 +427,21 @@
                                 <label>Password</label>
                                 <input type="password" class="form-control" name="password">
                             </div>
+
                             <div class="form-group">
                                 <label>Role</label>
                                 <select class="d-none" multiple="multiple" name="roles" required>
                                     <option th:each="role : ${roles}"
                                             th:value="${role.id}"
-                                            th:text="${role.name.replace('ROLE_','')}"
-                                            th:selected="${#lists.contains(user.roles.![id], role.id)}">
+                                            th:selected="${#lists.contains(user.roles.![id], role.id)}"
+                                            th:text="${role.name.replace('ROLE_','')}">
                                     </option>
                                 </select>
                                 <div class="role-items-container">
                                     <div th:each="role : ${roles}" class="role-item"
                                          th:data-roleid="${role.id}"
-                                         th:classappend="${#lists.contains(user.roles.![id], role.id)} ? 'selected' : ''">
+                                         th:classappend="${#lists.contains(user.roles.![id], role.id)} ? 'selected' : ''"
+                                         onclick="toggleEditRoleSelection(this)">
                                         <span th:text="${role.name.replace('ROLE_','')}"></span>
                                     </div>
                                 </div>
@@ -455,43 +456,43 @@
             </div>
         </div>
 
-        <!-- Модальное окно удаления -->
-        <div class="modal fade delete-modal" id="deleteUserModal" tabindex="-1" aria-hidden="true">
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Delete user</h5>
+                        <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-3 fw-bold">ID</div>
+                            <div class="col-3 fw-bold">ID:</div>
                             <div class="col-9" id="deleteUserId"></div>
                         </div>
                         <div class="row">
-                            <div class="col-3 fw-bold">First name</div>
+                            <div class="col-3 fw-bold">First Name:</div>
                             <div class="col-9" id="deleteUserFirstName"></div>
                         </div>
                         <div class="row">
-                            <div class="col-3 fw-bold">Last name</div>
+                            <div class="col-3 fw-bold">Last Name:</div>
                             <div class="col-9" id="deleteUserLastName"></div>
                         </div>
                         <div class="row">
-                            <div class="col-3 fw-bold">Age</div>
+                            <div class="col-3 fw-bold">Age:</div>
                             <div class="col-9" id="deleteUserAge"></div>
                         </div>
                         <div class="row">
-                            <div class="col-3 fw-bold">Email</div>
+                            <div class="col-3 fw-bold">Email:</div>
                             <div class="col-9" id="deleteUserEmail"></div>
                         </div>
                         <div class="row">
-                            <div class="col-3 fw-bold">Role</div>
-                            <div class="col-9" id="deleteUserRole"></div>
+                            <div class="col-3 fw-bold">Roles:</div>
+                            <div class="col-9" id="deleteUserRoles"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <form id="deleteForm" method="post" class="d-inline">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form id="deleteForm" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
@@ -507,149 +508,58 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Инициализация выбора ролей
-        initRoleSelection('form[th\\:object="${newUser}"]');
+        // Role selection initialization
+        initRoleSelection('#userForm');
 
-        // Инициализация модальных окон редактирования
-        document.querySelectorAll('.modal').forEach(modal => {
-            if (modal.id !== 'deleteUserModal') {
-                initRoleSelection(modal);
-            }
-        });
-
-        // Обработка кнопок удаления (делегирование событий)
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('delete-btn')) {
-                const userId = e.target.getAttribute('data-id') || e.target.getAttribute('th:data-id');
-                const firstName = e.target.getAttribute('data-firstname') || e.target.getAttribute('th:data-firstname');
-                const lastName = e.target.getAttribute('data-lastname') || e.target.getAttribute('th:data-lastname');
-                const age = e.target.getAttribute('data-age') || e.target.getAttribute('th:data-age');
-                const email = e.target.getAttribute('data-email') || e.target.getAttribute('th:data-email');
-                const roles = e.target.getAttribute('data-roles') || e.target.getAttribute('th:data-roles');
-
-                // Заполняем модальное окно
-                document.getElementById('deleteUserId').textContent = userId;
-                document.getElementById('deleteUserFirstName').textContent = firstName;
-                document.getElementById('deleteUserLastName').textContent = lastName;
-                document.getElementById('deleteUserAge').textContent = age;
-                document.getElementById('deleteUserEmail').textContent = email;
-                document.getElementById('deleteUserRole').textContent = roles;
-
-                // Устанавливаем action формы
-                document.getElementById('deleteForm').action = '/admin/delete/' + userId;
-
-                // Показываем модальное окно
-                new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
-            }
-        });
-
-        // Валидация формы создания пользователя
-        const userForm = document.getElementById('userForm');
-        if (userForm) {
-            userForm.addEventListener('submit', function (e) {
-                validateRoles();
-                if (!this.checkValidity()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
+        // Delete button handling
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('deleteUserId').textContent = this.dataset.id;
+                document.getElementById('deleteUserFirstName').textContent = this.dataset.firstname;
+                document.getElementById('deleteUserLastName').textContent = this.dataset.lastname;
+                document.getElementById('deleteUserAge').textContent = this.dataset.age;
+                document.getElementById('deleteUserEmail').textContent = this.dataset.email;
+                document.getElementById('deleteUserRoles').textContent = this.dataset.roles;
+                document.getElementById('deleteForm').action = `/admin/delete/${this.dataset.id}`;
             });
-        }
+        });
 
-        // Валидация других форм
-        document.querySelectorAll('form').forEach(form => {
-            if (form.id !== 'userForm' && form.id !== 'deleteForm') {
-                form.addEventListener('submit', function (e) {
-                    const roleSelect = this.querySelector('select[name="roles"]');
-                    if (roleSelect) {
-                        validateRoleSelection(roleSelect);
-                        if (!roleSelect.reportValidity()) {
-                            e.preventDefault();
-                            return false;
-                        }
-                    }
-                    return true;
-                });
+        // Form validation
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            const selectedRoles = Array.from(this.querySelectorAll('.role-item.selected'));
+            if(selectedRoles.length === 0) {
+                e.preventDefault();
+                document.getElementById('rolesError').style.display = 'block';
             }
         });
     });
 
-    // Функции для работы с ролями
     function initRoleSelection(formSelector) {
-        const form = typeof formSelector === 'string' ? document.querySelector(formSelector) : formSelector;
-        if (!form) return;
+        const form = document.querySelector(formSelector);
+        form.querySelectorAll('.role-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const roleId = this.dataset.roleid;
+                const select = form.querySelector('select[name="roles"]');
+                const option = Array.from(select.options).find(opt => opt.value === roleId);
 
-        const select = form.querySelector('select[name="roles"]');
-        const roleItems = form.querySelectorAll('.role-item');
-
-        if (!select || !roleItems) return;
-
-        roleItems.forEach(item => {
-            item.addEventListener('click', function () {
-                toggleRoleSelection(this);
+                this.classList.toggle('selected');
+                option.selected = !option.selected;
             });
-
-            // Инициализация выбранных ролей
-            const roleId = item.getAttribute('data-roleid');
-            const option = Array.from(select.options).find(opt => opt.value === roleId);
-            if (option && option.selected) {
-                item.classList.add('selected');
-            }
         });
-
-        // Для модальных окон редактирования
-        if (form.classList.contains('modal')) {
-            const modal = new bootstrap.Modal(form);
-            form.addEventListener('shown.bs.modal', function () {
-                roleItems.forEach(item => {
-                    const roleId = item.getAttribute('data-roleid');
-                    const option = Array.from(select.options).find(opt => opt.value === roleId);
-                    item.classList.toggle('selected', option && option.selected);
-                });
-            });
-        }
     }
 
-    function toggleRoleSelection(element) {
-        const roleId = element.getAttribute('data-roleid');
-        const select = document.querySelector('select[name="roles"]');
+    function toggleEditRoleSelection(element) {
+        const roleId = element.dataset.roleid;
+        const form = element.closest('.modal-content');
+        const select = form.querySelector('select[name="roles"]');
         const option = Array.from(select.options).find(opt => opt.value === roleId);
 
-        if (option) {
-            option.selected = !option.selected;
-            element.classList.toggle('selected');
-            validateRoles();
-        }
+        element.classList.toggle('selected');
+        option.selected = !option.selected;
     }
 
-    function validateRoles() {
-        const select = document.getElementById('rolesSelect');
-        if (!select) return;
-
-        const errorElement = document.getElementById('rolesError');
-        const selectedOptions = Array.from(select.options).filter(opt => opt.selected);
-
-        if (selectedOptions.length === 0) {
-            if (errorElement) errorElement.style.display = 'block';
-            select.setCustomValidity('Please select at least one role');
-        } else {
-            if (errorElement) errorElement.style.display = 'none';
-            select.setCustomValidity('');
-        }
-    }
-
-    // Функции для подсветки полей
     function highlightField(element) {
         element.classList.add('editing');
-    }
-
-    function resetHighlight() {
-        const form = document.getElementById('userForm');
-        if (form) {
-            const inputs = form.getElementsByTagName('input');
-            for (let input of inputs) {
-                input.classList.remove('editing');
-            }
-        }
     }
 </script>
 </body>
