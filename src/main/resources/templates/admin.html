@@ -374,12 +374,15 @@
                                         <span th:text="${role.name.replace('ROLE_', '')}"></span>
                                     </div>
                                 </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least one role</div>
+                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
+                                    one role
+                                </div>
                             </div>
 
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <div class="button-container">
-                                <button type="submit" class="btn btn-success" onclick="validateRoles()">Add new user</button>
+                                <button type="submit" class="btn btn-success" onclick="validateRoles()">Add new user
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -456,8 +459,9 @@
             </div>
         </div>
 
-        <!-- Delete Modal -->
-        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+        <!-- Модальное окно удаления -->
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -465,34 +469,34 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-3 fw-bold">ID:</div>
-                            <div class="col-9" id="deleteUserId"></div>
+                        <div class="mb-3">
+                            <label for="deleteUserId" class="col-form-label fw-bold">ID:</label>
+                            <input type="text" class="form-control" id="deleteUserId" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3 fw-bold">First Name:</div>
-                            <div class="col-9" id="deleteUserFirstName"></div>
+                        <div class="mb-3">
+                            <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
+                            <input type="text" class="form-control" id="deleteUserFirstName" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3 fw-bold">Last Name:</div>
-                            <div class="col-9" id="deleteUserLastName"></div>
+                        <div class="mb-3">
+                            <label for="deleteUserLastName" class="col-form-label fw-bold">Last name:</label>
+                            <input type="text" class="form-control" id="deleteUserLastName" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3 fw-bold">Age:</div>
-                            <div class="col-9" id="deleteUserAge"></div>
+                        <div class="mb-3">
+                            <label for="deleteUserAge" class="col-form-label fw-bold">Age:</label>
+                            <input type="text" class="form-control" id="deleteUserAge" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3 fw-bold">Email:</div>
-                            <div class="col-9" id="deleteUserEmail"></div>
+                        <div class="mb-3">
+                            <label for="deleteUserEmail" class="col-form-label fw-bold">Email:</label>
+                            <input type="text" class="form-control" id="deleteUserEmail" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3 fw-bold">Roles:</div>
-                            <div class="col-9" id="deleteUserRoles"></div>
+                        <div class="mb-3">
+                            <label for="deleteUserRole" class="col-form-label fw-bold">Role:</label>
+                            <input type="text" class="form-control" id="deleteUserRole" readonly>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <form id="deleteForm" method="post">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form id="deleteForm" method="post" class="d-inline">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
@@ -513,7 +517,7 @@
 
         // Delete button handling
         document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 document.getElementById('deleteUserId').textContent = this.dataset.id;
                 document.getElementById('deleteUserFirstName').textContent = this.dataset.firstname;
                 document.getElementById('deleteUserLastName').textContent = this.dataset.lastname;
@@ -525,9 +529,9 @@
         });
 
         // Form validation
-        document.getElementById('userForm').addEventListener('submit', function(e) {
+        document.getElementById('userForm').addEventListener('submit', function (e) {
             const selectedRoles = Array.from(this.querySelectorAll('.role-item.selected'));
-            if(selectedRoles.length === 0) {
+            if (selectedRoles.length === 0) {
                 e.preventDefault();
                 document.getElementById('rolesError').style.display = 'block';
             }
@@ -537,7 +541,7 @@
     function initRoleSelection(formSelector) {
         const form = document.querySelector(formSelector);
         form.querySelectorAll('.role-item').forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 const roleId = this.dataset.roleid;
                 const select = form.querySelector('select[name="roles"]');
                 const option = Array.from(select.options).find(opt => opt.value === roleId);
