@@ -223,6 +223,11 @@
             margin-top: 5px;
             display: none;
         }
+
+        .btn-edit {
+            color: #fdfdfd;
+            background-color: #17a1b7;
+        }
     </style>
 </head>
 <body>
@@ -293,7 +298,7 @@
                         <td th:text="${user.email}"></td>
                         <td th:text="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}"></td>
                         <td>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                            <button class="btn btn-sm btn-edit" data-bs-toggle="modal"
                                     th:attr="data-bs-target='#editModal' + ${user.id}">
                                 Edit
                             </button>
@@ -471,27 +476,28 @@
                     <div class="modal-body">
                         <div class="mb-3 text-center">
                             <label for="deleteUserId" class="col-form-label fw-bold">ID:</label>
-                            <input type="text" class="form-control text-start" id="deleteUserId" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserId" readonly>
+
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
-                            <input type="text" class="form-control text-start" id="deleteUserFirstName" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName" readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserLastName" class="col-form-label fw-bold">Last name:</label>
-                            <input type="text" class="form-control text-start" id="deleteUserLastName" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName" readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserAge" class="col-form-label fw-bold">Age:</label>
-                            <input type="text" class="form-control text-start" id="deleteUserAge" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserAge" readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserEmail" class="col-form-label fw-bold">Email:</label>
-                            <input type="text" class="form-control text-start" id="deleteUserEmail" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserEmail" readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserRole" class="col-form-label fw-bold">Role:</label>
-                            <input type="text" class="form-control text-start" id="deleteUserRole" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserRole" readonly>
                         </div>
                     </div>
                     <div class="modal-footer">
