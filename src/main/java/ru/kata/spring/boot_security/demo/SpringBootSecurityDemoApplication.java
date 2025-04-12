@@ -1,12 +1,14 @@
 package ru.kata.spring.boot_security.demo;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.awt.*;
 import java.io.IOException;
@@ -19,6 +21,20 @@ public class SpringBootSecurityDemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootSecurityDemoApplication.class, args);
+	}
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@PostConstruct // Метод выполнится после старта приложения
+	public void demoPasswordHashing() {
+		String rawPassword = "admin"; // Тестовый пароль
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+
+		System.out.println("-----------------------------------");
+		System.out.println("Raw password: " + rawPassword);
+		System.out.println("Encoded password: " + encodedPassword);
+		System.out.println("-----------------------------------");
 	}
 
 	@EventListener(ApplicationReadyEvent.class)

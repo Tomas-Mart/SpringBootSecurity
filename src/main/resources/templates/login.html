@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Login</title>
 </head>
 <body>
-$END$
+<form onsubmit="login(event)">
+    <input type="email" id="email" required>
+    <input type="password" id="password" required>
+    <button type="submit">Login</button>
+</form>
+
+<script>
+    async function login(e) {
+        e.preventDefault();
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            })
+        });
+
+        if (response.ok) {
+            const { token } = await response.json();
+            localStorage.setItem('token', token);
+            window.location.href = '/';
+        } else {
+            alert('Ошибка авторизации');
+        }
+    }
+</script>
 </body>
 </html>

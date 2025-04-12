@@ -1,4 +1,12 @@
 package ru.kata.spring.boot_security.demo.dto.request;
 
-public class UserCreateDTO {
-}
+import java.util.Set;
+
+public record UserCreateDTO(
+        String email,
+        String password,
+        String firstName,
+        String lastName,
+        Integer age,
+        Set<Long> roleIds
+) {}

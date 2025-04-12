@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,19 +229,19 @@
             background-color: #17a1b7;
         }
     </style>
+    <script>
+        let currentToken = localStorage.getItem('token');
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-dark">
     <div class="container-fluid">
         <div class="d-flex align-items-center">
-            <span class="text-white me-3"
-                  th:text="${currentUser.email} + ' with roles: ' + ${#strings.arrayJoin(currentUser.roles.![name.replace('ROLE_','')], ' ')}"></span>
+            <span class="text-white me-3" id="currentUserInfo"></span>
         </div>
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" class="btn btn-outline-light">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
+        <button class="btn btn-outline-light" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
     </div>
 </nav>
 
@@ -276,8 +276,8 @@
         <div class="tab-content">
             <div class="tab-pane fade show active" id="users">
                 <h4 class="mb-4">All users</h4>
-                <table class="table table-bordered table-hover">
-                    <thead class="thead-light">
+                <table class="table" id="usersTable">
+                    <thead>
                     <tr>
                         <th>ID</th>
                         <th>First Name</th>
@@ -285,38 +285,79 @@
                         <th>Age</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.id}"></td>
-                        <td th:text="${user.firstName}"></td>
-                        <td th:text="${user.lastName}"></td>
-                        <td th:text="${user.age}"></td>
-                        <td th:text="${user.email}"></td>
-                        <td th:text="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}"></td>
-                        <td>
-                            <button class="btn btn-sm btn-edit" data-bs-toggle="modal"
-                                    th:attr="data-bs-target='#editModal' + ${user.id}">
-                                Edit
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-danger delete-btn"
-                                    th:data-id="${user.id}"
-                                    th:data-firstname="${user.firstName}"
-                                    th:data-lastname="${user.lastName}"
-                                    th:data-age="${user.age}"
-                                    th:data-email="${user.email}"
-                                    th:data-roles="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
+                    <tbody id="usersBody">
+                    <!-- Данные будут вставлены через JS -->
                     </tbody>
                 </table>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.age}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}"></td>
+                    <td>
+                        <button class="btn btn-success" onclick="openUserModal()">
+                            <i class="fas fa-plus"></i> Add User
+                        </button>
+                        <button class="btn btn-sm btn-primary"
+                                onclick="openUserModal(${user.id})"> <!-- Измените вызов функции -->
+                            Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger"
+                                onclick="deleteUser(${user.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+            </div>
+
+            <!-- Модальное окно добавления/редактирования -->
+            <div class="modal fade" id="userModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add/Edit User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="userForm">
+                                <input type="hidden" id="userId">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <input type="number" class="form-control" id="age" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="roles">Roles</label>
+                                    <select class="form-select" id="roles" multiple required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password">
+                                </div>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button type="button" onclick="submitForm()" class="btn btn-primary mt-3">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="new-user">
@@ -481,11 +522,13 @@
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName"
+                                   readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserLastName" class="col-form-label fw-bold">Last name:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName"
+                                   readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserAge" class="col-form-label fw-bold">Age:</label>
@@ -517,96 +560,184 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize role selection for the new user form
-        initRoleSelection('#userForm');
+    // Открытие модального окна
+    function openUserModal(userId = null) {
+        const modal = new bootstrap.Modal(document.getElementById('userModal'));
 
-        // Initialize role selection for edit modals
-        document.querySelectorAll('.modal').forEach(modal => {
-            if (!modal.id.includes('deleteUserModal')) {
-                initRoleSelection(modal);
-            }
-        });
+        if (userId) {
+            // Режим редактирования
+            fetch(`/api/users/${userId}`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById('userId').value = user.id;
+                    document.getElementById('firstName').value = user.firstName;
+                    document.getElementById('lastName').value = user.lastName;
+                    document.getElementById('age').value = user.age;
+                    document.getElementById('email').value = user.email;
+                    document.getElementById('password').value = '';
 
-        // Handle delete button clicks
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                fillDeleteModal(this);
-                new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
-            });
-        });
+                    // Загрузка ролей
+                    fetch('/api/roles')
+                        .then(response => response.json())
+                        .then(roles => {
+                            const rolesSelect = document.getElementById('roles');
+                            rolesSelect.innerHTML = roles.map(role => `
+                            <option value="${role.id}" ${user.roles.some(r => r.id === role.id) ? 'selected' : ''}>
+                                ${role.name.replace('ROLE_', '')}
+                            </option>
+                        `).join('');
+                        });
+                });
+        } else {
+            // Режим создания
+            document.getElementById('userForm').reset();
+            fetch('/api/roles')
+                .then(response => response.json())
+                .then(roles => {
+                    const rolesSelect = document.getElementById('roles');
+                    rolesSelect.innerHTML = roles.map(role => `
+                    <option value="${role.id}">${role.name.replace('ROLE_', '')}</option>
+                `).join('');
+                });
+        }
 
-        // Validate form submission for new user
-        document.getElementById('userForm').addEventListener('submit', function (e) {
-            if (!validateRoles('#rolesSelect')) {
-                e.preventDefault();
-            }
-        });
-    });
-
-    function initRoleSelection(formSelector) {
-        const form = typeof formSelector === 'string'
-            ? document.querySelector(formSelector)
-            : formSelector;
-
-        if (!form) return;
-
-        const select = form.querySelector('select[name="roles"]');
-        const roleItems = form.querySelectorAll('.role-item');
-
-        if (!select || !roleItems) return;
-
-        roleItems.forEach(item => {
-            item.addEventListener('click', function () {
-                const roleId = this.getAttribute('data-roleid');
-                const option = Array.from(select.options).find(opt => opt.value === roleId);
-
-                if (option) {
-                    option.selected = !option.selected;
-                    this.classList.toggle('selected');
-                }
-            });
-
-            // Initialize initial state
-            const roleId = item.getAttribute('data-roleid');
-            const option = Array.from(select.options).find(opt => opt.value === roleId);
-            item.classList.toggle('selected', option && option.selected);
-        });
+        modal.show();
     }
 
-    function toggleEditRoleSelection(element) {
-        const roleId = element.getAttribute('data-roleid');
-        const form = element.closest('.modal-content');
-        const select = form.querySelector('select[name="roles"]');
-        const option = Array.from(select.options).find(opt => opt.value === roleId);
+    // Отправка формы
+    async function submitForm() {
+        const userData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            age: document.getElementById('age').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            roles: Array.from(document.getElementById('roles').selectedOptions)
+                .map(option => ({ id: parseInt(option.value }))
+        };
 
-        if (option) {
-            option.selected = !option.selected;
-            element.classList.toggle('selected');
+        try {
+            const url = document.getElementById('userId').value
+                ? `/api/users/${document.getElementById('userId').value}`
+                : '/api/users';
+
+            const response = await fetch(url, {
+                method: document.getElementById('userId').value ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentToken}`
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (response.status === 401) logout();
+            if (!response.ok) throw new Error('Ошибка сохранения');
+
+            $('#userModal').modal('hide');
+            loadUsers();
+        } catch (error) {
+            showError(error.message);
         }
     }
 
-    function validateRoles(selectId) {
-        const select = document.querySelector(selectId);
-        const errorElement = document.getElementById('rolesError');
-        const selectedOptions = Array.from(select.options).filter(opt => opt.selected);
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', () => {
+        checkAuth();
+        loadUsers();
+        loadCurrentUser();
+    });
 
-        errorElement.style.display = selectedOptions.length === 0 ? 'block' : 'none';
-        return selectedOptions.length > 0;
+    // Проверка авторизации
+    function checkAuth() {
+        if (!currentToken) {
+            window.location.href = '/login';
+        }
     }
 
-    function fillDeleteModal(button) {
-        document.getElementById('deleteUserId').value = button.getAttribute('data-id');
-        document.getElementById('deleteUserFirstName').value = button.getAttribute('data-firstname');
-        document.getElementById('deleteUserLastName').value = button.getAttribute('data-lastname');
-        document.getElementById('deleteUserAge').value = button.getAttribute('data-age');
-        document.getElementById('deleteUserEmail').value = button.getAttribute('data-email');
-        document.getElementById('deleteUserRole').value = button.getAttribute('data-roles');
-        document.getElementById('deleteForm').action = `/admin/delete/${button.getAttribute('data-id')}`;
+    // Загрузка текущего пользователя
+    async function loadCurrentUser() {
+        try {
+            const response = await fetch('/api/user', {
+                headers: {
+                    'Authorization': `Bearer ${currentToken}`
+                }
+            });
+
+            if (response.status === 401) {
+                logout();
+                return;
+            }
+
+            const user = await response.json();
+            document.getElementById('currentUserInfo').textContent =
+                `${user.email} with roles: ${user.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}`;
+        } catch (error) {
+            showError(error.message);
+        }
     }
 
-    function highlightField(element) {
-        element.classList.add('editing');
+    // Выход из системы
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    }
+
+    // Рендер таблицы
+    function renderUsers(users) {
+        const tbody = document.getElementById('usersBody');
+        tbody.innerHTML = users.map(user => `
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.firstName}</td>
+            <td>${user.lastName}</td>
+            <td>${user.age}</td>
+            <td>${user.email}</td>
+            <td>${user.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}</td>
+            <td>
+                <button class="btn btn-sm btn-primary"
+                        onclick="openEditModal(${user.id})">
+                    Edit
+                </button>
+                <button class="btn btn-sm btn-danger"
+                        onclick="deleteUser(${user.id})">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    `).join('');
+    }
+
+    // Удаление пользователя
+    async function deleteUser(id) {
+        try {
+            const response = await fetch(`/api/users/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${currentToken}`
+                }
+            });
+
+            if (response.status === 401) logout();
+            if (!response.ok) throw new Error('Ошибка удаления');
+
+            loadUsers();
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    // Добавьте эти функции
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger';
+        errorDiv.textContent = message;
+        document.querySelector('.main-content').prepend(errorDiv);
+
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
+
+    function initModals() {
+        // Ваша логика инициализации модальных окон
     }
 </script>
 </body>

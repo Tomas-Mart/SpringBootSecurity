@@ -1,22 +1,43 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import jakarta.persistence.Entity;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Email
+    @Column(unique = true)
+    @NotBlank(message = "{user.email.notblank}")
+    @Size(min = 5, max = 100, message = "{user.email.size}")
+    private String email;
+
+    @Column
+    @NotBlank(message = "{user.password.notblank}")
+    @Size(min = 5, message = "{user.password.size}")
+    @JsonIgnore
+    private String password;
 
     @Column
     @NotBlank(message = "{user.firstName.notblank}")
@@ -33,12 +54,6 @@ public class User implements UserDetails {
     @Min(value = 0, message = "{user.age.min}")
     private Integer age;
 
-    @Email
-    @Column(unique = true)
-    @NotBlank(message = "{user.email.notblank}")
-    @Size(min = 5, max = 100, message = "{user.email.size}")
-    private String email;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty(message = "{user.roles.notempty}")
     @JoinTable(name = "users_roles",
@@ -46,23 +61,9 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @Column
-    @NotBlank(message = "{user.password.notblank}")
-    @Size(min = 5, message = "{user.password.size}")
-    private String password;
+    // Удален явный конструктор по умолчанию (заменен аннотациями Lombok)
 
-    public User() {
-    }
-
-    public User(Long id, String firstName, String lastName, Integer age, String email, Set<Role> roles, String password) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-        this.email = email;
-        this.roles = roles;
-        this.password = password;
-    }
+    // Удален явный конструктор с параметрами (заменен аннотациями Lombok)
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -91,89 +92,52 @@ public class User implements UserDetails {
         return true;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     public boolean hasRole(String roleName) {
-        return roles != null && roles.stream()
+        return roles.stream()
                 .anyMatch(role -> role.getName().equals(roleName));
     }
 
-    public boolean addRole(Role role) {
-        if (role == null) return false;
-        return roles.stream().noneMatch(r -> r.equals(role)) && roles.add(role);
+    // Упрощенные методы добавления ролей
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
-    public boolean addRoles(Set<Role> roles) {
-        if (roles == null) return false;
-        return this.roles.addAll(roles);
+    public void addRoles(Collection<Role> roles) {
+        this.roles.addAll(roles);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
+    // Геттеры и сеттеры
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    @Override
+    public String getUsername() { return email; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getLastName() {
-        return lastName;
-    }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getEmail() {
-        return email;
-    }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
+        return Objects.equals(id, user.id);
     }
 
     @Override
@@ -189,8 +153,9 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
-                ", roles=" + roles +
-                ", password='" + password + '\'' +
+                ", roles=" + roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.toList()) +
                 '}';
     }
 }

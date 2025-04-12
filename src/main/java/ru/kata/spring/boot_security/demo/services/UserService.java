@@ -1,16 +1,17 @@
 package ru.kata.spring.boot_security.demo.services;
 
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.models.Role;
-import java.util.List;
-import java.util.Optional;
+import ru.kata.spring.boot_security.demo.dto.request.UserCreateDTO;
+import ru.kata.spring.boot_security.demo.dto.response.UserResponseDTO;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
-    Optional<User> findByUsername(String username);
-    List<User> getAllUsers();
-    List<Role> getAllRoles();
-    User getUserById(Long id);
-    void createUserWithRoles(User user, List<Long> roleIds);
-    void updateUserWithRoles(Long id, String firstName, String lastName, Integer age, String email, List<Long> roleIds, String password);
+import java.util.List;
+
+public interface UserService extends UserDetailsService {
+    List<UserResponseDTO> getAllUsers();
+    UserResponseDTO getUserById(Long id);
+    UserResponseDTO createUser(UserCreateDTO userDTO);
+    UserResponseDTO updateUser(Long id, UserCreateDTO userDTO);
     void deleteUser(Long id);
+    List<String> getAllRoleNames();
+    UserResponseDTO getUserByEmail(String email);
 }

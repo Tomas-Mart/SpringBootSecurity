@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.request.UserCreateDTO;
 import ru.kata.spring.boot_security.demo.dto.response.UserResponseDTO;
 import ru.kata.spring.boot_security.demo.services.UserService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController

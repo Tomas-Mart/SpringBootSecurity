@@ -1,41 +1,30 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.kata.spring.boot_security.demo.models.User;
+import org.springframework.web.bind.annotation.RestController;
+import ru.kata.spring.boot_security.demo.dto.response.UserResponseDTO;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
-@Controller
-@RequestMapping("/user")
+@RestController
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public String userPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        User user = userService.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User not found with username: " + userDetails.getUsername()));
-        model.addAttribute("user", user);
-        return "user";
-    }
-
-    @GetMapping("/profile")
-    public String userProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        User user = userService.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        model.addAttribute("user", user);
-        return "user";
+    public ResponseEntity<UserResponseDTO> getCurrentUser(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(
+                userService.getUserByEmail(userDetails.getUsername())
+        );
     }
 }

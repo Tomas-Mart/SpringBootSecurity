@@ -1,23 +1,25 @@
 package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dto.request.UserCreateDTO;
+import ru.kata.spring.boot_security.demo.dto.response.UserResponseDTO;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-
+import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -33,70 +35,87 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserById(Long id) {
+    public UserResponseDTO getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     @Override
-    public void createUserWithRoles(User user, List<Long> roleIds) {
-        if (user.getId() == null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(new HashSet<>(roleRepository.findAllById(roleIds)));
-            userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("Invalid user ID");
-        }
+    public UserResponseDTO createUser(UserCreateDTO dto) {
+        User user = new User();
+        updateUserFields(user, dto);
+        return convertToDTO(userRepository.save(user));
     }
 
     @Override
-    public void updateUserWithRoles(Long id, String firstName, String lastName, Integer age, String email, List<Long> roleIds, String password) {
-        User user = getUserById(id);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setAge(age);
-        user.setEmail(email);
-        user.setRoles(new HashSet<>(roleRepository.findAllById(roleIds)));
-        if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-        userRepository.save(user);
+    public UserResponseDTO updateUser(Long id, UserCreateDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        updateUserFields(user, dto);
+        return convertToDTO(userRepository.save(user));
     }
 
     @Override
-    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) {
-        User user = findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public List<String> getAllRoleNames() {
+        return roleRepository.findAll().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+    }
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.getAuthorities()
+    // Вспомогательные методы
+    private UserResponseDTO convertToDTO(User user) {
+        return new UserResponseDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getAge(),
+                user.getRoles().stream()
+                        .map(Role::getName) // Получаем названия ролей
+                        .collect(Collectors.toSet())
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponseDTO getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    private void updateUserFields(User user, UserCreateDTO dto) {
+        user.setEmail(dto.email());
+        user.setFirstName(dto.firstName());
+        user.setLastName(dto.lastName());
+        user.setAge(dto.age());
+
+        if (dto.password() != null && !dto.password().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        // Преобразуем List<Role> в Set<Role>
+        Set<Role> roles = new HashSet<>(roleRepository.findAllByIdIn(dto.roleIds()));
+        user.setRoles(roles);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
     }
 }
