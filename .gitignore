@@ -1,6 +1,7 @@
 # Логи
 logs/
 *.log
+logs/spring.log.*.gz
 
 # Сборка
 /target/
