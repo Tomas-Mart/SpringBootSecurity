@@ -8,5 +8,4 @@ public record UserCreateDTO(
         String firstName,
         String lastName,
         Integer age,
-        Set<Long> roleIds
-) {}
+        Set<Long> roleIds) {}

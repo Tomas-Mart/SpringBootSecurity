@@ -8,5 +8,4 @@ public record UserResponseDTO(
         String firstName,
         String lastName,
         Integer age,
-        Set<String> roles
-) {}
+        Set<String> roles) {}

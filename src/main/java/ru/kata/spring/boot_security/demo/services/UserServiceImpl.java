@@ -1,17 +1,21 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dto.request.UserCreateDTO;
+import ru.kata.spring.boot_security.demo.dto.request.UserUpdateDTO;
 import ru.kata.spring.boot_security.demo.dto.response.UserResponseDTO;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +47,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(this::convertToDTO);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
     public UserResponseDTO getUserById(Long id) {
         return userRepository.findById(id)
                 .map(this::convertToDTO)
@@ -57,12 +69,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO updateUser(Long id, UserCreateDTO dto) {
+    public UserResponseDTO updateUser(Long id, UserUpdateDTO dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        updateUserFields(user, dto);
+
+        if (dto.email() != null) user.setEmail(dto.email());
+        if (dto.firstName() != null) user.setFirstName(dto.firstName());
+        if (dto.lastName() != null) user.setLastName(dto.lastName());
+        if (dto.age() != null) user.setAge(dto.age());
+
+        if (dto.password() != null && !dto.password().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
+        if (dto.roleIds() != null) {
+            Set<Role> roles = new HashSet<>(roleRepository.findAllByIdIn(dto.roleIds()));
+            user.setRoles(roles);
+        }
+
         return convertToDTO(userRepository.save(user));
     }
+
 
     @Override
     public void deleteUser(Long id) {
