@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
                 .map(this::convertToDTO);
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public UserResponseDTO getUserById(Long id) {
@@ -72,24 +71,19 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateUser(Long id, UserUpdateDTO dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        if (dto.email() != null) user.setEmail(dto.email());
         if (dto.firstName() != null) user.setFirstName(dto.firstName());
         if (dto.lastName() != null) user.setLastName(dto.lastName());
         if (dto.age() != null) user.setAge(dto.age());
-
+        if (dto.email() != null) user.setEmail(dto.email());
         if (dto.password() != null && !dto.password().isEmpty()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
         }
-
         if (dto.roleIds() != null) {
             Set<Role> roles = new HashSet<>(roleRepository.findAllByIdIn(dto.roleIds()));
             user.setRoles(roles);
         }
-
         return convertToDTO(userRepository.save(user));
     }
-
 
     @Override
     public void deleteUser(Long id) {
@@ -107,10 +101,11 @@ public class UserServiceImpl implements UserService {
     private UserResponseDTO convertToDTO(User user) {
         return new UserResponseDTO(
                 user.getId(),
-                user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getAge(),
+                user.getEmail(),
+                user.getPassword(),
                 user.getRoles().stream()
                         .map(Role::getName) // Получаем названия ролей
                         .collect(Collectors.toSet())
@@ -126,15 +121,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private void updateUserFields(User user, UserCreateDTO dto) {
-        user.setEmail(dto.email());
         user.setFirstName(dto.firstName());
         user.setLastName(dto.lastName());
         user.setAge(dto.age());
-
+        user.setEmail(dto.email());
         if (dto.password() != null && !dto.password().isEmpty()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
         }
-
         // Преобразуем List<Role> в Set<Role>
         Set<Role> roles = new HashSet<>(roleRepository.findAllByIdIn(dto.roleIds()));
         user.setRoles(roles);

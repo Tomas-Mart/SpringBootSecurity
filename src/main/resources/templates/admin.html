@@ -7,231 +7,47 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        .navbar-dark {
-            background-color: #000 !important;
-            padding: 10px 20px;
-        }
-
-        .sidebar {
-            background-color: #007bff;
-            min-height: 100vh;
-            width: 200px;
-            padding: 20px;
-            color: white;
-        }
-
-        .sidebar .nav-link {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white !important;
-            padding: 10px 15px;
-            margin: 5px 0;
-            border-radius: 5px;
-        }
-
-        .sidebar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .main-content {
-            padding: 20px;
-            flex-grow: 1;
-        }
-
-        .table thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #dee2e6;
-            margin-bottom: 20px;
-        }
-
-        .nav-tabs {
-            margin-bottom: 20px;
-        }
-
-        .tab-content {
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #dee2e6;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-        }
-
-        .table {
-            margin-top: 20px;
-        }
-
-        .admin-panel {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding-top: 20px;
-        }
-
-        .form-container {
-            width: 400px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form-group {
-            width: 300px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .button-container button {
-            margin: 0 10px;
-            padding: 10px 20px;
-        }
-
-        .editing {
-            background-color: #fdea98;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
-        .role-items-container {
-            gap: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            margin-top: 8px;
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-            background: #f8f9fa;
-            width: 300px;
-        }
-
-        .role-item {
-            padding: 8px 12px;
-            border-radius: 0.25rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .role-item:hover {
-            background-color: #e9ecef;
-        }
-
-        .role-item.selected {
-            color: #fff;
-            font-weight: 500;
-            background-color: #007bff;
-        }
-
-        .d-none {
-            display: none;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
-        .has-error {
-            border-color: red;
-        }
-
-        .modal-dialog-centered {
-            display: flex;
-            align-items: center;
-            min-height: calc(100% - 1rem);
-        }
-
-        .modal-title {
-            font-weight: bold;
-        }
-
-        .modal-footer {
-            justify-content: flex-end;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .bg-light {
-            background-color: #e8ebee !important;
-            cursor: not-allowed;
-        }
-
-        .form-control {
-            max-width: 300px;
-            width: 100%;
-            text-align: left;
-            margin: 0 auto;
-        }
-
-        .delete-modal .modal-body {
-            padding: 20px;
-        }
-
-        .delete-modal .row {
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .delete-modal .col-3 {
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .delete-modal .col-9 {
-            padding: 8px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        #rolesError {
-            color: #dc3545;
-            font-size: 0.875em;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .btn-edit {
-            color: #fdfdfd;
-            background-color: #17a1b7;
-        }
+        /* Все стили остаются без изменений */
+        .navbar-dark { background-color: #000 !important; padding: 10px 20px; }
+        .sidebar { background-color: #007bff; min-height: 100vh; width: 200px; padding: 20px; color: white; }
+        .sidebar .nav-link { background-color: rgba(255, 255, 255, 0.2); color: white !important; padding: 10px 15px; margin: 5px 0; border-radius: 5px; }
+        .sidebar .nav-link.active { background-color: rgba(255, 255, 255, 0.3); }
+        .main-content { padding: 20px; flex-grow: 1; }
+        .table thead th { background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #dee2e6; margin-bottom: 20px; }
+        .nav-tabs { margin-bottom: 20px; }
+        .tab-content { background-color: white; padding: 20px; border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 5px 5px; }
+        .table { margin-top: 20px; }
+        .admin-panel { display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding-top: 20px; }
+        .form-container { width: 400px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .form-group { width: 300px; text-align: left; display: flex; flex-direction: column; align-items: center; }
+        .form-group label { font-weight: bold; display: block; margin-bottom: 5px; text-align: center; width: 100%; }
+        .button-container { display: flex; justify-content: center; width: 100%; padding: 10px; box-sizing: border-box; }
+        .button-container button { margin: 0 10px; padding: 10px 20px; }
+        .editing { background-color: #fdea98; }
+        .bold { font-weight: bold; }
+        .role-items-container { gap: 0; padding: 0; display: flex; flex-direction: column; margin-top: 8px; border: 1px solid #ced4da; border-radius: 0.375rem; background: #f8f9fa; width: 300px; }
+        .role-item { padding: 8px 12px; border-radius: 0.25rem; transition: all 0.2s ease; cursor: pointer; }
+        .role-item:hover { background-color: #e9ecef; }
+        .role-item.selected { color: #fff; font-weight: 500; background-color: #007bff; }
+        .d-none { display: none; }
+        .error-message { color: red; font-size: 0.9em; margin-top: 5px; }
+        .has-error { border-color: red; }
+        .modal-dialog-centered { display: flex; align-items: center; min-height: calc(100% - 1rem); }
+        .modal-title { font-weight: bold; }
+        .modal-footer { justify-content: flex-end; padding: 1rem; }
+        .modal-content { width: 100%; max-width: 600px; margin: 0 auto; }
+        .bg-light { background-color: #e8ebee !important; cursor: not-allowed; }
+        .form-control { max-width: 300px; width: 100%; text-align: left; margin: 0 auto; }
+        .delete-modal .modal-body { padding: 20px; }
+        .delete-modal .row { margin-bottom: 10px; align-items: center; }
+        .delete-modal .col-3 { font-weight: bold; text-align: center; }
+        .delete-modal .col-9 { padding: 8px; background-color: #f8f9fa; border-radius: 4px; text-align: center; }
+        #rolesError { color: #dc3545; font-size: 0.875em; margin-top: 5px; display: none; }
+        .btn-edit { color: #fdfdfd; background-color: #17a1b7; }
+        .spinner { display: none; }
+        .loading .spinner { display: inline-block; }
     </style>
-    <script>
-        let currentToken = localStorage.getItem('token');
-    </script>
 </head>
 <body>
 <nav class="navbar navbar-dark">
@@ -248,496 +64,368 @@
 <div class="d-flex">
     <div class="sidebar">
         <ul class="nav flex-column">
-            <li class="nav-item" th:if="${#lists.contains(currentUser.roles.![name], 'ROLE_ADMIN')}">
-                <a href="/admin" class="nav-link active">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" onclick="loadAdminPanel()">
                     <i class="fas fa-table me-2"></i>Admin
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/user/profile" class="nav-link">
+                <a href="#" class="nav-link" onclick="loadUserProfile()">
                     <i class="fas fa-user me-2"></i>User
                 </a>
             </li>
         </ul>
     </div>
 
-    <div class="main-content">
-        <h3 class="mb-4">Admin panel</h3>
+    <div class="main-content" id="mainContent">
+        <!-- Динамический контент -->
+    </div>
+</div>
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" href="#users">Users table</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#new-user">New User</a>
-            </li>
-        </ul>
+<!-- Модальные окна -->
+<div id="modalsContainer"></div>
 
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="users">
-                <h4 class="mb-4">All users</h4>
-                <table class="table" id="usersTable">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Age</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody id="usersBody">
-                    <!-- Данные будут вставлены через JS -->
-                    </tbody>
-                </table>
-                <tr th:each="user : ${users}">
-                    <td th:text="${user.id}"></td>
-                    <td th:text="${user.firstName}"></td>
-                    <td th:text="${user.lastName}"></td>
-                    <td th:text="${user.age}"></td>
-                    <td th:text="${user.email}"></td>
-                    <td th:text="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}"></td>
-                    <td>
-                        <button class="btn btn-success" onclick="openUserModal()">
-                            <i class="fas fa-plus"></i> Add User
-                        </button>
-                        <button class="btn btn-sm btn-primary"
-                                onclick="openUserModal(${user.id})"> <!-- Измените вызов функции -->
-                            Edit
-                        </button>
-                        <button class="btn btn-sm btn-danger"
-                                onclick="deleteUser(${user.id})">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-                </table>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let currentUser = null;
+    let users = [];
+    let roles = [];
+    let currentPage = 0;
+    const pageSize = 10;
+    let sortBy = 'email';
+    let currentToken = localStorage.getItem('token');
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!currentToken) {
+            window.location.href = '/login';
+            return;
+        }
+
+        try {
+            await Promise.all([loadCurrentUser(), loadRoles(), loadUsers()]);
+            renderAdminPanel();
+        } catch (error) {
+            handleApiError(error);
+        }
+    });
+
+    // Загрузка данных
+    async function loadCurrentUser() {
+        const response = await fetch('/api/user', {
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to load user');
+        currentUser = await response.json();
+        document.getElementById('currentUserInfo').textContent =
+            `${currentUser.email} with roles: ${currentUser.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}`;
+    }
+
+    async function loadRoles() {
+        const response = await fetch('/api/admin/roles', {
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to load roles');
+        roles = await response.json();
+    }
+
+    async function loadUsers(page = currentPage) {
+        const response = await fetch(`/api/admin/users?page=${page}&size=${pageSize}&sortBy=${sortBy}`, {
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to load users');
+        users = await response.json();
+        currentPage = page;
+    }
+
+    // Рендеринг интерфейса
+    function renderAdminPanel() {
+        const mainContent = document.getElementById('mainContent');
+        mainContent.innerHTML = `
+            <h3 class="mb-4">Admin panel</h3>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="showTab('users')">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showTab('new-user')">New User</a>
+                </li>
+            </ul>
+            <div id="tabContent"></div>
+            <div class="pagination-controls mt-3">
+                <button class="btn btn-outline-primary" ${currentPage === 0 ? 'disabled' : ''}
+                    onclick="changePage(${currentPage - 1})">
+                    Previous
+                </button>
+                <span class="mx-3">Page ${currentPage + 1}</span>
+                <button class="btn btn-outline-primary" ${users.length < pageSize ? 'disabled' : ''}
+                    onclick="changePage(${currentPage + 1})">
+                    Next
+                </button>
             </div>
+        `;
+        showTab('users');
+    }
 
-            <!-- Модальное окно добавления/редактирования -->
-            <div class="modal fade" id="userModal" tabindex="-1">
+    async function changePage(newPage) {
+        try {
+            await loadUsers(newPage);
+            renderAdminPanel();
+        } catch (error) {
+            handleApiError(error);
+        }
+    }
+
+    function showTab(tabName) {
+        const tabContent = document.getElementById('tabContent');
+        tabContent.innerHTML = tabName === 'users' ? renderUsersTable() : renderUserForm();
+    }
+
+    function renderUsersTable() {
+        return `
+            <h4 class="mb-4">All users</h4>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        ${['ID', 'First Name', 'Last Name', 'Age', 'Email', 'Roles', 'Actions']
+            .map(h => `<th>${h}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${users.map(user => `
+                        <tr>
+                            <td>${escapeHtml(user.id)}</td>
+                            <td>${escapeHtml(user.firstName)}</td>
+                            <td>${escapeHtml(user.lastName)}</td>
+                            <td>${escapeHtml(user.age)}</td>
+                            <td>${escapeHtml(user.email)}</td>
+                            <td>${escapeHtml(user.roles.map(r => r.name.replace('ROLE_', '')).join(', '))}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="openEditModal(${user.id})">
+                                    Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="showDeleteConfirmation(${user.id})">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    // Модальные окна
+    async function openEditModal(userId) {
+        const user = users.find(u => u.id === userId);
+        const modalHtml = `
+            <div class="modal fade" id="editModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add/Edit User</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="userForm">
-                                <input type="hidden" id="userId">
-                                <div class="form-group">
-                                    <label for="firstName">First Name</label>
-                                    <input type="text" class="form-control" id="firstName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastName">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="age">Age</label>
-                                    <input type="number" class="form-control" id="age" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="roles">Roles</label>
-                                    <select class="form-select" id="roles" multiple required></select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password">
-                                </div>
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button type="button" onclick="submitForm()" class="btn btn-primary mt-3">Save</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="new-user">
-                <h4 class="mb-4">Add new user</h4>
-                <div class="admin-panel">
-                    <div class="form-container">
-                        <form id="userForm" th:action="@{/admin/create}" th:object="${newUser}" method="post">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
-                                <label class="bold">First Name</label>
-                                <input type="text" class="form-control" th:field="*{firstName}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('firstName')}"
-                                     th:errors="*{firstName}"></div>
+                        <form onsubmit="handleSubmit(event, ${user.id})">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit User</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
-
-                            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'has-error'">
-                                <label class="bold">Last Name</label>
-                                <input type="text" class="form-control" th:field="*{lastName}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('lastName')}"
-                                     th:errors="*{lastName}"></div>
+                            <div class="modal-body">
+                                ${renderUserForm(user)}
                             </div>
-
-                            <div class="form-group" th:classappend="${#fields.hasErrors('age')} ? 'has-error'">
-                                <label class="bold">Age</label>
-                                <input type="number" class="form-control" th:field="*{age}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
-                            </div>
-
-                            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
-                                <label class="bold">Email</label>
-                                <input type="email" class="form-control" th:field="*{email}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('email')}"
-                                     th:errors="*{email}"></div>
-                            </div>
-
-                            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
-                                <label class="bold">Password</label>
-                                <input type="password" class="form-control" th:field="*{password}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('password')}"
-                                     th:errors="*{password}"></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="bold">Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
-                                    <option th:each="role : ${roles}"
-                                            th:value="${role.id}"
-                                            th:text="${role.name.replace('ROLE_', '')}">
-                                    </option>
-                                </select>
-
-                                <div class="role-items-container" id="rolesContainer">
-                                    <div th:each="role : ${roles}" class="role-item"
-                                         th:data-roleid="${role.id}"
-                                         onclick="toggleRoleSelection(this)">
-                                        <span th:text="${role.name.replace('ROLE_', '')}"></span>
-                                    </div>
-                                </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
-                                    one role
-                                </div>
-                            </div>
-
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <div class="button-container">
-                                <button type="submit" class="btn btn-success" onclick="validateRoles()">Add new user
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="spinner-border spinner-border-sm d-none"></span>
+                                    Save changes
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+        `;
 
-        <!-- Edit Modals -->
-        <div th:each="user : ${users}" th:attr="id='editModal' + ${user.id}" class="modal fade" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit user</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form th:action="@{/admin/update}" method="post">
-                        <input type="hidden" name="id" th:value="${user.id}">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label>ID</label>
-                                <input type="text" class="form-control bg-light" th:value="${user.id}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>First Name</label>
-                                <input type="text" class="form-control" name="firstName" th:value="${user.firstName}"
-                                       required>
-                            </div>
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" class="form-control" name="lastName" th:value="${user.lastName}"
-                                       required>
-                            </div>
-                            <div class="form-group">
-                                <label>Age</label>
-                                <input type="number" class="form-control" name="age" th:value="${user.age}" required
-                                       min="1">
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" class="form-control" name="email" th:value="${user.email}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" class="form-control" name="password">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" required>
-                                    <option th:each="role : ${roles}"
-                                            th:value="${role.id}"
-                                            th:selected="${#lists.contains(user.roles.![id], role.id)}"
-                                            th:text="${role.name.replace('ROLE_','')}">
-                                    </option>
-                                </select>
-                                <div class="role-items-container">
-                                    <div th:each="role : ${roles}" class="role-item"
-                                         th:data-roleid="${role.id}"
-                                         th:classappend="${#lists.contains(user.roles.![id], role.id)} ? 'selected' : ''"
-                                         onclick="toggleEditRoleSelection(this)">
-                                        <span th:text="${role.name.replace('ROLE_','')}"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Edit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Modal -->
-        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3 text-center">
-                            <label for="deleteUserId" class="col-form-label fw-bold">ID:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserId" readonly>
-
-                        </div>
-                        <div class="mb-3 text-center">
-                            <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName"
-                                   readonly>
-                        </div>
-                        <div class="mb-3 text-center">
-                            <label for="deleteUserLastName" class="col-form-label fw-bold">Last name:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName"
-                                   readonly>
-                        </div>
-                        <div class="mb-3 text-center">
-                            <label for="deleteUserAge" class="col-form-label fw-bold">Age:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserAge" readonly>
-                        </div>
-                        <div class="mb-3 text-center">
-                            <label for="deleteUserEmail" class="col-form-label fw-bold">Email:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserEmail" readonly>
-                        </div>
-                        <div class="mb-3 text-center">
-                            <label for="deleteUserRole" class="col-form-label fw-bold">Role:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserRole" readonly>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <form id="deleteForm" method="post" class="d-inline">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    // Открытие модального окна
-    function openUserModal(userId = null) {
-        const modal = new bootstrap.Modal(document.getElementById('userModal'));
-
-        if (userId) {
-            // Режим редактирования
-            fetch(`/api/users/${userId}`)
-                .then(response => response.json())
-                .then(user => {
-                    document.getElementById('userId').value = user.id;
-                    document.getElementById('firstName').value = user.firstName;
-                    document.getElementById('lastName').value = user.lastName;
-                    document.getElementById('age').value = user.age;
-                    document.getElementById('email').value = user.email;
-                    document.getElementById('password').value = '';
-
-                    // Загрузка ролей
-                    fetch('/api/roles')
-                        .then(response => response.json())
-                        .then(roles => {
-                            const rolesSelect = document.getElementById('roles');
-                            rolesSelect.innerHTML = roles.map(role => `
-                            <option value="${role.id}" ${user.roles.some(r => r.id === role.id) ? 'selected' : ''}>
-                                ${role.name.replace('ROLE_', '')}
-                            </option>
-                        `).join('');
-                        });
-                });
-        } else {
-            // Режим создания
-            document.getElementById('userForm').reset();
-            fetch('/api/roles')
-                .then(response => response.json())
-                .then(roles => {
-                    const rolesSelect = document.getElementById('roles');
-                    rolesSelect.innerHTML = roles.map(role => `
-                    <option value="${role.id}">${role.name.replace('ROLE_', '')}</option>
-                `).join('');
-                });
-        }
-
-        modal.show();
+        document.getElementById('modalsContainer').innerHTML = modalHtml;
+        new bootstrap.Modal(document.getElementById('editModal')).show();
     }
 
-    // Отправка формы
-    async function submitForm() {
-        const userData = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            age: document.getElementById('age').value,
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value,
-            roles: Array.from(document.getElementById('roles').selectedOptions)
-                .map(option => ({ id: parseInt(option.value }))
-        };
+    function renderUserForm(user = null) {
+        const isNewUser = !user;
+        return `
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control"
+                    value="${escapeHtml(user?.firstName || '')}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control"
+                    value="${escapeHtml(user?.lastName || '')}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Age</label>
+                <input type="number" class="form-control"
+                    value="${escapeHtml(user?.age || '')}" required min="1">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control"
+                    value="${escapeHtml(user?.email || '')}" required>
+            </div>
+            <div class="mb-3" ${!isNewUser ? 'hidden' : ''}>
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control"
+                    ${isNewUser ? 'required' : 'placeholder="Leave blank to keep current"'}>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Roles</label>
+                <select class="form-select" multiple required>
+                    ${roles.map(role => `
+                        <option value="${role.id}"
+                            ${user?.roles?.some(r => r.id === role.id) ? 'selected' : ''}>
+                            ${role.name.replace('ROLE_', '')}
+                        </option>
+                    `).join('')}
+                </select>
+            </div>
+        `;
+    }
+
+    // Обработчики
+    async function handleSubmit(event, userId = null) {
+        event.preventDefault();
+        const form = event.target;
+        const button = form.querySelector('button[type="submit"]');
+        const spinner = button.querySelector('.spinner');
 
         try {
-            const url = document.getElementById('userId').value
-                ? `/api/users/${document.getElementById('userId').value}`
-                : '/api/users';
+            button.disabled = true;
+            spinner.classList.remove('d-none');
 
-            const response = await fetch(url, {
-                method: document.getElementById('userId').value ? 'PUT' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${currentToken}`
-                },
-                body: JSON.stringify(userData)
-            });
+            const formData = {
+                firstName: form.querySelector('input[type="text"]').value.trim(),
+                lastName: form.querySelectorAll('input[type="text"]')[1].value.trim(),
+                age: parseInt(form.querySelector('input[type="number"]').value),
+                email: form.querySelector('input[type="email"]').value.trim(),
+                password: form.querySelector('input[type="password"]')?.value,
+                roleIds: Array.from(form.querySelector('select').selectedOptions)
+                    .map(option => parseInt(option.value))
+            };
 
-            if (response.status === 401) logout();
-            if (!response.ok) throw new Error('Ошибка сохранения');
-
-            $('#userModal').modal('hide');
-            loadUsers();
-        } catch (error) {
-            showError(error.message);
-        }
-    }
-
-    // Инициализация при загрузке
-    document.addEventListener('DOMContentLoaded', () => {
-        checkAuth();
-        loadUsers();
-        loadCurrentUser();
-    });
-
-    // Проверка авторизации
-    function checkAuth() {
-        if (!currentToken) {
-            window.location.href = '/login';
-        }
-    }
-
-    // Загрузка текущего пользователя
-    async function loadCurrentUser() {
-        try {
-            const response = await fetch('/api/user', {
-                headers: {
-                    'Authorization': `Bearer ${currentToken}`
-                }
-            });
-
-            if (response.status === 401) {
-                logout();
-                return;
+            if (!userId && !formData.password) {
+                throw new Error('Password is required for new users');
             }
 
-            const user = await response.json();
-            document.getElementById('currentUserInfo').textContent =
-                `${user.email} with roles: ${user.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}`;
+            const url = userId ? `/api/admin/users/${userId}` : '/api/admin/users';
+            const method = userId ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Request failed');
+            }
+
+            await loadUsers();
+            bootstrap.Modal.getInstance(form.closest('.modal')).hide();
+        } catch (error) {
+            showError(error.message);
+        } finally {
+            button.disabled = false;
+            spinner.classList.add('d-none');
+        }
+    }
+
+    function showDeleteConfirmation(id) {
+        const modalHtml = `
+            <div class="modal fade" id="deleteModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this user?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" onclick="deleteUser(${id})">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('modalsContainer').innerHTML = modalHtml;
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+
+    async function deleteUser(id) {
+        try {
+            const response = await fetch(`/api/admin/users/${id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            });
+
+            if (!response.ok) throw new Error('Failed to delete user');
+
+            await loadUsers();
+            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
         } catch (error) {
             showError(error.message);
         }
     }
 
-    // Выход из системы
+    // Вспомогательные функции
+    function getAuthHeaders() {
+        return {
+            'Authorization': `Bearer ${currentToken}`,
+            'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
+        };
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        return parts.length === 2 ? parts.pop().split(';').shift() : null;
+    }
+
+    function showError(message) {
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-danger alert-dismissible fade show';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.main-content').prepend(alert);
+    }
+
+    function handleApiError(error) {
+        console.error(error);
+        if (error.message.includes('401')) {
+            logout();
+        } else {
+            showError(error.message || 'An error occurred');
+        }
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe?.toString()?.replace(/[&<"'>]/g,
+            m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])) || '';
+    }
+
     function logout() {
         localStorage.removeItem('token');
         window.location.href = '/login';
-    }
-
-    // Рендер таблицы
-    function renderUsers(users) {
-        const tbody = document.getElementById('usersBody');
-        tbody.innerHTML = users.map(user => `
-        <tr>
-            <td>${user.id}</td>
-            <td>${user.firstName}</td>
-            <td>${user.lastName}</td>
-            <td>${user.age}</td>
-            <td>${user.email}</td>
-            <td>${user.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}</td>
-            <td>
-                <button class="btn btn-sm btn-primary"
-                        onclick="openEditModal(${user.id})">
-                    Edit
-                </button>
-                <button class="btn btn-sm btn-danger"
-                        onclick="deleteUser(${user.id})">
-                    Delete
-                </button>
-            </td>
-        </tr>
-    `).join('');
-    }
-
-    // Удаление пользователя
-    async function deleteUser(id) {
-        try {
-            const response = await fetch(`/api/users/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${currentToken}`
-                }
-            });
-
-            if (response.status === 401) logout();
-            if (!response.ok) throw new Error('Ошибка удаления');
-
-            loadUsers();
-        } catch (error) {
-            showError(error.message);
-        }
-    }
-
-    // Добавьте эти функции
-    function showError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'alert alert-danger';
-        errorDiv.textContent = message;
-        document.querySelector('.main-content').prepend(errorDiv);
-
-        setTimeout(() => errorDiv.remove(), 5000);
-    }
-
-    function initModals() {
-        // Ваша логика инициализации модальных окон
     }
 </script>
 </body>

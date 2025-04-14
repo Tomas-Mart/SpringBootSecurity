@@ -55,9 +55,19 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/admin/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/user").hasRole("USER")
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessHandler((request,
+                                               response,
+                                               authentication) -> response
+                                .setStatus(HttpStatus.OK.value()))
+                        .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                        .invalidateHttpSession(true)
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exc -> exc
@@ -90,14 +100,17 @@ public class WebSecurityConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080", "http://localhost:3000")
+                        .allowedOrigins(
+                                "http://localhost:8080",
+                                "http://localhost:3000",
+                                "http://your-frontend-domain")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
     }
-    
+
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

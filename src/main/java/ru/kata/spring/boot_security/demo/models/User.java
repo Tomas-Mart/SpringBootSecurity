@@ -10,9 +10,6 @@ import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.Entity;
-
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,18 +23,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Email
-    @Column(unique = true)
-    @NotBlank(message = "{user.email.notblank}")
-    @Size(min = 5, max = 100, message = "{user.email.size}")
-    private String email;
-
-    @Column
-    @NotBlank(message = "{user.password.notblank}")
-    @Size(min = 5, message = "{user.password.size}")
-    @JsonIgnore
-    private String password;
 
     @Column
     @NotBlank(message = "{user.firstName.notblank}")
@@ -54,6 +39,18 @@ public class User implements UserDetails {
     @Min(value = 0, message = "{user.age.min}")
     private Integer age;
 
+    @Email
+    @Column(unique = true)
+    @NotBlank(message = "{user.email.notblank}")
+    @Size(min = 5, max = 100, message = "{user.email.size}")
+    private String email;
+
+    @Column
+    @NotBlank(message = "{user.password.notblank}")
+    @Size(min = 5, message = "{user.password.size}")
+    @JsonIgnore
+    private String password;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty(message = "{user.roles.notempty}")
     @JoinTable(name = "users_roles",
@@ -61,9 +58,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    // Удален явный конструктор по умолчанию (заменен аннотациями Lombok)
-
-    // Удален явный конструктор с параметрами (заменен аннотациями Lombok)
+    // Реализация методов интерфейса UserDetails
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -92,12 +87,13 @@ public class User implements UserDetails {
         return true;
     }
 
+    // Дополнительные методы для работы с ролями
+
     public boolean hasRole(String roleName) {
         return roles.stream()
                 .anyMatch(role -> role.getName().equals(roleName));
     }
 
-    // Упрощенные методы добавления ролей
     public void addRole(Role role) {
         this.roles.add(role);
     }
@@ -107,18 +103,9 @@ public class User implements UserDetails {
     }
 
     // Геттеры и сеттеры
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    @Override
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    @Override
-    public String getUsername() { return email; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -129,8 +116,20 @@ public class User implements UserDetails {
     public Integer getAge() { return age; }
     public void setAge(Integer age) { this.age = age; }
 
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    @Override
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    @Override
+    public String getUsername() { return email; }
+
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    // Переопределение методов Object
 
     @Override
     public boolean equals(Object o) {

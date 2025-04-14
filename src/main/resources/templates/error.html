@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="alert alert-danger" id="errorContainer">
+        <h1 id="errorTitle">Loading error information...</h1>
+        <p id="errorMessage">Please wait while we load error details.</p>
+        <button class="btn btn-primary" onclick="handleHomeButton()">Return to Home</button>
+    </div>
+</div>
+
+<script>
+    // Загрузка информации об ошибке при открытии страницы
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/api/error', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to load error details');
+
+            const errorData = await response.json();
+            updateErrorDisplay(errorData);
+
+        } catch (error) {
+            showFallbackError();
+            console.error('Error loading error details:', error);
+        }
+    });
+
+    // Обновление отображения ошибки
+    function updateErrorDisplay(errorData) {
+        document.getElementById('errorTitle').textContent =
+            errorData.title || 'An error occurred';
+        document.getElementById('errorMessage').textContent =
+            errorData.message || 'Please try again later or contact support.';
+    }
+
+    // Отображение запасного варианта при ошибке загрузки
+    function showFallbackError() {
+        document.getElementById('errorTitle').textContent = 'An error occurred';
+        document.getElementById('errorMessage').textContent =
+            'Failed to load error details. Please try again later.';
+    }
+
+    // Обработка кнопки возврата на главную
+    function handleHomeButton() {
+        // Для SPA-приложения:
+        // history.pushState(null, '', '/');
+        // loadMainContent();
+
+        // Для обычного перехода:
+        window.location.href = '/';
+    }
+
+    // Получение CSRF токена
+    function getCsrfToken() {
+        return document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] || '';
+    }
+</script>
+</body>
+</html>

@@ -4,8 +4,9 @@ import java.util.Set;
 
 public record UserResponseDTO(
         Long id,
-        String email,
         String firstName,
         String lastName,
         Integer age,
+        String email,
+        String password,
         Set<String> roles) {}
