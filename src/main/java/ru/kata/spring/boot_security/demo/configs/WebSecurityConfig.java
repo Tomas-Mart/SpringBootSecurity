@@ -55,10 +55,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/admin/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/user").hasRole("USER")
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/**").hasRole("USER")
+                        .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
@@ -66,7 +65,7 @@ public class WebSecurityConfig {
                                                response,
                                                authentication) -> response
                                 .setStatus(HttpStatus.OK.value()))
-                        .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                        .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
