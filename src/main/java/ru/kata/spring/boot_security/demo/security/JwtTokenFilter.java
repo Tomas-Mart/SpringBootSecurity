@@ -13,11 +13,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
+
+    private static final String AUTH_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -34,32 +37,46 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
 
-        try {
-            String token = getTokenFromRequest(request);
-            if (token != null && jwtTokenUtil.validateToken(token)) {
-                String username = jwtTokenUtil.getUsernameFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (userDetails != null) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            }
-        } catch (Exception ex) {
-            SecurityContextHolder.clearContext();
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
-            logger.error("Authentication error", ex);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "authorization, content-type, xsrf-token");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
+
+        try {
+            String token = parseJwt(request);
+            if (token != null && jwtTokenUtil.validateToken(token)) {
+                String username = jwtTokenUtil.getUsernameFromToken(token);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            logger.error("Cannot set user authentication", e);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+            return;
+        }
+
         chain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
+    private String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader(AUTH_HEADER);
+        if (headerAuth != null && headerAuth.startsWith(BEARER_PREFIX)) {
+            return headerAuth.substring(BEARER_PREFIX.length());
         }
         return null;
     }
