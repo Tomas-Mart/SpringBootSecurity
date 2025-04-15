@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,18 +9,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dto.request.*;
-import ru.kata.spring.boot_security.demo.dto.response.*;
-import ru.kata.spring.boot_security.demo.security.JwtTokenUtil;
+import ru.kata.spring.boot_security.demo.dto.request.UserCreateDTO;
+import ru.kata.spring.boot_security.demo.dto.request.UserUpdateDTO;
+import ru.kata.spring.boot_security.demo.dto.response.UserResponseDTO;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.util.HashMap;
@@ -33,53 +27,17 @@ import java.util.Map;
 public class UnifiedController {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtil jwtTokenUtil;
 
-    public UnifiedController(UserService userService,
-                             AuthenticationManager authenticationManager,
-                             JwtTokenUtil jwtTokenUtil) {
+    public UnifiedController(UserService userService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
-
-    // ========== Аутентификация ==========
-    @PostMapping("/auth/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.username(),
-                        request.password()));
-
-        final UserDetails user = userService.loadUserByUsername(request.username());
-        return ResponseEntity.ok(new AuthResponse(jwtTokenUtil.generateToken(user)));
-    }
-
-    @PostMapping("/auth/refresh")
-    public ResponseEntity<AuthResponse> refresh(HttpServletRequest request) {
-        String token = jwtTokenUtil.parseJwt(request);
-        if (token != null && jwtTokenUtil.validateToken(token)) {
-            return ResponseEntity.ok(new AuthResponse(jwtTokenUtil.refreshToken(token)));
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     // ========== Пользовательские операции ==========
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/user")
     public ResponseEntity<UserResponseDTO> getCurrentUser(
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if (csrfToken == null) {
-            throw new AccessDeniedException("CSRF token not found");
-        }
-
-        return ResponseEntity.ok()
-                .header(csrfToken.getHeaderName(), csrfToken.getToken())
-                .body(userService.getUserByEmail(userDetails.getUsername()));
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(userService.getUserByEmail(userDetails.getUsername()));
     }
 
     // ========== Административные операции ==========
@@ -94,7 +52,7 @@ public class UnifiedController {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
             return ResponseEntity.ok(userService.getAllUsers(pageable));
         } catch (PropertyReferenceException e) {
-            return ResponseEntity.badRequest().body("Invalid sort parameter");
+            return ResponseEntity.badRequest().body("Некорректный параметр сортировки");
         }
     }
 
@@ -139,13 +97,14 @@ public class UnifiedController {
     @GetMapping("/error")
     public ResponseEntity<Map<String, String>> handleError() {
         Map<String, String> errorInfo = new HashMap<>();
-        errorInfo.put("title", "Error 500");
-        errorInfo.put("message", "Internal Server Error");
+        errorInfo.put("title", "Ошибка 500");
+        errorInfo.put("message", "Внутренняя ошибка сервера");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
     }
 
-    @ExceptionHandler({AuthenticationException.class, AccessDeniedException.class})
-    public ResponseEntity<?> handleAuthExceptions() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGeneralExceptions() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Произошла непредвиденная ошибка"));
     }
 }

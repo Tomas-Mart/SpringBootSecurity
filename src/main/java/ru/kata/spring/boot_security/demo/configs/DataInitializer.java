@@ -31,27 +31,18 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        // Создание ролей
+        // Сначала создаем роли
         Role adminRole = createRoleIfNotExists("ROLE_ADMIN");
         Role userRole = createRoleIfNotExists("ROLE_USER");
 
-        // Создание администратора
+        // Затем пользователей с этими ролями
         createUserIfNotExists(
-                "Admin",
-                "Admin",
-                30,
-                "admin@example.com",
-                "admin",
-                Set.of(adminRole, userRole)
+                "Admin", "Admin", 30, "admin@example.com", "admin",
+                Set.of(adminRole, userRole) // Назначаем обе роли
         );
 
-        // Создание обычного пользователя
         createUserIfNotExists(
-                "User",
-                "User",
-                25,
-                "user@example.com",
-                "user",
+                "User", "User", 25, "user@example.com", "user",
                 Set.of(userRole)
         );
     }
@@ -61,28 +52,31 @@ public class DataInitializer implements CommandLineRunner {
         return roleRepository.findByName(roleName)
                 .orElseGet(() -> {
                     Role newRole = new Role(roleName);
-                    return roleRepository.save(newRole); // Используем save вместо saveAndFlush
+                    return roleRepository.save(newRole);
                 });
     }
 
     @Transactional
     protected void createUserIfNotExists(
-            String firstName,
-            String lastName,
-            int age,
-            String email,
-            String password,
-            Set<Role> roles) {
+            String firstName, String lastName, int age,
+            String email, String password, Set<Role> roles
+    ) {
         if (!userRepository.existsByEmail(email)) {
-            User user = new User();
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setAge(age);
-            user.setEmail(email);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setRoles(new HashSet<>(roles)); // Создаем копию для безопасности
+            User user = User.builder()
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .age(age)
+                    .email(email)
+                    .password(passwordEncoder.encode(password))
+                    .roles(new HashSet<>())
+                    .build();
 
-            userRepository.save(user); // Используем save вместо saveAndFlush
+            // Присваиваем роли (убедитесь, что они уже сохранены)
+            roles.forEach(role -> user.getRoles().add(
+                    roleRepository.findByName(role.getName()).orElseThrow()
+            ));
+
+            userRepository.save(user);
         }
     }
 }
