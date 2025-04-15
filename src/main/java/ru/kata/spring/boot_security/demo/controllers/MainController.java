@@ -9,27 +9,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MainController {
 
     @GetMapping("/")
-    public String homePage() {
-        return "redirect:/login"; // Перенаправление на страницу входа
+    public String home() {
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
-    public String loginPage(
-            @RequestParam(required = false) Boolean error,
-            @RequestParam(required = false) Boolean logout,
-            Model model
-    ) {
-        if (Boolean.TRUE.equals(error)) {
-            model.addAttribute("error", "Неверные учетные данные");
+    public String loginPage(@RequestParam(required = false) Boolean error, Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid credentials");
         }
-        if (Boolean.TRUE.equals(logout)) {
-            model.addAttribute("message", "Вы успешно вышли из системы");
-        }
-        return "login"; // Возвращаем шаблон login.html
+        return "login";
     }
 
     @GetMapping("/admin")
     public String adminPage() {
-        return "admin"; // Возвращаем шаблон admin.html
+        return "admin";
+    }
+
+    @GetMapping("/user")
+    public String userPage() {
+        return "user";
     }
 }

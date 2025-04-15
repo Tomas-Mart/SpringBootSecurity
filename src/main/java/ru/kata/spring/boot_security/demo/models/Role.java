@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Getter @Setter
 @Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,15 +20,12 @@ public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
     private Long id;
 
     @Column(unique = true)
-    @Getter @Setter
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
     private Set<User> users = new HashSet<>();
 
     // Конструктор для создания роли с именем
@@ -57,5 +54,17 @@ public class Role implements GrantedAuthority {
     @Override
     public String toString() {
         return name.replace("ROLE_", "");
+    }
+
+    // Метод для добавления пользователя к роли
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getRoles().add(this);
+    }
+
+    // Метод для удаления пользователя из роли
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getRoles().remove(this);
     }
 }
