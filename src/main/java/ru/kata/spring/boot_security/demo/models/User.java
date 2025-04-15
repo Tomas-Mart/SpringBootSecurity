@@ -2,21 +2,19 @@ package ru.kata.spring.boot_security.demo.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
+@Getter
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -45,21 +43,30 @@ public class User implements UserDetails {
     @Size(min = 5, max = 100, message = "{user.email.size}")
     private String email;
 
-    @Column
-    @NotBlank(message = "{user.password.notblank}")
-    @Size(min = 5, message = "{user.password.size}")
-    @JsonIgnore
-    private String password;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty(message = "{user.roles.notempty}")
-    @JoinTable(
-            name = "users_roles",
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    // Реализация методов интерфейса UserDetails
+    @Column
+    @NotBlank(message = "{user.password.notblank}")
+    @Size(min = 5, message = "{user.password.size}")
+    private String password;
+
+    public User() {
+    }
+
+    public User(Long id, String firstName, String lastName, Integer age, String email, Set<Role> roles, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.roles = roles;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -88,56 +95,37 @@ public class User implements UserDetails {
         return true;
     }
 
-    // Дополнительные методы для работы с ролями
-
     public boolean hasRole(String roleName) {
-        return roles.stream()
+        return roles != null && roles.stream()
                 .anyMatch(role -> role.getName().equals(roleName));
     }
 
-    public void addRole(Role role) {
-        this.roles.add(role);
+    public boolean addRole(Role role) {
+        if (role == null) return false;
+        return roles.stream().noneMatch(r -> r.equals(role)) && roles.add(role);
     }
 
-    public void addRoles(Collection<Role> roles) {
-        this.roles.addAll(roles);
+    public boolean addRoles(Set<Role> roles) {
+        if (roles == null) return false;
+        return this.roles.addAll(roles);
     }
 
-    // Геттеры и сеттеры
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public Integer getAge() { return age; }
-    public void setAge(Integer age) { this.age = age; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
     @Override
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    @Override
-    public String getUsername() { return email; }
-
-    public Set<Role> getRoles() { return roles; }
-    public void setRoles(Set<Role> roles) { this.roles = roles; }
-
-    // Переопределение методов Object
+    public String getUsername() {
+        return email;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
     }
 
     @Override
@@ -153,9 +141,8 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
-                ", roles=" + roles.stream()
-                .map(Role::getName)
-                .collect(Collectors.toList()) +
+                ", roles=" + roles +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

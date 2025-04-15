@@ -1,33 +1,50 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dto.AuthStatusDTO;
+import ru.kata.spring.boot_security.demo.dto.MessageDTO;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class MainController {
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/login";
-    }
+    @GetMapping("/auth/check")
+    public ResponseEntity<AuthStatusDTO> checkAuthStatus(Authentication authentication) {
+        AuthStatusDTO response = new AuthStatusDTO();
 
-    @GetMapping("/login")
-    public String loginPage(@RequestParam(required = false) Boolean error, Model model) {
-        if (error != null) {
-            model.addAttribute("error", "Invalid credentials");
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+        response.setAuthenticated(isAuthenticated);
+
+        if (isAuthenticated) {
+            response.setEmail(authentication.getName());
+
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority ->
+                            grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+            response.setAdmin(isAdmin);
         }
-        return "login";
+
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin";
+    @PostMapping("/logout")
+    public ResponseEntity<MessageDTO> logout(HttpServletRequest request) {
+        try {
+            request.logout();
+            return ResponseEntity.ok(new MessageDTO("Вы успешно вышли из системы"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageDTO("Ошибка при выходе из системы: " + e.getMessage()));
+        }
     }
 
-    @GetMapping("/user")
-    public String userPage() {
-        return "user";
+    @GetMapping("/access-denied")
+    public ResponseEntity<MessageDTO> accessDenied() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new MessageDTO("Доступ запрещен"));
     }
 }

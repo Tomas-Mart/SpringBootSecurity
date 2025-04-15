@@ -1,11 +1,10 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import org.springframework.security.core.GrantedAuthority;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -14,8 +13,6 @@ import java.util.Set;
 @Entity
 @Getter @Setter
 @Table(name = "roles")
-@NoArgsConstructor
-@AllArgsConstructor
 public class Role implements GrantedAuthority {
 
     @Id
@@ -27,11 +24,6 @@ public class Role implements GrantedAuthority {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
-
-    // Конструктор для создания роли с именем
-    public Role(String name) {
-        this.name = name;
-    }
 
     @Override
     public String getAuthority() {
@@ -54,17 +46,5 @@ public class Role implements GrantedAuthority {
     @Override
     public String toString() {
         return name.replace("ROLE_", "");
-    }
-
-    // Метод для добавления пользователя к роли
-    public void addUser(User user) {
-        this.users.add(user);
-        user.getRoles().add(this);
-    }
-
-    // Метод для удаления пользователя из роли
-    public void removeUser(User user) {
-        this.users.remove(user);
-        user.getRoles().remove(this);
     }
 }

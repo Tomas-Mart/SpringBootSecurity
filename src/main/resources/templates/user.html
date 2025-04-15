@@ -3,117 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>User Information</title>
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/bootstrap-icons.css">
+    <title>Личный кабинет</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar-dark {
+            background-color: #000 !important;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+        }
         .sidebar {
-            width: 250px;
-            background-color: #f8f9fa;
+            background-color: #007bff;
+            min-height: 100vh;
+            width: 200px;
             padding: 20px;
+            color: white;
+            position: fixed;
+            top: 56px; /* Высота navbar */
+            bottom: 0;
+            overflow-y: auto;
         }
         .main-content {
-            flex-grow: 1;
+            margin-left: 200px;
             padding: 20px;
+            margin-top: 56px; /* Высота navbar */
         }
-        .navbar {
-            background-color: #343a40;
+        .sidebar .nav-link {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white !important;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        #loadingSpinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .user-role {
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #28a745;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
+<!-- Верхняя черная панель (navbar) -->
 <nav class="navbar navbar-dark">
     <div class="container-fluid">
         <div class="d-flex align-items-center">
-            <span class="text-white me-3" id="userInfo"></span>
+            <span class="text-white me-3">
+                <span id="userEmail">Загрузка...</span>
+                <span class="user-role ms-2" id="userRoleBadge">User</span>
+            </span>
         </div>
         <button id="logoutBtn" class="btn btn-outline-light">
-            <i class="fas fa-sign-out-alt"></i> Logout
+            <i class="fas fa-sign-out-alt"></i> Выйти
         </button>
     </div>
 </nav>
 
+<!-- Основной контейнер -->
 <div class="d-flex">
+    <!-- Голубая боковая панель -->
     <div class="sidebar">
         <ul class="nav flex-column">
-            <li class="nav-item" id="adminLink">
+            <li class="nav-item" id="adminLink" style="display: none;">
                 <a href="/admin" class="nav-link">
-                    <i class="fas fa-table me-2"></i>Admin
+                    <i class="fas fa-table me-2"></i>Админка
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/user" class="nav-link active">
-                    <i class="fas fa-user me-2"></i>User
+                <a href="#" class="nav-link active" id="profileLink">
+                    <i class="fas fa-user me-2"></i>Профиль
                 </a>
             </li>
         </ul>
     </div>
 
-    <div class="col-md-9 p-4">
-        <h3>User information-page</h3>
-        <h4 class="mt-4">About user</h4>
+    <!-- Основной контент -->
+    <div class="main-content">
+        <h3>Личная информация</h3>
 
-        <table class="table table-bordered mt-3">
-            <thead class="table-light">
-            <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th>Email</th>
-                <th>Role</th>
-            </tr>
-            </thead>
-            <tbody id="userData">
-            <!-- Данные будут загружены через JS -->
-            </tbody>
-        </table>
+        <div class="card table-container">
+            <div class="card-body">
+                <div class="text-center" id="loadingSpinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-hover" id="userTable" style="display: none;">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th>Возраст</th>
+                        <th>Email</th>
+                        <th>Роль</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userData">
+                    <!-- Данные будут загружены через JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="/static/js/bootstrap.bundle.min.js"></script>
-<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         loadUserData();
-        setupEventListeners();
+        $('#logoutBtn').click(logoutUser);
+        $('#profileLink').click(function(e) {
+            e.preventDefault();
+            loadUserData();
+        });
     });
 
-    function loadUserData() {
-        fetch('/api/user')
-            .then(response => response.json())
-            .then(user => {
-                // Заполняем информацию о пользователе
-                const roles = user.roles.join(' ').replace(/ROLE_/g, '');
-                $('#userInfo').text(`${user.email} with roles: ${roles}`);
+    async function loadUserData() {
+        try {
+            showLoading(true);
 
-                // Показываем/скрываем ссылку на админку
-                if (user.roles.includes('ROLE_ADMIN')) {
-                    $('#adminLink').show();
-                } else {
-                    $('#adminLink').hide();
-                }
-
-                // Заполняем таблицу данными
-                const row = `
-                    <tr>
-                        <td>${user.id}</td>
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
-                        <td>${user.age}</td>
-                        <td>${user.email}</td>
-                        <td>${roles}</td>
-                    </tr>
-                `;
-                $('#userData').html(row);
+            const authResponse = await fetch('/api/auth/check', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                credentials: 'include'
             });
+
+            if (!authResponse.ok) throw new Error('Not authenticated');
+
+            const authData = await authResponse.json();
+            if (!authData.authenticated) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const userResponse = await fetch('/api/user/profile', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            if (!userResponse.ok) throw new Error('Failed to load user data');
+
+            const user = await userResponse.json();
+            displayUserInfo(user);
+
+        } catch (error) {
+            console.error('Error:', error);
+            $('#userEmail').text('Ошибка загрузки данных');
+            $('#loadingSpinner').html(
+                '<div class="alert alert-danger">Не удалось загрузить данные</div>'
+            );
+        } finally {
+            showLoading(false);
+        }
     }
 
-    function setupEventListeners() {
-        $('#logoutBtn').click(function() {
-            fetch('/logout', { method: 'POST' })
-                .then(() => window.location.href = '/login');
-        });
+    function displayUserInfo(user) {
+        // Определяем основную роль пользователя
+        const mainRole = user.roles && user.roles.length > 0
+            ? user.roles[0].replace('ROLE_', '')
+            : 'User';
+
+        // Обновляем информацию в шапке
+        $('#userEmail').text(user.email || '');
+        $('#userRoleBadge').text(mainRole);
+
+        // Если пользователь админ, показываем ссылку на админку
+        if (user.roles && user.roles.includes('ROLE_ADMIN')) {
+            $('#adminLink').show();
+            $('#userRoleBadge').text('Admin')
+                .removeClass('bg-success')
+                .addClass('bg-danger');
+        }
+
+        // Заполняем таблицу
+        $('#userData').html(`
+            <tr>
+                <td>${user.id || ''}</td>
+                <td>${user.firstName || ''}</td>
+                <td>${user.lastName || ''}</td>
+                <td>${user.age || ''}</td>
+                <td>${user.email || ''}</td>
+                <td><span class="user-role">${mainRole}</span></td>
+            </tr>
+        `);
+
+        $('#userTable').show();
+    }
+
+    function showLoading(show) {
+        if (show) {
+            $('#loadingSpinner').show();
+            $('#userTable').hide();
+        } else {
+            $('#loadingSpinner').hide();
+        }
+    }
+
+    async function logoutUser() {
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                window.location.href = '/login?logout=true';
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+        }
     }
 </script>
 </body>
