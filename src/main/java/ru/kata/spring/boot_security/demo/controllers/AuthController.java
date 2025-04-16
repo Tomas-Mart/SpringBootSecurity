@@ -1,9 +1,5 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dto.AuthStatusDTO;
+import ru.kata.spring.boot_security.demo.dto.LoginRequestDTO;
 
 @RestController
 @RequestMapping("/api")
@@ -27,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         try {
             if (loginRequest.getEmail() == null || loginRequest.getEmail().isEmpty() ||
                     loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
@@ -69,20 +67,5 @@ public class AuthController {
     public ResponseEntity<?> logout() {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class AuthStatusDTO {
-        private boolean authenticated;
-        private String email;
-        private boolean admin;
-    }
-
-    @Getter
-    @Setter
-    public static class LoginRequest {
-        private String email;
-        private String password;
     }
 }
