@@ -7,82 +7,127 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .navbar-dark {
-      background-color: #000 !important;
-      padding: 10px 20px;
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
     }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-color);
+    }
+
+    .navbar-dark {
+      background-color: var(--dark-color) !important;
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1030;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
     .sidebar {
-      background-color: #007bff;
+      background-color: var(--primary-color);
       min-height: 100vh;
-      width: 200px;
+      width: 220px;
       padding: 20px;
       color: white;
+      position: fixed;
+      top: 56px;
+      bottom: 0;
+      overflow-y: auto;
+      transition: all 0.3s;
     }
-    .sidebar .nav-link {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: white !important;
-      padding: 10px 15px;
-      margin: 5px 0;
-      border-radius: 5px;
-    }
-    .sidebar .nav-link:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-    .sidebar .nav-link.active {
-      background-color: rgba(255, 255, 255, 0.4);
-    }
+
     .main-content {
-      padding: 20px;
-      flex-grow: 1;
+      margin-left: 220px;
+      padding: 30px;
+      margin-top: 56px;
+      background-color: white;
+      min-height: calc(100vh - 56px);
+      border-radius: 10px 0 0 0;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
     }
+
+    .sidebar .nav-link {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white !important;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border-radius: 8px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: translateX(5px);
+    }
+
+    .sidebar .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.3);
+      font-weight: 500;
+    }
+
     .table {
       margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
-    .admin-panel {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding-top: 20px;
+
+    .table th {
+      background-color: var(--light-color);
+      color: var(--secondary-color);
+      font-weight: 500;
     }
+
     .form-container {
-      width: 400px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
+
     .form-group {
-      width: 300px;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-bottom: 20px;
     }
+
     .form-group label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-      text-align: center;
-      width: 100%;
+      font-weight: 500;
+      color: var(--secondary-color);
     }
+
     .button-container {
       display: flex;
       justify-content: center;
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
+      gap: 15px;
+      margin-top: 25px;
     }
-    .button-container button {
-      margin: 0 10px;
-      padding: 10px 20px;
-    }
+
     .editing {
       background-color: #fdea98;
     }
+
     .bold {
       font-weight: bold;
     }
+
     .role-items-container {
       gap: 0;
       padding: 0;
@@ -91,89 +136,145 @@
       margin-top: 8px;
       border: 1px solid #ced4da;
       border-radius: 0.25rem;
-      background: #f8f9fa;
-      width: 300px;
+      background: var(--light-color);
+      width: 100%;
     }
+
     .role-item {
       padding: 8px 12px;
       border-radius: 0.25rem;
       transition: all 0.2s ease;
       cursor: pointer;
     }
+
     .role-item:hover {
       background-color: #e9ecef;
     }
+
     .role-item.selected {
       color: #fff;
       font-weight: 500;
-      background-color: #17a1b7;
+      background-color: var(--primary-color);
     }
+
     .d-none {
       display: none;
     }
+
     .error-message {
-      color: red;
+      color: var(--danger-color);
       font-size: 0.9em;
       margin-top: 5px;
       display: none;
     }
+
     .modal-dialog-centered {
       display: flex;
       align-items: center;
       min-height: calc(100% - 1rem);
     }
+
     .modal-title {
-      font-weight: bold;
+      font-weight: 500;
     }
-    .modal-footer {
-      justify-content: flex-end;
-      padding: 1rem;
-    }
+
     .modal-content {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     }
+
     .bg-light {
-      background-color: #e8ebee !important;
+      background-color: var(--light-color) !important;
       cursor: not-allowed;
     }
-    .form-control {
-      max-width: 300px;
-      width: 100%;
-      text-align: left;
-      margin: 0 auto;
-    }
+
     .delete-modal .modal-body {
       padding: 20px;
     }
+
     .delete-modal .row {
       margin-bottom: 10px;
       align-items: center;
     }
+
     .delete-modal .col-3 {
-      font-weight: bold;
-      text-align: center;
+      font-weight: 500;
       padding: 8px;
-      background-color: #f8f9fa;
+      background-color: var(--light-color);
       border-radius: 4px;
-      text-align: center;
     }
+
     .delete-modal .col-9 {
       padding: 8px;
-      background-color: #f8f9fa;
+      background-color: var(--light-color);
       border-radius: 4px;
-      text-align: center;
     }
+
     #rolesError {
-      color: #dc3545;
+      color: var(--danger-color);
       font-size: 0.875em;
       margin-top: 5px;
       display: none;
     }
+
     .btn-edit {
       color: #fdfdfd;
-      background-color: #17a1b7;
+      background-color: var(--primary-color);
+    }
+
+    .user-role {
+      font-weight: bold;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      display: inline-block;
+    }
+
+    .role-user {
+      background-color: var(--success-color);
+    }
+
+    .role-admin {
+      background-color: var(--danger-color);
+    }
+
+    .logout-btn {
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .nav-tabs .nav-link {
+      color: var(--secondary-color);
+      font-weight: 500;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 70px;
+        overflow: hidden;
+      }
+
+      .sidebar .nav-link span {
+        display: none;
+      }
+
+      .sidebar .nav-link i {
+        margin-right: 0;
+        font-size: 1.2rem;
+      }
+
+      .main-content {
+        margin-left: 70px;
+      }
     }
   </style>
 </head>
@@ -181,10 +282,13 @@
 <nav class="navbar navbar-dark">
   <div class="container-fluid">
     <div class="d-flex align-items-center">
-      <span class="text-white me-3" id="currentUserInfo"></span>
+      <span class="text-white me-3" id="currentUserInfo">
+        <i class="fas fa-user-circle me-2"></i>
+        <span>Загрузка...</span>
+      </span>
     </div>
-    <button id="logoutBtn" class="btn btn-outline-light">
-      <i class="fas fa-sign-out-alt"></i> Выйти
+    <button id="logoutBtn" class="btn btn-outline-light logout-btn">
+      <i class="fas fa-sign-out-alt me-1"></i> Выйти
     </button>
   </div>
 </nav>
@@ -194,34 +298,40 @@
     <ul class="nav flex-column">
       <li class="nav-item" id="adminLink">
         <a href="/admin" class="nav-link active">
-          <i class="fas fa-table me-2"></i>Админка
+          <i class="fas fa-table me-2"></i>
+          <span>Админка</span>
         </a>
       </li>
       <li class="nav-item">
         <a href="/user/profile" class="nav-link">
-          <i class="fas fa-user me-2"></i>Пользователь
+          <i class="fas fa-user me-2"></i>
+          <span>Пользователь</span>
         </a>
       </li>
     </ul>
   </div>
 
   <div class="main-content">
-    <h3 class="mb-4">Админ панель</h3>
+    <h3 class="mb-4"><i class="fas fa-users-cog me-2"></i>Админ панель</h3>
 
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="tab" href="#users">Пользователи</a>
+        <a class="nav-link active" data-bs-toggle="tab" href="#users">
+          <i class="fas fa-users me-1"></i> Пользователи
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#new-user">Новый пользователь</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#new-user">
+          <i class="fas fa-user-plus me-1"></i> Новый пользователь
+        </a>
       </li>
     </ul>
 
-    <div class="tab-content">
+    <div class="tab-content mt-4">
       <div class="tab-pane fade show active" id="users">
-        <h4 class="mb-4">Все пользователи</h4>
+        <h4 class="mb-4"><i class="fas fa-list me-2"></i>Все пользователи</h4>
         <table class="table table-bordered table-hover">
-          <thead class="table-light">
+          <thead>
           <tr>
             <th>ID</th>
             <th>Имя</th>
@@ -239,56 +349,59 @@
         </table>
       </div>
       <div class="tab-pane fade" id="new-user">
-        <h4 class="mb-4">Добавить нового пользователя</h4>
-        <div class="admin-panel">
-          <div class="form-container">
-            <form id="userForm">
-              <div class="form-group">
-                <label class="bold">Имя</label>
-                <input type="text" class="form-control" id="firstName" required>
-                <div class="error-message" id="firstNameError"></div>
-              </div>
+        <h4 class="mb-4"><i class="fas fa-plus-circle me-2"></i>Добавить нового пользователя</h4>
+        <div class="form-container">
+          <form id="userForm">
+            <div class="form-group">
+              <label class="form-label">Имя</label>
+              <input type="text" class="form-control" id="firstName" required>
+              <div class="error-message" id="firstNameError"></div>
+            </div>
 
-              <div class="form-group">
-                <label class="bold">Фамилия</label>
-                <input type="text" class="form-control" id="lastName" required>
-                <div class="error-message" id="lastNameError"></div>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Фамилия</label>
+              <input type="text" class="form-control" id="lastName" required>
+              <div class="error-message" id="lastNameError"></div>
+            </div>
 
-              <div class="form-group">
-                <label class="bold">Возраст</label>
-                <input type="number" class="form-control" id="age" required min="1">
-                <div class="error-message" id="ageError"></div>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Возраст</label>
+              <input type="number" class="form-control" id="age" required min="1">
+              <div class="error-message" id="ageError"></div>
+            </div>
 
-              <div class="form-group">
-                <label class="bold">Email</label>
-                <input type="email" class="form-control" id="email" required>
-                <div class="error-message" id="emailError"></div>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" required>
+              <div class="error-message" id="emailError"></div>
+            </div>
 
-              <div class="form-group">
-                <label class="bold">Пароль</label>
-                <input type="password" class="form-control" id="password" required>
-                <div class="error-message" id="passwordError"></div>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Пароль</label>
+              <input type="password" class="form-control" id="password" required>
+              <div class="error-message" id="passwordError"></div>
+            </div>
 
-              <div class="form-group">
-                <label class="bold">Роль</label>
-                <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
-                  <!-- Роли будут загружены через JS -->
-                </select>
-                <div class="role-items-container" id="rolesContainer">
-                  <!-- Роли будут загружены через JS -->
-                </div>
-                <div class="error-message" id="rolesError" style="display: none;">Пожалуйста, выберите хотя бы одну роль</div>
+            <div class="form-group">
+              <label class="form-label">Роль</label>
+              <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
+                <!-- Роли будут загружены через JS -->
+              </select>
+              <div class="role-items-container" id="rolesContainer">
+                <!-- Роли будут загружены через JS -->
               </div>
+              <div class="error-message" id="rolesError">Пожалуйста, выберите хотя бы одну роль</div>
+            </div>
 
-              <div class="button-container">
-                <button type="submit" class="btn btn-success" onclick="validateRoles()">Добавить нового пользователя</button>
-              </div>
-            </form>
-          </div>
+            <div class="button-container">
+              <button type="submit" class="btn btn-primary" onclick="validateRoles()">
+                <i class="fas fa-save me-1"></i> Сохранить
+              </button>
+              <button type="reset" class="btn btn-outline-secondary">
+                <i class="fas fa-undo me-1"></i> Сбросить
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -299,39 +412,40 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Редактировать пользователя</h5>
+            <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Редактировать пользователя</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form id="editUserForm">
             <input type="hidden" id="editUserId">
             <div class="modal-body">
               <div class="form-group">
-                <label>ID</label>
+                <label class="form-label">ID</label>
                 <input type="text" class="form-control bg-light" id="editIdDisplay" readonly>
               </div>
               <div class="form-group">
-                <label>Имя</label>
+                <label class="form-label">Имя</label>
                 <input type="text" class="form-control" id="editFirstName" required>
               </div>
               <div class="form-group">
-                <label>Фамилия</label>
+                <label class="form-label">Фамилия</label>
                 <input type="text" class="form-control" id="editLastName" required>
               </div>
               <div class="form-group">
-                <label>Возраст</label>
+                <label class="form-label">Возраст</label>
                 <input type="number" class="form-control" id="editAge" required min="1">
               </div>
               <div class="form-group">
-                <label>Email</label>
+                <label class="form-label">Email</label>
                 <input type="email" class="form-control" id="editEmail" required>
               </div>
               <div class="form-group">
-                <label>Пароль</label>
+                <label class="form-label">Пароль</label>
                 <input type="password" class="form-control" id="editPassword">
+                <small class="text-muted">Оставьте пустым, если не хотите менять пароль</small>
               </div>
 
               <div class="form-group">
-                <label>Роль</label>
+                <label class="form-label">Роль</label>
                 <select class="d-none" multiple="multiple" name="roles" required id="editRolesSelect">
                   <!-- Роли будут загружены через JS -->
                 </select>
@@ -341,8 +455,12 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-              <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="fas fa-times me-1"></i> Закрыть
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-1"></i> Сохранить
+              </button>
             </div>
           </form>
         </div>
@@ -355,38 +473,41 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Удалить пользователя</h5>
+            <h5 class="modal-title"><i class="fas fa-user-times me-2"></i>Удалить пользователя</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="mb-3 text-center">
-              <label for="deleteUserId" class="col-form-label fw-bold">ID:</label>
-              <input type="text" class="form-control bg-light text-start" id="deleteUserId" readonly>
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i>Вы уверены, что хотите удалить этого пользователя?
             </div>
-            <div class="mb-3 text-center">
-              <label for="deleteUserFirstName" class="col-form-label fw-bold">Имя:</label>
-              <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName" readonly>
+            <div class="mb-3">
+              <label class="form-label fw-bold">ID:</label>
+              <input type="text" class="form-control bg-light" id="deleteUserId" readonly>
             </div>
-            <div class="mb-3 text-center">
-              <label for="deleteUserLastName" class="col-form-label fw-bold">Фамилия:</label>
-              <input type="text" class="form-control bg-light text-start" id="deleteUserLastName" readonly>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Имя:</label>
+              <input type="text" class="form-control bg-light" id="deleteUserFirstName" readonly>
             </div>
-            <div class="mb-3 text-center">
-              <label for="deleteUserAge" class="col-form-label fw-bold">Возраст:</label>
-              <input type="text" class="form-control bg-light text-start" id="deleteUserAge" readonly>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Фамилия:</label>
+              <input type="text" class="form-control bg-light" id="deleteUserLastName" readonly>
             </div>
-            <div class="mb-3 text-center">
-              <label for="deleteUserEmail" class="col-form-label fw-bold">Email:</label>
-              <input type="text" class="form-control bg-light text-start" id="deleteUserEmail" readonly>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Email:</label>
+              <input type="text" class="form-control bg-light" id="deleteUserEmail" readonly>
             </div>
-            <div class="mb-3 text-center">
-              <label for="deleteUserRole" class="col-form-label fw-bold">Роль:</label>
-              <input type="text" class="form-control bg-light text-start" id="deleteUserRole" readonly>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Роль:</label>
+              <input type="text" class="form-control bg-light" id="deleteUserRole" readonly>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Удалить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times me-1"></i> Отмена
+            </button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+              <i class="fas fa-trash-alt me-1"></i> Удалить
+            </button>
           </div>
         </div>
       </div>
@@ -487,8 +608,8 @@
 
   function updateCurrentUserInfo() {
     const roles = currentUser.roles.map(role => role.replace('ROLE_', '')).join(', ');
-    $('#currentUserInfo').text(
-            `${currentUser.email} с ролями: ${roles}`
+    $('#currentUserInfo span').text(
+            `${currentUser.email} (${roles})`
     );
   }
 
@@ -574,7 +695,10 @@
     tableBody.empty();
 
     users.forEach(user => {
-      const roles = user.roles.map(role => role.replace('ROLE_', '')).join(' ');
+      const roles = user.roles.map(role => {
+        const roleName = role.replace('ROLE_', '');
+        return `<span class="user-role ${role === 'ROLE_ADMIN' ? 'role-admin' : 'role-user'}">${roleName}</span>`;
+      }).join(' ');
 
       const row = $('<tr></tr>')
               .append(`<td>${user.id}</td>`)
@@ -585,8 +709,14 @@
               .append(`<td>${roles}</td>`)
               .append(`
                     <td>
-                        <button class="btn btn-sm btn-edit edit-btn" data-id="${user.id}" data-firstname="${user.firstName}" data-lastname="${user.lastName}" data-age="${user.age}" data-email="${user.email}" data-roles="${roles}">
-                            Редактировать
+                        <button class="btn btn-sm btn-primary edit-btn"
+                                data-id="${user.id}"
+                                data-firstname="${user.firstName}"
+                                data-lastname="${user.lastName}"
+                                data-age="${user.age}"
+                                data-email="${user.email}"
+                                data-roles="${user.roles.join(',')}">
+                            <i class="fas fa-edit me-1"></i> Редактировать
                         </button>
                     </td>
                 `)
@@ -598,8 +728,8 @@
                                 data-lastname="${user.lastName}"
                                 data-age="${user.age}"
                                 data-email="${user.email}"
-                                data-roles="${roles}">
-                            Удалить
+                                data-roles="${user.roles.join(',')}">
+                            <i class="fas fa-trash-alt me-1"></i> Удалить
                         </button>
                     </td>
                 `);
@@ -663,48 +793,32 @@
             });
   }
 
-  function loadUserForEdit(userId) {
-    fetch(`/api/admin/users/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      },
-      credentials: 'include'
-    })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Failed to load user data');
-              }
-              return response.json();
-            })
-            .then(user => {
-              $('#editUserId').val(user.id);
-              $('#editIdDisplay').val(user.id);
-              $('#editFirstName').val(user.firstName);
-              $('#editLastName').val(user.lastName);
-              $('#editAge').val(user.age);
-              $('#editEmail').val(user.email);
-              $('#editPassword').val('');
+  function showEditModal(userId, firstName, lastName, age, email, roles) {
+    $('#editUserId').val(userId);
+    $('#editIdDisplay').val(userId);
+    $('#editFirstName').val(firstName);
+    $('#editLastName').val(lastName);
+    $('#editAge').val(age);
+    $('#editEmail').val(email);
+    $('#editPassword').val('');
 
-              // Очистка предыдущих выборов
-              $('#editRolesContainer .role-item').removeClass('selected');
+    // Очистка предыдущих выборов
+    $('#editRolesContainer .role-item').removeClass('selected');
 
-              // Выбор ролей пользователя
-              user.roles.forEach(role => {
-                const roleItem = $('#editRolesContainer .role-item[data-roleid="' + role.id + '"]');
-                if (roleItem) {
-                  roleItem.addClass('selected');
-                }
-              });
+    // Выбор ролей пользователя
+    roles.split(',').forEach(role => {
+      const roleId = allRoles.find(r => r.name === role)?.id;
+      if (roleId) {
+        const roleItem = $('#editRolesContainer .role-item[data-roleid="' + roleId + '"]');
+        if (roleItem) {
+          roleItem.addClass('selected');
+        }
+      }
+    });
 
-              // Открытие модального окна
-              const modal = new bootstrap.Modal($('#editUserModal')[0]);
-              modal.show();
-            })
-            .catch(error => {
-              console.error('Error loading user for edit:', error);
-              alert('Ошибка при загрузке данных пользователя');
-            });
+    // Открытие модального окна
+    const modal = new bootstrap.Modal($('#editUserModal')[0]);
+    modal.show();
   }
 
   function updateUser() {
@@ -762,7 +876,9 @@
     $('#deleteUserLastName').val(lastName);
     $('#deleteUserAge').val(age);
     $('#deleteUserEmail').val(email);
-    $('#deleteUserRole').val(roles);
+
+    const roleNames = roles.split(',').map(role => role.replace('ROLE_', '')).join(', ');
+    $('#deleteUserRole').val(roleNames);
 
     const modal = new bootstrap.Modal($('#deleteUserModal')[0]);
     modal.show();
@@ -795,13 +911,13 @@
 
   function displayValidationErrors(errors, isEditForm = false) {
     // Очистка предыдущих ошибок
-    $('.error-message').text('');
+    $('.error-message').text('').hide();
 
     // Отображение новых ошибок
     for (const field in errors) {
       const errorElement = $(isEditForm ? `#edit${field.charAt(0).toUpperCase() + field.slice(1)}Error` : `#${field}Error`);
       if (errorElement) {
-        errorElement.text(errors[field]);
+        errorElement.text(errors[field]).show();
       }
     }
   }
