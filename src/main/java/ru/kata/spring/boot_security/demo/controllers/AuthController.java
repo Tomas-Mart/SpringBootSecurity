@@ -25,17 +25,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         try {
-            if (loginRequest.getEmail() == null || loginRequest.getEmail().isEmpty() ||
-                    loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
+            if (loginRequestDTO.getEmail() == null || loginRequestDTO.getEmail().isEmpty() ||
+                    loginRequestDTO.getPassword() == null || loginRequestDTO.getPassword().isEmpty()) {
                 return ResponseEntity.badRequest().body("Email and password are required");
             }
 
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(),
-                            loginRequest.getPassword()
+                            loginRequestDTO.getEmail(),
+                            loginRequestDTO.getPassword()
                     )
             );
 
@@ -43,7 +43,7 @@ public class AuthController {
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
-            logger.warn("Authentication failed for email: {}", loginRequest.getEmail());
+            logger.warn("Authentication failed for email: {}", loginRequestDTO.getEmail());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         } catch (Exception e) {
             logger.error("Authentication error", e);
