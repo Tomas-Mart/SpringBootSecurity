@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -63,10 +63,15 @@
         .user-role {
             font-weight: bold;
             color: #ffffff;
-            background-color: #28a745;
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 0.9em;
+        }
+        .role-user {
+            background-color: #28a745;
+        }
+        .role-admin {
+            background-color: #dc3545;
         }
     </style>
 </head>
@@ -162,12 +167,6 @@
 
             if (!authResponse.ok) throw new Error('Not authenticated');
 
-            const authData = await authResponse.json();
-            if (!authData.authenticated) {
-                window.location.href = '/login';
-                return;
-            }
-
             const userResponse = await fetch('/api/user/profile', {
                 method: 'GET',
                 headers: {
@@ -193,24 +192,21 @@
     }
 
     function displayUserInfo(user) {
-        // Определяем основную роль пользователя
         const mainRole = user.roles && user.roles.length > 0
             ? user.roles[0].replace('ROLE_', '')
             : 'User';
 
-        // Обновляем информацию в шапке
         $('#userEmail').text(user.email || '');
-        $('#userRoleBadge').text(mainRole);
+        const $roleBadge = $('#userRoleBadge');
+        $roleBadge.text(mainRole);
 
-        // Если пользователь админ, показываем ссылку на админку
         if (user.roles && user.roles.includes('ROLE_ADMIN')) {
             $('#adminLink').show();
-            $('#userRoleBadge').text('Admin')
-                .removeClass('bg-success')
-                .addClass('bg-danger');
+            $roleBadge.removeClass('role-user').addClass('role-admin');
+        } else {
+            $roleBadge.removeClass('role-admin').addClass('role-user');
         }
 
-        // Заполняем таблицу
         $('#userData').html(`
             <tr>
                 <td>${user.id || ''}</td>
@@ -218,7 +214,7 @@
                 <td>${user.lastName || ''}</td>
                 <td>${user.age || ''}</td>
                 <td>${user.email || ''}</td>
-                <td><span class="user-role">${mainRole}</span></td>
+                <td><span class="user-role ${user.roles && user.roles.includes('ROLE_ADMIN') ? 'role-admin' : 'role-user'}">${mainRole}</span></td>
             </tr>
         `);
 
@@ -236,16 +232,19 @@
 
     async function logoutUser() {
         try {
-            const response = await fetch('/logout', {
+            const response = await fetch('/api/logout', {
                 method: 'POST',
                 credentials: 'include'
             });
 
             if (response.ok) {
+                // Явное удаление куков сессии
+                document.cookie = 'JSESSIONID=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
                 window.location.href = '/login?logout=true';
             }
         } catch (error) {
             console.error('Ошибка:', error);
+            window.location.href = '/login?logout=true';
         }
     }
 </script>

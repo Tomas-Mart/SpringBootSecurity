@@ -18,12 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<UserProfileDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        UserProfileDTO userProfile = userService.getUserProfile(userDetails.getUsername());
-        return ResponseEntity.ok(userProfile);
-    }
-
     @GetMapping("/profile")
     public ResponseEntity<UserProfileDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
         UserProfileDTO userProfile = userService.getUserProfile(userDetails.getUsername());
