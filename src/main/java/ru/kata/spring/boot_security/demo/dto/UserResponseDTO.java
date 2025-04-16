@@ -10,12 +10,11 @@ public record UserResponseDTO(
         String lastName,
         Integer age,
         String email,
-        String password, // может быть null при возврате данных
+        String password,
         Set<String> roles,
-        List<UserResponseDTO> users, // для adminPanel
-        List<String> allRoles // для adminPanel
+        List<UserResponseDTO> users,
+        List<String> allRoles
 ) {
-    // Конструктор для обычного ответа с пользователем
     public UserResponseDTO(Long id, String firstName, String lastName,
                            Integer age, String email, String password,
                            Set<String> roles) {

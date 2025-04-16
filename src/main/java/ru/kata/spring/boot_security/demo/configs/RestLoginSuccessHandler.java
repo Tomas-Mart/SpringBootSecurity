@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Component
-public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class RestLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -19,12 +19,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
-        if (roles.contains("ROLE_ADMIN")) {
-            response.sendRedirect("/admin");
-        } else if (roles.contains("ROLE_USER")) {
-            response.sendRedirect("/user");
-        } else {
-            response.sendRedirect("/");
-        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
+        response.getWriter().write(
+                String.format("{\"status\":\"success\", \"roles\":[\"%s\"], \"username\":\"%s\"}",
+                        String.join("\",\"", roles),
+                        authentication.getName())
+        );
     }
 }

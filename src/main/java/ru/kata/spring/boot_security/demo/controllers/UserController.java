@@ -1,34 +1,25 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dto.UserProfileDTO;
+import ru.kata.spring.boot_security.demo.dto.*;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDTO> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        UserProfileDTO userProfile = userService.getUserProfile(userDetails.getUsername());
-        return ResponseEntity.ok(userProfile);
+    public UserResponseDTO getProfile(Authentication authentication) {
+        return userService.findByEmail(authentication.getName());
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<UserProfileDTO> updateUserProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody @Valid UserProfileDTO userProfileDTO) {
-        UserProfileDTO updatedProfile = userService.updateUserProfile(userDetails.getUsername(), userProfileDTO);
-        return ResponseEntity.ok(updatedProfile);
+    public UserProfileDTO updateProfile(@RequestBody UserProfileDTO dto, Authentication authentication) {
+        return userService.updateUserProfile(authentication.getName(), dto);
     }
 }

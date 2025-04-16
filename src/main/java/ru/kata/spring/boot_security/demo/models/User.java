@@ -43,6 +43,11 @@ public class User implements UserDetails {
     @Size(min = 5, max = 100, message = "{user.email.size}")
     private String email;
 
+    @Column
+    @NotBlank(message = "{user.password.notblank}")
+    @Size(min = 5, message = "{user.password.size}")
+    private String password;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty(message = "{user.roles.notempty}")
     @JoinTable(name = "users_roles",
@@ -50,22 +55,17 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @Column
-    @NotBlank(message = "{user.password.notblank}")
-    @Size(min = 5, message = "{user.password.size}")
-    private String password;
-
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, Integer age, String email, Set<Role> roles, String password) {
+    public User(Long id, String firstName, String lastName, Integer age, String email, String password, Set<Role> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
-        this.roles = roles;
         this.password = password;
+        this.roles = roles;
     }
 
     @Override

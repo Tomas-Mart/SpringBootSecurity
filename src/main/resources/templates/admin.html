@@ -35,28 +35,6 @@
       padding: 20px;
       flex-grow: 1;
     }
-    .table thead th {
-      background-color: #f8f9fa;
-      border-bottom: 2px solid #dee2e6;
-    }
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #dee2e6;
-      margin-bottom: 20px;
-    }
-    .nav-tabs {
-      margin-bottom: 20px;
-    }
-    .tab-content {
-      background-color: white;
-      padding: 20px;
-      border: 1px solid #dee2e6;
-      border-top: none;
-      border-radius: 0 0 5px 5px;
-    }
     .table {
       margin-top: 20px;
     }
@@ -112,7 +90,7 @@
       flex-direction: column;
       margin-top: 8px;
       border: 1px solid #ced4da;
-      border-radius: 0.375rem;
+      border-radius: 0.25rem;
       background: #f8f9fa;
       width: 300px;
     }
@@ -128,7 +106,7 @@
     .role-item.selected {
       color: #fff;
       font-weight: 500;
-      background-color: #007bff;
+      background-color: #17a1b7;
     }
     .d-none {
       display: none;
@@ -137,9 +115,7 @@
       color: red;
       font-size: 0.9em;
       margin-top: 5px;
-    }
-    .has-error {
-      border-color: red;
+      display: none;
     }
     .modal-dialog-centered {
       display: flex;
@@ -177,6 +153,10 @@
     }
     .delete-modal .col-3 {
       font-weight: bold;
+      text-align: center;
+      padding: 8px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
       text-align: center;
     }
     .delete-modal .col-9 {
@@ -258,7 +238,6 @@
           </tbody>
         </table>
       </div>
-
       <div class="tab-pane fade" id="new-user">
         <h4 class="mb-4">Добавить нового пользователя</h4>
         <div class="admin-panel">
@@ -278,7 +257,7 @@
 
               <div class="form-group">
                 <label class="bold">Возраст</label>
-                <input type="number" class="form-control" id="age" required>
+                <input type="number" class="form-control" id="age" required min="1">
                 <div class="error-message" id="ageError"></div>
               </div>
 
@@ -299,7 +278,6 @@
                 <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
                   <!-- Роли будут загружены через JS -->
                 </select>
-
                 <div class="role-items-container" id="rolesContainer">
                   <!-- Роли будут загружены через JS -->
                 </div>
@@ -316,7 +294,8 @@
     </div>
 
     <!-- Модальное окно редактирования -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel"
+         aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -457,7 +436,13 @@
     // Делегированные обработчики для кнопок редактирования и удаления
     $('#usersTable').on('click', '.edit-btn', function() {
       const userId = $(this).data('id');
-      loadUserForEdit(userId);
+      const firstName = $(this).data('firstname');
+      const lastName = $(this).data('lastname');
+      const age = $(this).data('age');
+      const email = $(this).data('email');
+      const roles = $(this).data('roles');
+
+      showEditModal(userId, firstName, lastName, age, email, roles);
     });
 
     $('#usersTable').on('click', '.delete-btn', function() {
@@ -565,8 +550,8 @@
 
       const option = $('<option></option>')
               .val(role.id)
-              .text(role.name.replace('ROLE_', ''));
-      rolesSelect.append(option);
+              .text(role.name.replace('ROLE_', ''))
+              .appendTo(rolesSelect);
 
       // Для формы редактирования
       const editRoleItem = roleItem.clone(true);
@@ -580,7 +565,7 @@
       editRolesContainer.append(editRoleItem);
 
       const editOption = option.clone(true);
-      editRolesSelect.append(editOption);
+      editOption.appendTo(editRolesSelect);
     });
   }
 
@@ -600,7 +585,7 @@
               .append(`<td>${roles}</td>`)
               .append(`
                     <td>
-                        <button class="btn btn-sm btn-edit edit-btn" data-id="${user.id}">
+                        <button class="btn btn-sm btn-edit edit-btn" data-id="${user.id}" data-firstname="${user.firstName}" data-lastname="${user.lastName}" data-age="${user.age}" data-email="${user.email}" data-roles="${roles}">
                             Редактировать
                         </button>
                     </td>
@@ -624,6 +609,11 @@
   }
 
   function createUser() {
+    const firstName = $('#firstName').val();
+    const lastName = $('#lastName').val();
+    const age = $('#age').val();
+    const email = $('#email').val();
+    const password = $('#password').val();
     const selectedRoles = $('#rolesContainer .role-item.selected').map((index, item) => $(item).attr('data-roleid')).get();
 
     if (selectedRoles.length === 0) {
@@ -634,11 +624,11 @@
     }
 
     const userData = {
-      firstName: $('#firstName').val(),
-      lastName: $('#lastName').val(),
-      age: $('#age').val(),
-      email: $('#email').val(),
-      password: $('#password').val(),
+      firstName,
+      lastName,
+      age,
+      email,
+      password,
       roleIds: selectedRoles.map(Number)
     };
 

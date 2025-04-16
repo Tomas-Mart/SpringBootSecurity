@@ -1,8 +1,7 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,57 +9,38 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dto.AuthStatusDTO;
-import ru.kata.spring.boot_security.demo.dto.LoginRequestDTO;
+import ru.kata.spring.boot_security.demo.dto.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         try {
-            if (loginRequestDTO.getEmail() == null || loginRequestDTO.getEmail().isEmpty() ||
-                    loginRequestDTO.getPassword() == null || loginRequestDTO.getPassword().isEmpty()) {
-                return ResponseEntity.badRequest().body("Email and password are required");
-            }
-
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequestDTO.getEmail(),
-                            loginRequestDTO.getPassword()
-                    )
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return ResponseEntity.ok().build();
-
         } catch (BadCredentialsException e) {
-            logger.warn("Authentication failed for email: {}", loginRequestDTO.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        } catch (Exception e) {
-            logger.error("Authentication error", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Authentication error");
+            log.warn("Login failed for email: {}", request.email());
+            return ResponseEntity.badRequest().body("Invalid credentials");
         }
     }
 
-    @GetMapping("/auth/check")
-    public ResponseEntity<AuthStatusDTO> checkAuthStatus(Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
-
-            String email = authentication.getName();
-            return ResponseEntity.ok(new AuthStatusDTO(true, email, isAdmin));
+    @GetMapping("/status")
+    public AuthStatusDTO checkAuthStatus(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return new AuthStatusDTO(false, null, false);
         }
-        return ResponseEntity.ok(new AuthStatusDTO(false, null, false));
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        return new AuthStatusDTO(true, authentication.getName(), isAdmin);
     }
 
     @PostMapping("/logout")
