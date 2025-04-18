@@ -234,21 +234,18 @@
 <nav class="navbar navbar-dark">
     <div class="container-fluid">
         <div class="d-flex align-items-center">
-            <span class="text-white me-3"
-                  th:text="${currentUser.email} + ' with roles: ' + ${#strings.arrayJoin(currentUser.roles.![name.replace('ROLE_','')], ' ')}"></span>
+            <span class="text-white me-3" id="currentUserInfo"></span>
         </div>
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" class="btn btn-outline-light">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
+        <button id="logoutBtn" class="btn btn-outline-light">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
     </div>
 </nav>
 
 <div class="d-flex">
     <div class="sidebar">
         <ul class="nav flex-column">
-            <li class="nav-item" th:if="${#lists.contains(currentUser.roles.![name], 'ROLE_ADMIN')}">
+            <li class="nav-item">
                 <a href="/admin" class="nav-link active">
                     <i class="fas fa-table me-2"></i>Admin
                 </a>
@@ -266,15 +263,15 @@
 
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" href="#users">Users table</a>
+                <a class="nav-link active" href="#" data-tab="users">Users table</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#new-user">New User</a>
+                <a class="nav-link" href="#" data-tab="new-user">New User</a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane fade show active" id="users">
+            <div class="tab-pane active" id="users-tab">
                 <h4 class="mb-4">All users</h4>
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
@@ -289,105 +286,56 @@
                         <th>Delete</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.id}"></td>
-                        <td th:text="${user.firstName}"></td>
-                        <td th:text="${user.lastName}"></td>
-                        <td th:text="${user.age}"></td>
-                        <td th:text="${user.email}"></td>
-                        <td th:text="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}"></td>
-                        <td>
-                            <button class="btn btn-sm btn-edit" data-bs-toggle="modal"
-                                    th:attr="data-bs-target='#editModal' + ${user.id}">
-                                Edit
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-danger delete-btn"
-                                    th:data-id="${user.id}"
-                                    th:data-firstname="${user.firstName}"
-                                    th:data-lastname="${user.lastName}"
-                                    th:data-age="${user.age}"
-                                    th:data-email="${user.email}"
-                                    th:data-roles="${#strings.arrayJoin(user.roles.![name.replace('ROLE_','')], ' ')}">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
+                    <tbody id="usersTable">
+                    <!-- Данные будут загружены через JS -->
                     </tbody>
                 </table>
             </div>
 
-            <div class="tab-pane fade" id="new-user">
+            <div class="tab-pane" id="new-user-tab">
                 <h4 class="mb-4">Add new user</h4>
                 <div class="admin-panel">
                     <div class="form-container">
-                        <form id="userForm" th:action="@{/admin/create}" th:object="${newUser}" method="post">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
+                        <form id="userForm">
+                            <div class="form-group">
                                 <label class="bold">First Name</label>
-                                <input type="text" class="form-control" th:field="*{firstName}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('firstName')}"
-                                     th:errors="*{firstName}"></div>
+                                <input type="text" class="form-control" name="firstName" required>
                             </div>
 
-                            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'has-error'">
+                            <div class="form-group">
                                 <label class="bold">Last Name</label>
-                                <input type="text" class="form-control" th:field="*{lastName}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('lastName')}"
-                                     th:errors="*{lastName}"></div>
+                                <input type="text" class="form-control" name="lastName" required>
                             </div>
 
-                            <div class="form-group" th:classappend="${#fields.hasErrors('age')} ? 'has-error'">
+                            <div class="form-group">
                                 <label class="bold">Age</label>
-                                <input type="number" class="form-control" th:field="*{age}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+                                <input type="number" class="form-control" name="age" required min="1">
                             </div>
 
-                            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
+                            <div class="form-group">
                                 <label class="bold">Email</label>
-                                <input type="email" class="form-control" th:field="*{email}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('email')}"
-                                     th:errors="*{email}"></div>
+                                <input type="email" class="form-control" name="email" required>
                             </div>
 
-                            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
+                            <div class="form-group">
                                 <label class="bold">Password</label>
-                                <input type="password" class="form-control" th:field="*{password}"
-                                       oninput="highlightField(this)">
-                                <div class="error-message" th:if="${#fields.hasErrors('password')}"
-                                     th:errors="*{password}"></div>
+                                <input type="password" class="form-control" name="password" required>
                             </div>
 
                             <div class="form-group">
                                 <label class="bold">Role</label>
                                 <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
-                                    <option th:each="role : ${roles}"
-                                            th:value="${role.id}"
-                                            th:text="${role.name.replace('ROLE_', '')}">
-                                    </option>
+                                    <!-- Роли будут загружены через JS -->
                                 </select>
 
                                 <div class="role-items-container" id="rolesContainer">
-                                    <div th:each="role : ${roles}" class="role-item"
-                                         th:data-roleid="${role.id}"
-                                         onclick="toggleRoleSelection(this)">
-                                        <span th:text="${role.name.replace('ROLE_', '')}"></span>
-                                    </div>
+                                    <!-- Роли будут загружены через JS -->
                                 </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
-                                    one role
-                                </div>
+                                <div class="error-message" id="rolesError" style="display: none;">Please select at least one role</div>
                             </div>
 
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <div class="button-container">
-                                <button type="submit" class="btn btn-success" onclick="validateRoles()">Add new user
-                                </button>
+                                <button type="submit" class="btn btn-success">Add new user</button>
                             </div>
                         </form>
                     </div>
@@ -395,69 +343,56 @@
             </div>
         </div>
 
-        <!-- Edit Modals -->
-        <div th:each="user : ${users}" th:attr="id='editModal' + ${user.id}" class="modal fade" tabindex="-1">
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editUserModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit user</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form th:action="@{/admin/update}" method="post">
-                        <input type="hidden" name="id" th:value="${user.id}">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <form id="editUserForm">
+                        <input type="hidden" name="id" id="editUserId">
 
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>ID</label>
-                                <input type="text" class="form-control bg-light" th:value="${user.id}" readonly>
+                                <input type="text" class="form-control bg-light" id="editUserDisplayId" readonly>
                             </div>
                             <div class="form-group">
                                 <label>First Name</label>
-                                <input type="text" class="form-control" name="firstName" th:value="${user.firstName}"
-                                       required>
+                                <input type="text" class="form-control" name="firstName" id="editUserFirstName" required>
                             </div>
                             <div class="form-group">
                                 <label>Last Name</label>
-                                <input type="text" class="form-control" name="lastName" th:value="${user.lastName}"
-                                       required>
+                                <input type="text" class="form-control" name="lastName" id="editUserLastName" required>
                             </div>
                             <div class="form-group">
                                 <label>Age</label>
-                                <input type="number" class="form-control" name="age" th:value="${user.age}" required
-                                       min="1">
+                                <input type="number" class="form-control" name="age" id="editUserAge" required min="1">
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" class="form-control" name="email" th:value="${user.email}" required>
+                                <input type="email" class="form-control" name="email" id="editUserEmail" required>
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
-                                <input type="password" class="form-control" name="password">
+                                <input type="password" class="form-control" name="password" id="editUserPassword">
                             </div>
 
                             <div class="form-group">
                                 <label>Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" required>
-                                    <option th:each="role : ${roles}"
-                                            th:value="${role.id}"
-                                            th:selected="${#lists.contains(user.roles.![id], role.id)}"
-                                            th:text="${role.name.replace('ROLE_','')}">
-                                    </option>
+                                <select class="d-none" multiple="multiple" name="roles" id="editUserRolesSelect" required>
+                                    <!-- Роли будут загружены через JS -->
                                 </select>
-                                <div class="role-items-container">
-                                    <div th:each="role : ${roles}" class="role-item"
-                                         th:data-roleid="${role.id}"
-                                         th:classappend="${#lists.contains(user.roles.![id], role.id)} ? 'selected' : ''"
-                                         onclick="toggleEditRoleSelection(this)">
-                                        <span th:text="${role.name.replace('ROLE_','')}"></span>
-                                    </div>
+                                <div class="role-items-container" id="editUserRolesContainer">
+                                    <!-- Роли будут загружены через JS -->
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>
                 </div>
@@ -465,19 +400,17 @@
         </div>
 
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
+                        <h5 class="modal-title">Delete user</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3 text-center">
                             <label for="deleteUserId" class="col-form-label fw-bold">ID:</label>
                             <input type="text" class="form-control bg-light text-start" id="deleteUserId" readonly>
-
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
@@ -502,10 +435,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <form id="deleteForm" method="post" class="d-inline">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
                     </div>
                 </div>
             </div>
@@ -515,98 +445,347 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize role selection for the new user form
-        initRoleSelection('#userForm');
+    $(document).ready(function() {
+        let allRoles = [];
+        let currentUser = {};
+        let allUsers = [];
 
-        // Initialize role selection for edit modals
-        document.querySelectorAll('.modal').forEach(modal => {
-            if (!modal.id.includes('deleteUserModal')) {
-                initRoleSelection(modal);
-            }
-        });
+        // Загрузка данных при открытии страницы
+        function loadAdminData() {
+            // Загрузка текущего пользователя
+            $.get('/api/rest/current-user')
+                .done(function(user) {
+                    if (user) {
+                        currentUser = user;
+                        updateCurrentUserInfo();
 
-        // Handle delete button clicks
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                fillDeleteModal(this);
-                new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
+                        // Проверка прав администратора
+                        const isAdmin = user.roles.some(role => role.name === 'ROLE_ADMIN');
+                        if (!isAdmin) {
+                            window.location.href = '/user';
+                            return;
+                        }
+
+                        // Загрузка всех пользователей
+                        loadAllUsers();
+                    }
+                })
+                .fail(function() {
+                    alert('Error loading current user data');
+                });
+        }
+
+        // Загрузка всех пользователей
+        function loadAllUsers() {
+            $.get('/api/rest')
+                .done(function(users) {
+                    allUsers = users;
+                    renderUsersTable(users);
+
+                    // Извлекаем уникальные роли из списка пользователей
+                    if (users.length > 0) {
+                        const rolesSet = new Set();
+                        users.forEach(user => {
+                            user.roles.forEach(role => {
+                                rolesSet.add(JSON.stringify(role));
+                            });
+                        });
+
+                        allRoles = Array.from(rolesSet).map(roleStr => JSON.parse(roleStr));
+                        renderRoleOptions();
+                    }
+                })
+                .fail(function() {
+                    alert('Error loading users data');
+                });
+        }
+
+        // Отрисовка таблицы пользователей
+        function renderUsersTable(users) {
+            let tableBody = '';
+
+            users.forEach(user => {
+                let roles = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
+
+                tableBody += `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${roles}</td>
+                    <td>
+                        <button class="btn btn-sm btn-edit edit-btn"
+                                data-id="${user.id}"
+                                data-firstname="${user.firstName}"
+                                data-lastname="${user.lastName}"
+                                data-age="${user.age}"
+                                data-email="${user.email}"
+                                data-roles="${JSON.stringify(user.roles)}">
+                            Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-btn"
+                                data-id="${user.id}"
+                                data-firstname="${user.firstName}"
+                                data-lastname="${user.lastName}"
+                                data-age="${user.age}"
+                                data-email="${user.email}"
+                                data-roles="${roles}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
             });
-        });
 
-        // Validate form submission for new user
-        document.getElementById('userForm').addEventListener('submit', function (e) {
-            if (!validateRoles('#rolesSelect')) {
-                e.preventDefault();
+            $('#usersTable').html(tableBody);
+        }
+
+        // Отрисовка опций ролей
+        function renderRoleOptions() {
+            const rolesContainer = $('#rolesContainer');
+            const rolesSelect = $('#rolesSelect');
+            const editRolesContainer = $('#editUserRolesContainer');
+            const editRolesSelect = $('#editUserRolesSelect');
+
+            rolesContainer.empty();
+            rolesSelect.empty();
+            editRolesContainer.empty();
+            editRolesSelect.empty();
+
+            allRoles.forEach(role => {
+                // Для формы добавления пользователя
+                rolesContainer.append(`
+                    <div class="role-item" data-roleid="${role.id}" onclick="toggleRoleSelection(this)">
+                        <span>${role.name.replace('ROLE_', '')}</span>
+                    </div>
+                `);
+
+                rolesSelect.append(`
+                    <option value="${role.id}">${role.name.replace('ROLE_', '')}</option>
+                `);
+
+                // Для формы редактирования пользователя
+                editRolesContainer.append(`
+                    <div class="role-item" data-roleid="${role.id}" onclick="toggleEditRoleSelection(this)">
+                        <span>${role.name.replace('ROLE_', '')}</span>
+                    </div>
+                `);
+
+                editRolesSelect.append(`
+                    <option value="${role.id}">${role.name.replace('ROLE_', '')}</option>
+                `);
+            });
+        }
+
+        // Обновление информации о текущем пользователе
+        function updateCurrentUserInfo() {
+            if (currentUser) {
+                const roles = currentUser.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
+                $('#currentUserInfo').text(`${currentUser.firstName} ${currentUser.lastName} (${roles})`);
             }
+        }
+
+        // Обработчик кнопки Edit
+        $(document).on('click', '.edit-btn', function() {
+            const userId = $(this).data('id');
+            const firstName = $(this).data('firstname');
+            const lastName = $(this).data('lastname');
+            const age = $(this).data('age');
+            const email = $(this).data('email');
+            const roles = JSON.parse($(this).data('roles'));
+
+            // Заполнение формы редактирования
+            $('#editUserId').val(userId);
+            $('#editUserDisplayId').val(userId);
+            $('#editUserFirstName').val(firstName);
+            $('#editUserLastName').val(lastName);
+            $('#editUserAge').val(age);
+            $('#editUserEmail').val(email);
+            $('#editUserPassword').val('');
+
+            // Сброс выбранных ролей
+            $('#editUserRolesContainer .role-item').removeClass('selected');
+            $('#editUserRolesSelect').val([]);
+
+            // Установка выбранных ролей
+            roles.forEach(role => {
+                $(`#editUserRolesContainer .role-item[data-roleid="${role.id}"]`).addClass('selected');
+                $(`#editUserRolesSelect option[value="${role.id}"]`).prop('selected', true);
+            });
+
+            // Показ модального окна
+            const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            editModal.show();
         });
-    });
 
-    function initRoleSelection(formSelector) {
-        const form = typeof formSelector === 'string'
-            ? document.querySelector(formSelector)
-            : formSelector;
+        // Обработчик кнопки Delete
+        $(document).on('click', '.delete-btn', function() {
+            const userId = $(this).data('id');
+            const firstName = $(this).data('firstname');
+            const lastName = $(this).data('lastname');
+            const age = $(this).data('age');
+            const email = $(this).data('email');
+            const roles = $(this).data('roles');
 
-        if (!form) return;
+            // Заполнение модального окна удаления
+            $('#deleteUserId').val(userId);
+            $('#deleteUserFirstName').val(firstName);
+            $('#deleteUserLastName').val(lastName);
+            $('#deleteUserAge').val(age);
+            $('#deleteUserEmail').val(email);
+            $('#deleteUserRole').val(roles);
 
-        const select = form.querySelector('select[name="roles"]');
-        const roleItems = form.querySelectorAll('.role-item');
+            // Показ модального окна
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+            deleteModal.show();
+        });
 
-        if (!select || !roleItems) return;
+        // Обработчик подтверждения удаления
+        $('#confirmDeleteBtn').click(function() {
+            const userId = $('#deleteUserId').val();
 
-        roleItems.forEach(item => {
-            item.addEventListener('click', function () {
-                const roleId = this.getAttribute('data-roleid');
-                const option = Array.from(select.options).find(opt => opt.value === roleId);
-
-                if (option) {
-                    option.selected = !option.selected;
-                    this.classList.toggle('selected');
+            $.ajax({
+                url: '/api/rest/' + userId,
+                type: 'DELETE',
+                success: function() {
+                    $('#deleteUserModal').modal('hide');
+                    loadAllUsers();
+                },
+                error: function(xhr) {
+                    alert('Error deleting user: ' + xhr.responseText);
                 }
             });
-
-            // Initialize initial state
-            const roleId = item.getAttribute('data-roleid');
-            const option = Array.from(select.options).find(opt => opt.value === roleId);
-            item.classList.toggle('selected', option && option.selected);
         });
+
+        // Обработчик формы добавления пользователя
+        $('#userForm').submit(function(e) {
+            e.preventDefault();
+
+            if (!validateRoles()) {
+                return false;
+            }
+
+            const formData = {
+                firstName: $('#userForm input[name="firstName"]').val(),
+                lastName: $('#userForm input[name="lastName"]').val(),
+                age: $('#userForm input[name="age"]').val(),
+                email: $('#userForm input[name="email"]').val(),
+                password: $('#userForm input[name="password"]').val(),
+                roles: $('#rolesSelect').val()
+            };
+
+            $.ajax({
+                url: '/api/rest',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function() {
+                    loadAllUsers();
+                    $('#userForm')[0].reset();
+                    $('#rolesContainer .role-item').removeClass('selected');
+                    $('#rolesError').hide();
+                },
+                error: function(xhr) {
+                    alert('Error creating user: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // Обработчик формы редактирования пользователя
+        $('#editUserForm').submit(function(e) {
+            e.preventDefault();
+
+            const userId = $('#editUserId').val();
+            const formData = {
+                id: userId,
+                firstName: $('#editUserFirstName').val(),
+                lastName: $('#editUserLastName').val(),
+                age: $('#editUserAge').val(),
+                email: $('#editUserEmail').val(),
+                password: $('#editUserPassword').val(),
+                roles: $('#editUserRolesSelect').val()
+            };
+
+            $.ajax({
+                url: '/api/rest/' + userId,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function() {
+                    $('#editUserModal').modal('hide');
+                    loadAllUsers();
+                },
+                error: function(xhr) {
+                    alert('Error updating user: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // Обработчик вкладок
+        $('[data-tab]').click(function() {
+            const tabId = $(this).data('tab');
+            $('.nav-tabs .nav-link').removeClass('active');
+            $(this).addClass('active');
+
+            $('.tab-pane').removeClass('active');
+            $(`#${tabId}-tab`).addClass('active');
+        });
+
+        // Обработчик выхода
+        $('#logoutBtn').click(function() {
+            $.post('/logout', function() {
+                window.location.href = '/login';
+            });
+        });
+
+        // Первоначальная загрузка данных
+        loadAdminData();
+    });
+
+    // Функции для работы с ролями
+    function toggleRoleSelection(element) {
+        $(element).toggleClass('selected');
+        updateRolesSelect();
     }
 
     function toggleEditRoleSelection(element) {
-        const roleId = element.getAttribute('data-roleid');
-        const form = element.closest('.modal-content');
-        const select = form.querySelector('select[name="roles"]');
-        const option = Array.from(select.options).find(opt => opt.value === roleId);
+        $(element).toggleClass('selected');
+        updateEditRolesSelect();
+    }
 
-        if (option) {
-            option.selected = !option.selected;
-            element.classList.toggle('selected');
+    function updateRolesSelect() {
+        const selectedRoles = $('#rolesContainer .role-item.selected').map(function() {
+            return $(this).data('roleid');
+        }).get();
+
+        $('#rolesSelect').val(selectedRoles);
+    }
+
+    function updateEditRolesSelect() {
+        const selectedRoles = $('#editUserRolesContainer .role-item.selected').map(function() {
+            return $(this).data('roleid');
+        }).get();
+
+        $('#editUserRolesSelect').val(selectedRoles);
+    }
+
+    function validateRoles() {
+        const selectedRoles = $('#rolesContainer .role-item.selected').length;
+        if (selectedRoles === 0) {
+            $('#rolesError').show();
+            return false;
         }
-    }
-
-    function validateRoles(selectId) {
-        const select = document.querySelector(selectId);
-        const errorElement = document.getElementById('rolesError');
-        const selectedOptions = Array.from(select.options).filter(opt => opt.selected);
-
-        errorElement.style.display = selectedOptions.length === 0 ? 'block' : 'none';
-        return selectedOptions.length > 0;
-    }
-
-    function fillDeleteModal(button) {
-        document.getElementById('deleteUserId').value = button.getAttribute('data-id');
-        document.getElementById('deleteUserFirstName').value = button.getAttribute('data-firstname');
-        document.getElementById('deleteUserLastName').value = button.getAttribute('data-lastname');
-        document.getElementById('deleteUserAge').value = button.getAttribute('data-age');
-        document.getElementById('deleteUserEmail').value = button.getAttribute('data-email');
-        document.getElementById('deleteUserRole').value = button.getAttribute('data-roles');
-        document.getElementById('deleteForm').action = `/admin/delete/${button.getAttribute('data-id')}`;
+        $('#rolesError').hide();
+        return true;
     }
 
     function highlightField(element) {
-        element.classList.add('editing');
+        $(element).removeClass('has-error');
     }
 </script>
 </body>

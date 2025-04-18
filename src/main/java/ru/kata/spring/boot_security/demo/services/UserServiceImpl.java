@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,93 +9,91 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.security.UserDetailServiceImpl;
 
-import java.util.HashSet;
+import javax.persistence.EntityNotFoundException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserDetailServiceImpl userDetailService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserDetailServiceImpl userDetailService, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.userDetailService = userDetailService;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userDetailService.loadUserByUsername(username);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public User save(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        return userRepository.save(user);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
-    }
-
-    @Override
-    public void createUserWithRoles(User user, List<Long> roleIds) {
-        if (user.getId() == null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(new HashSet<>(roleRepository.findAllById(roleIds)));
-            userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("Invalid user ID");
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException(id + " not found");
         }
-    }
-
-    @Override
-    public void updateUserWithRoles(Long id, String firstName, String lastName, Integer age, String email, List<Long> roleIds, String password) {
-        User user = getUserById(id);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setAge(age);
-        user.setEmail(email);
-        user.setRoles(new HashSet<>(roleRepository.findAllById(roleIds)));
-        if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-        userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) {
-        User user = findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public User update(User user, Long id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setAge(user.getAge());
+        existingUser.setEmail(user.getEmail());
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.getAuthorities()
-        );
+        if (user.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (user.getRoleIds() != null && !user.getRoleIds().isEmpty()) {
+            List<Role> roles = roleRepository.findAllById(user.getRoleIds());
+            if (roles.size() != user.getRoleIds().size()) {
+                throw new IllegalArgumentException("Some roles not found");
+            }
+            existingUser.getRoles().clear();
+            existingUser.getRoles().addAll(roles);
+        }
+        return userRepository.save(existingUser);
+    }
+
+    public void setRoles(User user, Set<Long> selectedRoleIds) {
+        Collection<Role> roles = selectedRoleIds.stream()
+                .map(roleRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        user.setRoles((Set<Role>) roles);
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public User getById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException(id + " not found");
+        }
+        return userRepository.getById(id);
     }
 }

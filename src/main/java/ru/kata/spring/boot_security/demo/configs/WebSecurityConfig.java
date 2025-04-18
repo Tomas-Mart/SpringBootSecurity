@@ -1,147 +1,88 @@
 package ru.kata.spring.boot_security.demo.configs;
 
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.kata.spring.boot_security.demo.models.Role;
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.kata.spring.boot_security.demo.security.UserDetailServiceImpl;
 
-import java.util.Set;
+import java.util.List;
+
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
+    private final SuccessUserHandler successUserHandler;
+    private final UserDetailServiceImpl userDetailsService;
 
-    public WebSecurityConfig(UserRepository userRepository,
-                             RoleRepository roleRepository,
-                             UserDetailsService userDetailsService,
-                             PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailServiceImpl userDetailsService) {
+        this.successUserHandler = successUserHandler;
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
         http
-                .authenticationProvider(daoAuthenticationProvider())
-                .csrf().and()
-                .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/", "/index", "/login", "/css/**").permitAll()
-                        .antMatchers("/admin/**").hasRole("ADMIN")
-                        .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/perform_login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error=true")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll()
-                )
-                .exceptionHandling(handling -> handling
-                        .accessDeniedPage("/access-denied")
-                );
-
-        return http.build();
+                .cors().and()
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/rest").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/" + getUsernameOnAuthorizedUser()).hasAnyRole("ADMIN", "USER")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().successHandler(successUserHandler)
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*");
-            }
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry) {
-                registry.addViewController("/login").setViewName("login");
-            }
-        };
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public CommandLineRunner initData() {
-        return args -> {
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElse(null);
-            Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);
-
-            if (adminRole == null) {
-                adminRole = new Role();
-                adminRole.setName("ROLE_ADMIN");
-                roleRepository.save(adminRole);
-            }
-
-            if (userRole == null) {
-                userRole = new Role();
-                userRole.setName("ROLE_USER");
-                roleRepository.save(userRole);
-            }
-
-            if (userRepository.count() == 0) {
-                User admin = new User();
-                admin.setEmail("admin@example.com");
-                admin.setPassword(passwordEncoder.encode("admin"));
-                admin.setAge(30);
-                admin.setFirstName("Admin");
-                admin.setLastName("Admin");
-                admin.setRoles(Set.of(adminRole, userRole));
-                userRepository.save(admin);
-
-                User user = new User();
-                user.setEmail("user@example.com");
-                user.setPassword(passwordEncoder.encode("user"));
-                user.setAge(30);
-                user.setFirstName("User");
-                user.setLastName("User");
-                user.setRoles(Set.of(userRole));
-                userRepository.save(user);
-            }
-        };
+    public String getUsernameOnAuthorizedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            return authentication.getName();
+        }
+        return null;
     }
 }
