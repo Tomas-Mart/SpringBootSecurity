@@ -17,7 +17,7 @@ public class MainController {
     @GetMapping("/")
     public String redirectBasedOnRole(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "login";
+            return "redirect:/login";
         }
         return authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))

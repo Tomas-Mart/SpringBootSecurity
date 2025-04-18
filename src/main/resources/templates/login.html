@@ -171,7 +171,8 @@
             errorAlert.style.display = 'none';
 
             try {
-                const response = await fetch('/api/auth/login', {
+                // 1. Пытаемся войти
+                const loginResponse = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -181,18 +182,26 @@
                     credentials: 'include'
                 });
 
-                if (response.ok) {
-                    const authCheck = await fetch('/api/auth/check', {
-                        credentials: 'include'
-                    });
+                if (!loginResponse.ok) {
+                    const error = await loginResponse.text();
+                    showError(error || 'Ошибка аутентификации');
+                    return;
+                }
 
-                    if (authCheck.ok) {
-                        const authData = await authCheck.json();
+                // 2. Проверяем статус аутентификации
+                const statusResponse = await fetch('/api/auth/status', {
+                    credentials: 'include'
+                });
+
+                if (statusResponse.ok) {
+                    const authData = await statusResponse.json();
+                    if (authData.authenticated) {
                         window.location.href = authData.admin ? '/admin' : '/user';
+                    } else {
+                        showError('Аутентификация не удалась');
                     }
                 } else {
-                    const error = await response.json();
-                    showError(error.message || 'Ошибка аутентификации');
+                    showError('Ошибка проверки статуса');
                 }
             } catch (error) {
                 showError('Ошибка соединения с сервером');

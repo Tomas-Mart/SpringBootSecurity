@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
@@ -36,15 +38,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+    public UserResponseDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return toUserResponseDTO(user);
     }
 
     @Override
-    public UserResponseDTO findByEmail(String email) {
-        User user = (User) loadUserByUsername(email);
-        return toUserResponseDTO(user);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("Loading user by email: {}", email);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("User not found with email: {}", email);
+                    return new UsernameNotFoundException("User not found");
+                });
     }
 
     @Override
