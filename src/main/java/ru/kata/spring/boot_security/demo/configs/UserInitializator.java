@@ -42,18 +42,20 @@ public class UserInitializator implements CommandLineRunner {
 
         if (userRepository.count() == 0) {
             User admin = new User();
-            admin.setEmail("admin@example.com");
-            admin.setPassword(passwordEncoder.encode("admin"));
             admin.setFirstName("Admin");
             admin.setLastName("Admin");
+            admin.setAge(30);
+            admin.setEmail("admin@example.com");
+            admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRoles(Set.of(adminRole, userRole));
             userRepository.save(admin);
 
             User user = new User();
-            user.setEmail("user@example.com");
-            user.setPassword(passwordEncoder.encode("user"));
             user.setFirstName("User");
             user.setLastName("User");
+            user.setAge(30);
+            user.setEmail("user@example.com");
+            user.setPassword(passwordEncoder.encode("user"));
             user.setRoles(Set.of(userRole));
             userRepository.save(user);
         }
