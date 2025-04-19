@@ -37,11 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and()
-                .csrf()
+                .cors().and().csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-                .authorizeRequests()
+                .and().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/rest").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/" + getUsernameOnAuthorizedUser()).hasAnyRole("ADMIN", "USER")

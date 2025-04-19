@@ -23,7 +23,7 @@
 <div class="container py-5 text-center">
     <div class="card shadow-sm mx-auto auth-card">
         <div class="card-body p-5">
-            <h1 class="h3 mb-4">Добро пожаловать</h1>
+            <h1 class="h3 mb-4">Войти</h1>
 
             <div sec:authorize="!isAuthenticated()" class="d-grid gap-3">
                 <a th:href="@{/login}" class="btn btn-primary btn-lg btn-auth">
