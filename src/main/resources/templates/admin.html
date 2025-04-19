@@ -586,7 +586,7 @@
         function updateCurrentUserInfo() {
             if (currentUser) {
                 const roles = currentUser.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
-                $('#currentUserInfo').text(`${currentUser.firstName} ${currentUser.lastName} (${roles})`);
+                $('#currentUserInfo').text(`${currentUser.email} (${roles})`);
             }
         }
 
