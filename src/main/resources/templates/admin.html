@@ -347,16 +347,14 @@
 
                             <div class="form-group">
                                 <label class="bold">Role</label>
-                                <select class="form-control" multiple="multiple" name="roles" required id="rolesSelect"
-                                        style="display: none;">
+                                <select class="form-control" multiple="multiple" name="roles" id="rolesSelect" required
+                                        style="height: auto; opacity: 0; position: absolute; width: 1px;">
                                     <!-- Options will be loaded dynamically -->
                                 </select>
                                 <div class="role-items-container" id="rolesContainer">
                                     <div class="text-muted">Loading roles...</div>
                                 </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
-                                    one role
-                                </div>
+                                <div class="invalid-feedback">Please select at least one role</div>
                             </div>
 
                             <div class="button-container">
@@ -469,7 +467,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const API_BASE_URL = '/api/rest';
         let allRoles = [];
         let currentUser = {};
@@ -520,29 +518,6 @@
                 .fail(handleError);
         }
 
-        function loadUserData() {
-            showLoading('#userInfo');
-
-            $.ajax({
-                url: `${API_BASE_URL}/current-user`,
-                type: 'GET',
-                success: function(user) {
-                    updateUserInfo(user);
-                    if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
-                        loadAllUsers();
-                    }
-                    hideLoading('#userInfo');
-                },
-                error: function(xhr) {
-                    console.error('Error loading user data:', xhr);
-                    hideLoading('#userInfo');
-                    if (xhr.status === 401) {
-                        window.location.href = '/login';
-                    }
-                }
-            });
-        }
-
         // Загрузка всех пользователей
         function loadAllUsers() {
             showLoading('#usersTable');
@@ -550,16 +525,15 @@
             $.ajax({
                 url: `${API_BASE_URL}/users`,
                 type: 'GET',
-                success: function(users) {
+                success: function (users) {
+                    allUsers = users;
                     renderUsersTable(users);
+                    extractRoles(users);
                     hideLoading('#usersTable');
                 },
-                error: function(xhr) {
-                    console.error('Error loading users:', xhr);
+                error: function (xhr) {
                     hideLoading('#usersTable');
-                    if (xhr.status === 403) {
-                        alert('Access denied. Admin rights required.');
-                    }
+                    handleError(xhr);
                 }
             });
         }
@@ -578,16 +552,39 @@
 
         // Отрисовка таблицы пользователей
         function renderUsersTable(users) {
-            const tableBody = users.map(user => `
-        <tr>
-            <td>${user.id}</td>
-            <td>${user.firstName}</td>
-            <td>${user.lastName}</td>
-            <td>${user.age}</td>
-            <td>${user.email}</td>
-            <td>${user.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}</td>
-        </tr>
-    `).join('');
+            let tableBody = '';
+
+            if (users.length === 0) {
+                tableBody = '<tr><td colspan="8" class="text-center">No users found</td></tr>';
+            } else {
+                users.forEach(user => {
+                    let roles = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
+
+                    tableBody += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.firstName}</td>
+                            <td>${user.lastName}</td>
+                            <td>${user.age}</td>
+                            <td>${user.email}</td>
+                            <td>${roles}</td>
+                            <td>
+                                <button class="btn btn-sm btn-edit edit-btn"
+                                        data-user='${JSON.stringify(user)}'>
+                                    Edit
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger delete-btn"
+                                        data-user='${JSON.stringify(user)}'
+                                        data-roles-text="${roles}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
             $('#usersTable tbody').html(tableBody);
         }
@@ -703,28 +700,22 @@
 
         // Настройка обработчиков событий
         function setupEventHandlers() {
-            
             // Обработчик кнопки выхода
             $('#logoutBtn').click(function(e) {
                 e.preventDefault();
-
-                // Получаем CSRF токен из мета-тега
                 const token = $('meta[name="_csrf"]').attr('content');
                 const header = $('meta[name="_csrf_header"]').attr('content');
 
                 $.ajax({
                     url: '/logout',
                     type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(header, token); // Добавляем CSRF токен в заголовок
-                    },
+                    headers: { [header]: token },
                     success: function() {
                         window.location.href = '/login?logout';
                     },
                     error: function(xhr) {
                         console.error('Logout failed:', xhr);
                         if (xhr.status === 403) {
-                            // Если CSRF токен неверный, перезагружаем страницу
                             window.location.reload();
                         }
                     }
