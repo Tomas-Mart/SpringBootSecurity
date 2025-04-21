@@ -703,10 +703,31 @@
 
         // Настройка обработчиков событий
         function setupEventHandlers() {
+            
             // Обработчик кнопки выхода
-            $('#logoutBtn').click(function() {
-                $.post('/logout', function() {
-                    window.location.href = '/login';
+            $('#logoutBtn').click(function(e) {
+                e.preventDefault();
+
+                // Получаем CSRF токен из мета-тега
+                const token = $('meta[name="_csrf"]').attr('content');
+                const header = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '/logout',
+                    type: 'POST',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(header, token); // Добавляем CSRF токен в заголовок
+                    },
+                    success: function() {
+                        window.location.href = '/login?logout';
+                    },
+                    error: function(xhr) {
+                        console.error('Logout failed:', xhr);
+                        if (xhr.status === 403) {
+                            // Если CSRF токен неверный, перезагружаем страницу
+                            window.location.reload();
+                        }
+                    }
                 });
             });
 
