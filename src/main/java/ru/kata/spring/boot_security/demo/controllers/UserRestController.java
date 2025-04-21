@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
@@ -12,12 +13,12 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
-public class AdminRestController {
+@RequestMapping("/api/rest")
+public class UserRestController {
 
     private final UserService userService;
 
-    public AdminRestController(UserService userService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
     }
 
@@ -28,11 +29,13 @@ public class AdminRestController {
     }
 
     @GetMapping("/current-user")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<User> getCurrentUser(Authentication authentication) {
-        return userService.findByUsername(authentication.getName())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userService.findByUsername(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/users/{id}")

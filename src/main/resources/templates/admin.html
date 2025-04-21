@@ -470,7 +470,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        const API_BASE_URL = '/api/admin';
+        const API_BASE_URL = '/api/rest';
         let allRoles = [];
         let currentUser = {};
         let allUsers = [];
@@ -521,19 +521,24 @@
         }
 
         function loadUserData() {
+            showLoading('#userInfo');
+
             $.ajax({
-                url: '/api/rest/current-user',
+                url: `${API_BASE_URL}/current-user`,
                 type: 'GET',
                 success: function(user) {
-                    if (user) {
-                        updateUserInfo(user);
-                        if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
-                            loadAllUsers();
-                        }
+                    updateUserInfo(user);
+                    if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
+                        loadAllUsers();
                     }
+                    hideLoading('#userInfo');
                 },
                 error: function(xhr) {
                     console.error('Error loading user data:', xhr);
+                    hideLoading('#userInfo');
+                    if (xhr.status === 401) {
+                        window.location.href = '/login';
+                    }
                 }
             });
         }
@@ -546,16 +551,15 @@
                 url: `${API_BASE_URL}/users`,
                 type: 'GET',
                 success: function(users) {
-                    allUsers = users;
                     renderUsersTable(users);
-                    extractRoles(users);
+                    hideLoading('#usersTable');
                 },
                 error: function(xhr) {
                     console.error('Error loading users:', xhr);
-                    handleError(xhr);
-                },
-                complete: function() {
-                    hideLoading('#usersTable', '');
+                    hideLoading('#usersTable');
+                    if (xhr.status === 403) {
+                        alert('Access denied. Admin rights required.');
+                    }
                 }
             });
         }
@@ -574,41 +578,18 @@
 
         // Отрисовка таблицы пользователей
         function renderUsersTable(users) {
-            let tableBody = '';
+            const tableBody = users.map(user => `
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.firstName}</td>
+            <td>${user.lastName}</td>
+            <td>${user.age}</td>
+            <td>${user.email}</td>
+            <td>${user.roles.map(r => r.name.replace('ROLE_', '')).join(', ')}</td>
+        </tr>
+    `).join('');
 
-            if (users.length === 0) {
-                tableBody = '<tr><td colspan="8" class="text-center">No users found</td></tr>';
-            } else {
-                users.forEach(user => {
-                    let roles = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
-
-                    tableBody += `
-                        <tr>
-                            <td>${user.id}</td>
-                            <td>${user.firstName}</td>
-                            <td>${user.lastName}</td>
-                            <td>${user.age}</td>
-                            <td>${user.email}</td>
-                            <td>${roles}</td>
-                            <td>
-                                <button class="btn btn-sm btn-edit edit-btn"
-                                        data-user='${JSON.stringify(user)}'>
-                                    Edit
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger delete-btn"
-                                        data-user='${JSON.stringify(user)}'
-                                        data-roles-text="${roles}">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-
-            $('#usersTable').html(tableBody);
+            $('#usersTable tbody').html(tableBody);
         }
 
         // Отрисовка опций ролей
