@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles;
 
     @Transient
     private List<Long> roleIds;
@@ -105,11 +105,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -154,8 +154,15 @@ public class User implements UserDetails {
         return true;
     }
 
+    public boolean isAdmin() {
+        return hasRole("ROLE_ADMIN");
+    }
+
     // Вспомогательные методы
     public boolean hasRole(String roleName) {
+        if (roles == null) {
+            return false;
+        }
         return roles.stream().anyMatch(role -> role.getName().equals(roleName));
     }
 

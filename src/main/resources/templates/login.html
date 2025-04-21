@@ -18,23 +18,27 @@
     <div class="card-body p-5">
       <h1 class="h3 mb-4 text-center">Вход в систему</h1>
 
-      <!-- Сообщения об ошибках и успешных операциях -->
-      <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
-      <div th:if="${message != null}" class="alert alert-success" th:text="${message}"></div>
+      <!-- Сообщения об ошибках -->
+      <div th:if="${param.error}" class="alert alert-danger">
+        Неверное имя пользователя или пароль
+      </div>
+      <div th:if="${param.logout}" class="alert alert-success">
+        Вы успешно вышли из системы
+      </div>
 
       <form th:action="@{/login}" method="post">
         <div class="mb-3">
           <input type="text" class="form-control" id="username" name="username"
-                 placeholder="Email" required autofocus>
+                 placeholder="Email address" required autofocus>
         </div>
 
         <div class="mb-3">
           <input type="password" class="form-control" id="password" name="password"
-                 placeholder="Пароль" required>
+                 placeholder="Password" required>
         </div>
 
         <!-- CSRF защита -->
-        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}"/>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
         <div class="d-grid mb-3">
           <button type="submit" class="btn btn-primary">

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
@@ -228,6 +230,23 @@
             color: #fdfdfd;
             background-color: #17a1b7;
         }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            vertical-align: text-bottom;
+            border: 0.25em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border .75s linear infinite;
+        }
+
+        @keyframes spinner-border {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -287,7 +306,9 @@
                     </tr>
                     </thead>
                     <tbody id="usersTable">
-                    <!-- Данные будут загружены через JS -->
+                    <tr>
+                        <td colspan="8" class="text-center">Loading users...</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -296,42 +317,46 @@
                 <h4 class="mb-4">Add new user</h4>
                 <div class="admin-panel">
                     <div class="form-container">
-                        <form id="userForm">
+                        <form id="addUserForm">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
                             <div class="form-group">
-                                <label class="bold">First Name</label>
-                                <input type="text" class="form-control" name="firstName" required>
+                                <label class="bold" for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
                             </div>
 
                             <div class="form-group">
-                                <label class="bold">Last Name</label>
-                                <input type="text" class="form-control" name="lastName" required>
+                                <label class="bold" for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
 
                             <div class="form-group">
-                                <label class="bold">Age</label>
-                                <input type="number" class="form-control" name="age" required min="1">
+                                <label class="bold" for="age">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" required min="1">
                             </div>
 
                             <div class="form-group">
-                                <label class="bold">Email</label>
-                                <input type="email" class="form-control" name="email" required>
+                                <label class="bold" for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
                             </div>
 
                             <div class="form-group">
-                                <label class="bold">Password</label>
-                                <input type="password" class="form-control" name="password" required>
+                                <label class="bold" for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
                             </div>
 
                             <div class="form-group">
                                 <label class="bold">Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
-                                    <!-- Роли будут загружены через JS -->
+                                <select class="form-control" multiple="multiple" name="roles" required id="rolesSelect"
+                                        style="display: none;">
+                                    <!-- Options will be loaded dynamically -->
                                 </select>
-
                                 <div class="role-items-container" id="rolesContainer">
-                                    <!-- Роли будут загружены через JS -->
+                                    <div class="text-muted">Loading roles...</div>
                                 </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least one role</div>
+                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
+                                    one role
+                                </div>
                             </div>
 
                             <div class="button-container">
@@ -353,7 +378,6 @@
                     </div>
                     <form id="editUserForm">
                         <input type="hidden" name="id" id="editUserId">
-
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>ID</label>
@@ -361,7 +385,8 @@
                             </div>
                             <div class="form-group">
                                 <label>First Name</label>
-                                <input type="text" class="form-control" name="firstName" id="editUserFirstName" required>
+                                <input type="text" class="form-control" name="firstName" id="editUserFirstName"
+                                       required>
                             </div>
                             <div class="form-group">
                                 <label>Last Name</label>
@@ -379,15 +404,11 @@
                                 <label>Password</label>
                                 <input type="password" class="form-control" name="password" id="editUserPassword">
                             </div>
-
                             <div class="form-group">
                                 <label>Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" id="editUserRolesSelect" required>
-                                    <!-- Роли будут загружены через JS -->
-                                </select>
-                                <div class="role-items-container" id="editUserRolesContainer">
-                                    <!-- Роли будут загружены через JS -->
-                                </div>
+                                <select class="d-none" multiple="multiple" name="roles" id="editUserRolesSelect"
+                                        required></select>
+                                <div class="role-items-container" id="editUserRolesContainer"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -414,11 +435,13 @@
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName"
+                                   readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserLastName" class="col-form-label fw-bold">Last name:</label>
-                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName" readonly>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName"
+                                   readonly>
                         </div>
                         <div class="mb-3 text-center">
                             <label for="deleteUserAge" class="col-form-label fw-bold">Age:</label>
@@ -447,100 +470,143 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+        const API_BASE_URL = '/api/admin';
         let allRoles = [];
         let currentUser = {};
         let allUsers = [];
+        let isLoading = false;
 
-        // Загрузка данных при открытии страницы
-        function loadAdminData() {
-            // Загрузка текущего пользователя
-            $.get('/api/rest/current-user')
-                .done(function(user) {
-                    if (user) {
-                        currentUser = user;
-                        updateCurrentUserInfo();
+        // Инициализация приложения
+        function init() {
+            loadCurrentUser();
+            setupEventHandlers();
+        }
 
-                        // Проверка прав администратора
-                        const isAdmin = user.roles.some(role => role.name === 'ROLE_ADMIN');
-                        if (!isAdmin) {
-                            window.location.href = '/user';
-                            return;
-                        }
+        function showLoading(selector, text = '') {
+            const element = $(selector);
+            element.html(`<span class="loading-spinner"></span> ${text || 'Loading...'}`);
+            element.prop('disabled', true);
+            isLoading = true;
+        }
 
-                        // Загрузка всех пользователей
+        function hideLoading(selector, originalText = '') {
+            const element = $(selector);
+            element.html(originalText);
+            element.prop('disabled', false);
+            isLoading = false;
+        }
+
+        function showError(message) {
+            console.error(message);
+            alert(message);
+        }
+
+        function showSuccess(message) {
+            alert(message);
+        }
+
+        // Загрузка текущего пользователя
+        function loadCurrentUser() {
+            $.get(`${API_BASE_URL}/current-user`)
+                .done(user => {
+                    currentUser = user;
+                    updateCurrentUserInfo();
+                    if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
                         loadAllUsers();
+                    } else {
+                        window.location.href = '/user';
                     }
                 })
-                .fail(function() {
-                    alert('Error loading current user data');
-                });
+                .fail(handleError);
+        }
+
+        function loadUserData() {
+            $.ajax({
+                url: '/api/rest/current-user',
+                type: 'GET',
+                success: function(user) {
+                    if (user) {
+                        updateUserInfo(user);
+                        if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
+                            loadAllUsers();
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error loading user data:', xhr);
+                }
+            });
         }
 
         // Загрузка всех пользователей
         function loadAllUsers() {
-            $.get('/api/rest')
-                .done(function(users) {
+            showLoading('#usersTable');
+
+            $.ajax({
+                url: `${API_BASE_URL}/users`,
+                type: 'GET',
+                success: function(users) {
                     allUsers = users;
                     renderUsersTable(users);
+                    extractRoles(users);
+                },
+                error: function(xhr) {
+                    console.error('Error loading users:', xhr);
+                    handleError(xhr);
+                },
+                complete: function() {
+                    hideLoading('#usersTable', '');
+                }
+            });
+        }
 
-                    // Извлекаем уникальные роли из списка пользователей
-                    if (users.length > 0) {
-                        const rolesSet = new Set();
-                        users.forEach(user => {
-                            user.roles.forEach(role => {
-                                rolesSet.add(JSON.stringify(role));
-                            });
-                        });
-
-                        allRoles = Array.from(rolesSet).map(roleStr => JSON.parse(roleStr));
-                        renderRoleOptions();
-                    }
-                })
-                .fail(function() {
-                    alert('Error loading users data');
+        // Извлечение ролей из списка пользователей
+        function extractRoles(users) {
+            const rolesSet = new Set();
+            users.forEach(user => {
+                user.roles.forEach(role => {
+                    rolesSet.add(JSON.stringify(role));
                 });
+            });
+            allRoles = Array.from(rolesSet).map(roleStr => JSON.parse(roleStr));
+            renderRoleOptions();
         }
 
         // Отрисовка таблицы пользователей
         function renderUsersTable(users) {
             let tableBody = '';
 
-            users.forEach(user => {
-                let roles = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
+            if (users.length === 0) {
+                tableBody = '<tr><td colspan="8" class="text-center">No users found</td></tr>';
+            } else {
+                users.forEach(user => {
+                    let roles = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
 
-                tableBody += `
-                <tr>
-                    <td>${user.id}</td>
-                    <td>${user.firstName}</td>
-                    <td>${user.lastName}</td>
-                    <td>${user.age}</td>
-                    <td>${user.email}</td>
-                    <td>${roles}</td>
-                    <td>
-                        <button class="btn btn-sm btn-edit edit-btn"
-                                data-id="${user.id}"
-                                data-firstname="${user.firstName}"
-                                data-lastname="${user.lastName}"
-                                data-age="${user.age}"
-                                data-email="${user.email}"
-                                data-roles="${JSON.stringify(user.roles)}">
-                            Edit
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-btn"
-                                data-id="${user.id}"
-                                data-firstname="${user.firstName}"
-                                data-lastname="${user.lastName}"
-                                data-age="${user.age}"
-                                data-email="${user.email}"
-                                data-roles="${roles}">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            `;
-            });
+                    tableBody += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.firstName}</td>
+                            <td>${user.lastName}</td>
+                            <td>${user.age}</td>
+                            <td>${user.email}</td>
+                            <td>${roles}</td>
+                            <td>
+                                <button class="btn btn-sm btn-edit edit-btn"
+                                        data-user='${JSON.stringify(user)}'>
+                                    Edit
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger delete-btn"
+                                        data-user='${JSON.stringify(user)}'
+                                        data-roles-text="${roles}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
             $('#usersTable').html(tableBody);
         }
@@ -557,28 +623,30 @@
             editRolesContainer.empty();
             editRolesSelect.empty();
 
+            if (allRoles.length === 0) {
+                rolesContainer.append('<div class="text-muted">No roles available</div>');
+                editRolesContainer.append('<div class="text-muted">No roles available</div>');
+                return;
+            }
+
             allRoles.forEach(role => {
-                // Для формы добавления пользователя
+                const roleName = role.name.replace('ROLE_', '');
+
                 rolesContainer.append(`
-                    <div class="role-item" data-roleid="${role.id}" onclick="toggleRoleSelection(this)">
-                        <span>${role.name.replace('ROLE_', '')}</span>
+                    <div class="role-item" data-roleid="${role.id}">
+                        <span>${roleName}</span>
                     </div>
                 `);
 
-                rolesSelect.append(`
-                    <option value="${role.id}">${role.name.replace('ROLE_', '')}</option>
-                `);
+                rolesSelect.append(`<option value="${role.id}">${roleName}</option>`);
 
-                // Для формы редактирования пользователя
                 editRolesContainer.append(`
-                    <div class="role-item" data-roleid="${role.id}" onclick="toggleEditRoleSelection(this)">
-                        <span>${role.name.replace('ROLE_', '')}</span>
+                    <div class="role-item" data-roleid="${role.id}">
+                        <span>${roleName}</span>
                     </div>
                 `);
 
-                editRolesSelect.append(`
-                    <option value="${role.id}">${role.name.replace('ROLE_', '')}</option>
-                `);
+                editRolesSelect.append(`<option value="${role.id}">${roleName}</option>`);
             });
         }
 
@@ -590,203 +658,243 @@
             }
         }
 
-        // Обработчик кнопки Edit
-        $(document).on('click', '.edit-btn', function() {
-            const userId = $(this).data('id');
-            const firstName = $(this).data('firstname');
-            const lastName = $(this).data('lastname');
-            const age = $(this).data('age');
-            const email = $(this).data('email');
-            const roles = JSON.parse($(this).data('roles'));
+        // Обработка ошибок
+        function handleError(xhr) {
+            let errorMsg = 'Operation failed';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg += ': ' + xhr.responseJSON.message;
+            } else if (xhr.status === 403) {
+                errorMsg = 'Access denied';
+            } else if (xhr.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            showError(errorMsg);
+        }
 
-            // Заполнение формы редактирования
-            $('#editUserId').val(userId);
-            $('#editUserDisplayId').val(userId);
-            $('#editUserFirstName').val(firstName);
-            $('#editUserLastName').val(lastName);
-            $('#editUserAge').val(age);
-            $('#editUserEmail').val(email);
+        // Заполнение формы редактирования
+        function fillEditForm(user) {
+            $('#editUserId').val(user.id);
+            $('#editUserDisplayId').val(user.id);
+            $('#editUserFirstName').val(user.firstName);
+            $('#editUserLastName').val(user.lastName);
+            $('#editUserAge').val(user.age);
+            $('#editUserEmail').val(user.email);
             $('#editUserPassword').val('');
 
-            // Сброс выбранных ролей
             $('#editUserRolesContainer .role-item').removeClass('selected');
             $('#editUserRolesSelect').val([]);
 
-            // Установка выбранных ролей
-            roles.forEach(role => {
-                $(`#editUserRolesContainer .role-item[data-roleid="${role.id}"]`).addClass('selected');
-                $(`#editUserRolesSelect option[value="${role.id}"]`).prop('selected', true);
-            });
-
-            // Показ модального окна
-            const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
-            editModal.show();
-        });
-
-        // Обработчик кнопки Delete
-        $(document).on('click', '.delete-btn', function() {
-            const userId = $(this).data('id');
-            const firstName = $(this).data('firstname');
-            const lastName = $(this).data('lastname');
-            const age = $(this).data('age');
-            const email = $(this).data('email');
-            const roles = $(this).data('roles');
-
-            // Заполнение модального окна удаления
-            $('#deleteUserId').val(userId);
-            $('#deleteUserFirstName').val(firstName);
-            $('#deleteUserLastName').val(lastName);
-            $('#deleteUserAge').val(age);
-            $('#deleteUserEmail').val(email);
-            $('#deleteUserRole').val(roles);
-
-            // Показ модального окна
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
-            deleteModal.show();
-        });
-
-        // Обработчик подтверждения удаления
-        $('#confirmDeleteBtn').click(function() {
-            const userId = $('#deleteUserId').val();
-
-            $.ajax({
-                url: '/api/rest/' + userId,
-                type: 'DELETE',
-                success: function() {
-                    $('#deleteUserModal').modal('hide');
-                    loadAllUsers();
-                },
-                error: function(xhr) {
-                    alert('Error deleting user: ' + xhr.responseText);
-                }
-            });
-        });
-
-        // Обработчик формы добавления пользователя
-        $('#userForm').submit(function(e) {
-            e.preventDefault();
-
-            if (!validateRoles()) {
-                return false;
+            if (user.roles && user.roles.length) {
+                user.roles.forEach(role => {
+                    const roleId = role.id;
+                    $(`#editUserRolesContainer .role-item[data-roleid="${roleId}"]`).addClass('selected');
+                    $(`#editUserRolesSelect option[value="${roleId}"]`).prop('selected', true);
+                });
             }
-
-            const formData = {
-                firstName: $('#userForm input[name="firstName"]').val(),
-                lastName: $('#userForm input[name="lastName"]').val(),
-                age: $('#userForm input[name="age"]').val(),
-                email: $('#userForm input[name="email"]').val(),
-                password: $('#userForm input[name="password"]').val(),
-                roles: $('#rolesSelect').val()
-            };
-
-            $.ajax({
-                url: '/api/rest',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(formData),
-                success: function() {
-                    loadAllUsers();
-                    $('#userForm')[0].reset();
-                    $('#rolesContainer .role-item').removeClass('selected');
-                    $('#rolesError').hide();
-                },
-                error: function(xhr) {
-                    alert('Error creating user: ' + xhr.responseText);
-                }
-            });
-        });
-
-        // Обработчик формы редактирования пользователя
-        $('#editUserForm').submit(function(e) {
-            e.preventDefault();
-
-            const userId = $('#editUserId').val();
-            const formData = {
-                id: userId,
-                firstName: $('#editUserFirstName').val(),
-                lastName: $('#editUserLastName').val(),
-                age: $('#editUserAge').val(),
-                email: $('#editUserEmail').val(),
-                password: $('#editUserPassword').val(),
-                roles: $('#editUserRolesSelect').val()
-            };
-
-            $.ajax({
-                url: '/api/rest/' + userId,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(formData),
-                success: function() {
-                    $('#editUserModal').modal('hide');
-                    loadAllUsers();
-                },
-                error: function(xhr) {
-                    alert('Error updating user: ' + xhr.responseText);
-                }
-            });
-        });
-
-        // Обработчик вкладок
-        $('[data-tab]').click(function() {
-            const tabId = $(this).data('tab');
-            $('.nav-tabs .nav-link').removeClass('active');
-            $(this).addClass('active');
-
-            $('.tab-pane').removeClass('active');
-            $(`#${tabId}-tab`).addClass('active');
-        });
-
-        // Обработчик выхода
-        $('#logoutBtn').click(function() {
-            $.post('/logout', function() {
-                window.location.href = '/login';
-            });
-        });
-
-        // Первоначальная загрузка данных
-        loadAdminData();
-    });
-
-    // Функции для работы с ролями
-    function toggleRoleSelection(element) {
-        $(element).toggleClass('selected');
-        updateRolesSelect();
-    }
-
-    function toggleEditRoleSelection(element) {
-        $(element).toggleClass('selected');
-        updateEditRolesSelect();
-    }
-
-    function updateRolesSelect() {
-        const selectedRoles = $('#rolesContainer .role-item.selected').map(function() {
-            return $(this).data('roleid');
-        }).get();
-
-        $('#rolesSelect').val(selectedRoles);
-    }
-
-    function updateEditRolesSelect() {
-        const selectedRoles = $('#editUserRolesContainer .role-item.selected').map(function() {
-            return $(this).data('roleid');
-        }).get();
-
-        $('#editUserRolesSelect').val(selectedRoles);
-    }
-
-    function validateRoles() {
-        const selectedRoles = $('#rolesContainer .role-item.selected').length;
-        if (selectedRoles === 0) {
-            $('#rolesError').show();
-            return false;
         }
-        $('#rolesError').hide();
-        return true;
-    }
 
-    function highlightField(element) {
-        $(element).removeClass('has-error');
-    }
+        // Заполнение модального окна удаления
+        function fillDeleteModal(user, rolesText) {
+            $('#deleteUserId').val(user.id);
+            $('#deleteUserFirstName').val(user.firstName);
+            $('#deleteUserLastName').val(user.lastName);
+            $('#deleteUserAge').val(user.age);
+            $('#deleteUserEmail').val(user.email);
+            $('#deleteUserRole').val(rolesText);
+        }
+
+        // Валидация ролей
+        function validateRoles() {
+            const selectedRoles = $('#rolesSelect').val();
+            const isValid = selectedRoles && selectedRoles.length > 0;
+            $('#rolesError').toggle(!isValid);
+            return isValid;
+        }
+
+        // Сброс формы
+        function resetForm() {
+            $('#addUserForm')[0].reset();
+            $('#rolesContainer .role-item').removeClass('selected');
+            $('#rolesSelect').val([]);
+            $('#rolesError').hide();
+        }
+
+        // Настройка обработчиков событий
+        function setupEventHandlers() {
+            // Обработчик кнопки выхода
+            $('#logoutBtn').click(function() {
+                $.post('/logout', function() {
+                    window.location.href = '/login';
+                });
+            });
+
+            // Переключение вкладок
+            $('[data-tab]').click(function() {
+                const tabId = $(this).data('tab');
+                $('.nav-tabs .nav-link').removeClass('active');
+                $(this).addClass('active');
+                $('.tab-pane').removeClass('active');
+                $(`#${tabId}-tab`).addClass('active');
+            });
+
+            // Обработчик клика по ролям
+            $(document).on('click', '.role-item', function() {
+                $(this).toggleClass('selected');
+                const roleId = $(this).data('roleid');
+                const $select = $(this).closest('.role-items-container').nextAll('select.d-none');
+                $select.find(`option[value="${roleId}"]`).prop('selected', $(this).hasClass('selected'));
+
+                if ($select.attr('id') === 'rolesSelect') {
+                    validateRoles();
+                }
+            });
+
+            // Обработчик кнопок редактирования и удаления
+            $(document).on('click', '.edit-btn, .delete-btn', function() {
+                if (isLoading) return;
+
+                try {
+                    const userJson = $(this).data('user');
+                    const user = typeof userJson === 'string' ? JSON.parse(userJson) : userJson;
+
+                    if ($(this).hasClass('edit-btn')) {
+                        fillEditForm(user);
+                        new bootstrap.Modal('#editUserModal').show();
+                    } else {
+                        const rolesText = $(this).data('roles-text') ||
+                            user.roles.map(r => r.name.replace('ROLE_', '')).join(', ');
+                        fillDeleteModal(user, rolesText);
+                        new bootstrap.Modal('#deleteUserModal').show();
+                    }
+                } catch (e) {
+                    console.error('Error processing user data:', e);
+                    showError('Error processing user data');
+                }
+            });
+
+            // Обработчик подтверждения удаления
+            $('#confirmDeleteBtn').click(function() {
+                if (isLoading) return;
+
+                const userId = $('#deleteUserId').val();
+                const button = $(this);
+                const originalText = button.html();
+
+                showLoading(button, 'Deleting...');
+
+                $.ajax({
+                    url: `${API_BASE_URL}/users/${userId}`,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    },
+                    success: function() {
+                        $('#deleteUserModal').modal('hide');
+                        loadAllUsers();
+                        hideLoading(button, originalText);
+                        showSuccess('User deleted successfully');
+                    },
+                    error: function(xhr) {
+                        hideLoading(button, originalText);
+                        handleError(xhr);
+                    }
+                });
+            });
+
+            // Обработчик формы добавления пользователя
+            $('#addUserForm').submit(function(e) {
+                e.preventDefault();
+                if (isLoading) return;
+
+                if (!validateRoles()) {
+                    return false;
+                }
+
+                const form = $(this);
+                const submitButton = form.find('button[type="submit"]');
+                const originalText = submitButton.html();
+
+                showLoading(submitButton, 'Creating...');
+
+                const formData = {
+                    firstName: form.find('input[name="firstName"]').val(),
+                    lastName: form.find('input[name="lastName"]').val(),
+                    age: form.find('input[name="age"]').val(),
+                    email: form.find('input[name="email"]').val(),
+                    password: form.find('input[name="password"]').val(),
+                    roleIds: $('#rolesSelect').val() || []
+                };
+
+                $.ajax({
+                    url: `${API_BASE_URL}/users`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    },
+                    success: function() {
+                        loadAllUsers();
+                        resetForm();
+                        $('[data-tab="users"]').click();
+                        hideLoading(submitButton, originalText);
+                        showSuccess('User created successfully');
+                    },
+                    error: function(xhr) {
+                        hideLoading(submitButton, originalText);
+                        handleError(xhr);
+                    }
+                });
+            });
+
+            // Обработчик формы редактирования пользователя
+            $('#editUserForm').submit(function(e) {
+                e.preventDefault();
+                if (isLoading) return;
+
+                const form = $(this);
+                const submitButton = form.find('button[type="submit"]');
+                const originalText = submitButton.html();
+
+                showLoading(submitButton, 'Saving...');
+
+                const userId = $('#editUserId').val();
+                const formData = {
+                    id: userId,
+                    firstName: $('#editUserFirstName').val(),
+                    lastName: $('#editUserLastName').val(),
+                    age: $('#editUserAge').val(),
+                    email: $('#editUserEmail').val(),
+                    password: $('#editUserPassword').val(),
+                    roleIds: $('#editUserRolesSelect').val()
+                };
+
+                $.ajax({
+                    url: `${API_BASE_URL}/users/${userId}`,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    },
+                    success: function() {
+                        $('#editUserModal').modal('hide');
+                        loadAllUsers();
+                        hideLoading(submitButton, originalText);
+                        showSuccess('User updated successfully');
+                    },
+                    error: function(xhr) {
+                        hideLoading(submitButton, originalText);
+                        handleError(xhr);
+                    }
+                });
+            });
+        }
+
+        // Инициализация при загрузке
+        init();
+    });
 </script>
 </body>
 </html>
