@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringAntMatchers(
                                 "/api/auth/login",
+                                "/api/rest/users/**",
                                 "/api/rest/users",
                                 "/logout"
                         )
@@ -50,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         // API endpoints
                         .antMatchers(HttpMethod.GET, "/api/rest/current-user").authenticated()
                         .antMatchers(HttpMethod.POST, "/api/rest/users").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PUT, "/api/rest/users/**").hasRole("ADMIN")
 
                         // Страницы приложения
                         .antMatchers("/admin/**").hasRole("ADMIN")

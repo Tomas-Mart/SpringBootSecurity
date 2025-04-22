@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -64,15 +65,17 @@ public class UserRestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping(value = "/users/{id}")
+    @PutMapping(value = "/users/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateUser(@PathVariable Long id,
-                                        @RequestParam String firstName,
-                                        @RequestParam String lastName,
-                                        @RequestParam Integer age,
-                                        @RequestParam String email,
-                                        @RequestParam List<Long> roleIds,
-                                        @RequestParam(required = false) String password) {
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam Integer age,
+            @RequestParam String email,
+            @RequestParam List<Long> roleIds,
+            @RequestParam(required = false) String password) {
+
         try {
             userService.updateUser(id, firstName, lastName, age, email, roleIds, password);
             User updatedUser = userService.getUserById(id)

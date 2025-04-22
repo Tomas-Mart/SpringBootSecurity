@@ -720,18 +720,26 @@
             e.preventDefault();
 
             const userId = $('#editId').val();
+
+            // Проверяем роли
+            const $rolesSelect = $('#editRolesSelect');
+            if (!validateRoles($rolesSelect)) return;
+
+            // Создаем FormData (как в handleCreateUser)
             const formData = new FormData();
             formData.append('firstName', $('#editFirstName').val());
             formData.append('lastName', $('#editLastName').val());
             formData.append('age', $('#editAge').val());
             formData.append('email', $('#editEmail').val());
 
+            // Добавляем пароль, если он был изменен
             const password = $('#editPassword').val();
             if (password) {
                 formData.append('password', password);
             }
 
-            $('#editRolesSelect').val().forEach(id => {
+            // Добавляем roleIds как отдельные параметры (как в handleCreateUser)
+            $rolesSelect.val().forEach(id => {
                 formData.append('roleIds', id);
             });
 
@@ -739,12 +747,14 @@
             const csrfToken = $('meta[name="_csrf"]').attr('content');
             const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
+            // Отправляем запрос (меняем только метод на PUT)
             fetch(`${API_URL}/users/${userId}`, {
-                method: 'POST', // Используем POST для совместимости
+                method: 'PUT', // Отличие от handleCreateUser - используем PUT вместо POST
                 headers: {
                     [csrfHeader]: csrfToken
+                    // Не указываем Content-Type - браузер сам установит multipart/form-data с boundary
                 },
-                body: formData
+                body: formData // Отправляем FormData напрямую
             })
                 .then(response => {
                     if (!response.ok) {
