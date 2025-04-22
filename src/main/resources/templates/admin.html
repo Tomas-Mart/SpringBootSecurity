@@ -576,25 +576,25 @@
                                 <td>${formatRoles(user.roles)}</td>
                                 <td>
                                     <button class="btn btn-sm btn-edit edit-btn"
-                                            data-id="${user.id}"
-                                            data-firstname="${user.firstName}"
-                                            data-lastname="${user.lastName}"
-                                            data-age="${user.age}"
-                                            data-email="${user.email}"
-                                            data-roles='${JSON.stringify(user.roles)}'>
-                                        Edit
-                                    </button>
+            data-id="${user.id}"
+            data-firstname="${user.firstName}"
+            data-lastname="${user.lastName}"
+            data-age="${user.age}"
+            data-email="${user.email}"
+            data-roles='${JSON.stringify(user.roles)}'>
+        Edit
+    </button>
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-danger delete-btn"
-                                            data-id="${user.id}"
-                                            data-firstname="${user.firstName}"
-                                            data-lastname="${user.lastName}"
-                                            data-age="${user.age}"
-                                            data-email="${user.email}"
-                                            data-roles='${JSON.stringify(user.roles)}'>
-                                        Delete
-                                    </button>
+            data-id="${user.id}"
+            data-firstname="${user.firstName}"
+            data-lastname="${user.lastName}"
+            data-age="${user.age}"
+            data-email="${user.email}"
+            data-roles='${JSON.stringify(user.roles)}'>
+        Delete
+    </button>
                                 </td>
                             </tr>
                         `);
@@ -679,94 +679,152 @@
 
         // ==================== РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЯ ====================
         function showEditModal() {
-            const user = {
-                id: $(this).data('id'),
-                firstName: $(this).data('firstname'),
-                lastName: $(this).data('lastname'),
-                age: $(this).data('age'),
-                email: $(this).data('email'),
-                roles: JSON.parse($(this).data('roles'))
-            };
+            try {
+                const rolesData = $(this).data('roles');
+                const roles = typeof rolesData === 'string' ? JSON.parse(rolesData) : rolesData;
 
-            // Заполняем форму
-            $('#editId').val(user.id);
-            $('#editIdDisplay').val(user.id);
-            $('#editFirstName').val(user.firstName);
-            $('#editLastName').val(user.lastName);
-            $('#editAge').val(user.age);
-            $('#editEmail').val(user.email);
-            $('#editPassword').val('');
+                const user = {
+                    id: $(this).data('id'),
+                    firstName: $(this).data('firstname'),
+                    lastName: $(this).data('lastname'),
+                    age: $(this).data('age'),
+                    email: $(this).data('email'),
+                    roles: roles
+                };
 
-            // Устанавливаем роли
-            $('#editRolesContainer .role-item').each(function() {
-                const roleId = $(this).data('roleid');
-                const isSelected = user.roles.some(r => r.id == roleId);
-                $(this).toggleClass('selected', isSelected);
-                $(`#editRolesSelect option[value="${roleId}"]`).prop('selected', isSelected);
-            });
+                // Заполняем форму
+                $('#editId').val(user.id);
+                $('#editIdDisplay').val(user.id);
+                $('#editFirstName').val(user.firstName);
+                $('#editLastName').val(user.lastName);
+                $('#editAge').val(user.age);
+                $('#editEmail').val(user.email);
+                $('#editPassword').val('');
 
-            editModal.show();
+                // Устанавливаем роли
+                $('#editRolesContainer .role-item').each(function() {
+                    const roleId = $(this).data('roleid');
+                    const isSelected = user.roles.some(r => r.id == roleId);
+                    $(this).toggleClass('selected', isSelected);
+                    $(`#editRolesSelect option[value="${roleId}"]`).prop('selected', isSelected);
+                });
+
+                editModal.show();
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                alert('Error loading user data');
+            }
         }
 
         function handleUpdateUser(e) {
             e.preventDefault();
 
             const userId = $('#editId').val();
-            const formData = {
-                firstName: $('#editFirstName').val(),
-                lastName: $('#editLastName').val(),
-                age: parseInt($('#editAge').val()),
-                email: $('#editEmail').val(),
-                password: $('#editPassword').val(),
-                roleIds: $('#editRolesSelect').val().map(Number)
-            };
+            const formData = new FormData();
+            formData.append('firstName', $('#editFirstName').val());
+            formData.append('lastName', $('#editLastName').val());
+            formData.append('age', $('#editAge').val());
+            formData.append('email', $('#editEmail').val());
 
-            sendRequest(`${API_URL}/users/${userId}`, 'PUT', formData)
+            const password = $('#editPassword').val();
+            if (password) {
+                formData.append('password', password);
+            }
+
+            $('#editRolesSelect').val().forEach(id => {
+                formData.append('roleIds', id);
+            });
+
+            // Получаем CSRF токен
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            fetch(`${API_URL}/users/${userId}`, {
+                method: 'POST', // Используем POST для совместимости
+                headers: {
+                    [csrfHeader]: csrfToken
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
                 .then(() => {
                     editModal.hide();
                     loadUsers();
                 })
                 .catch(error => {
-                    alert('Error updating user: ' + error.message);
+                    console.error('Error updating user:', error);
+                    alert('Error updating user: ' + (error.message || JSON.stringify(error)));
                 });
         }
 
         // ==================== УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ ====================
         function showDeleteModal() {
-            const user = {
-                id: $(this).data('id'),
-                firstName: $(this).data('firstname'),
-                lastName: $(this).data('lastname'),
-                age: $(this).data('age'),
-                email: $(this).data('email'),
-                roles: JSON.parse($(this).data('roles'))
-            };
+            try {
+                const rolesData = $(this).data('roles');
+                const roles = typeof rolesData === 'string' ? JSON.parse(rolesData) : rolesData;
 
-            // Заполняем модальное окно
-            $('#deleteUserId').val(user.id);
-            $('#deleteUserFirstName').val(user.firstName);
-            $('#deleteUserLastName').val(user.lastName);
-            $('#deleteUserAge').val(user.age);
-            $('#deleteUserEmail').val(user.email);
-            $('#deleteUserRole').val(formatRoles(user.roles));
+                const user = {
+                    id: $(this).data('id'),
+                    firstName: $(this).data('firstname'),
+                    lastName: $(this).data('lastname'),
+                    age: $(this).data('age'),
+                    email: $(this).data('email'),
+                    roles: roles
+                };
 
-            deleteModal.show();
+                // Заполняем модальное окно
+                $('#deleteUserId').val(user.id);
+                $('#deleteUserFirstName').val(user.firstName);
+                $('#deleteUserLastName').val(user.lastName);
+                $('#deleteUserAge').val(user.age);
+                $('#deleteUserEmail').val(user.email);
+                $('#deleteUserRole').text(formatRoles(user.roles));
+
+                deleteModal.show();
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                alert('Error loading user data');
+            }
         }
 
         function handleDeleteUser() {
             const userId = $('#deleteUserId').val();
 
-            sendRequest(`${API_URL}/users/${userId}`, 'DELETE')
-                .then(() => {
+            // Получаем CSRF токен
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            fetch(`${API_URL}/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error deleting user');
+                    }
                     deleteModal.hide();
                     loadUsers();
                 })
                 .catch(error => {
+                    console.error('Error deleting user:', error);
                     alert('Error deleting user: ' + error.message);
                 });
         }
 
         // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+
+        // Вспомогательная функция для форматирования ролей
+        function formatRoles(roles) {
+            return roles.map(r => r.name.replace('ROLE_', '')).join(', ');
+        }
+
         function sendRequest(url, method, data = null) {
             const headers = {
                 'Content-Type': 'application/json',

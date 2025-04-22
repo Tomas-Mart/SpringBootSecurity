@@ -64,7 +64,7 @@ public class UserRestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/users/{id}")
+    @PostMapping(value = "/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id,
                                         @RequestParam String firstName,
