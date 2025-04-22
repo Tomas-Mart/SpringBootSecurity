@@ -55,6 +55,25 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public User(
+            Long id,
+            String firstName,
+            String lastName,
+            Integer age,
+            String email,
+            String password,
+            Set<Role> roles,
+            List<Long> roleIds) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.roleIds = roleIds;
+    }
+
     // Геттеры и сеттеры
     public Long getId() {
         return id;

@@ -10,8 +10,8 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rest")
@@ -27,6 +27,23 @@ public class UserRestController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping(value = "/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> createUser(
+            @RequestParam Map<String, String> params,
+            @RequestParam("roleIds") List<Long> roleIds) {
+
+        User user = new User();
+        user.setFirstName(params.get("firstName"));
+        user.setLastName(params.get("lastName"));
+        user.setAge(Integer.parseInt(params.get("age")));
+        user.setEmail(params.get("email"));
+        user.setPassword(params.get("password"));
+
+        userService.createUser(user, roleIds);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @GetMapping("/current-user")
@@ -45,13 +62,6 @@ public class UserRestController {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody @Valid User user, @RequestParam List<Long> roleIds) {
-        userService.createUser(user, roleIds);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PutMapping("/users/{id}")
