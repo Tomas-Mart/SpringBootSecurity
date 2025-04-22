@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.validation.Valid;
@@ -19,11 +18,9 @@ import java.util.List;
 public class UserRestController {
 
     private final UserService userService;
-    private final RoleService roleService; // Добавляем сервис для работы с ролями
 
-    public UserRestController(UserService userService, RoleService roleService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     @GetMapping("/users")
@@ -52,16 +49,24 @@ public class UserRestController {
 
     @PostMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.createUser(user));
+    public ResponseEntity<User> createUser(@RequestBody @Valid User user, @RequestParam List<Long> roleIds) {
+        userService.createUser(user, roleIds);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PutMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User user) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id,
+                                        @RequestParam String firstName,
+                                        @RequestParam String lastName,
+                                        @RequestParam Integer age,
+                                        @RequestParam String email,
+                                        @RequestParam List<Long> roleIds,
+                                        @RequestParam(required = false) String password) {
         try {
-            User updatedUser = userService.updateUser(user, id);
+            userService.updateUser(id, firstName, lastName, age, email, roleIds, password);
+            User updatedUser = userService.getUserById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found after update"));
             return ResponseEntity.ok(updatedUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -77,6 +82,6 @@ public class UserRestController {
 
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getAllRoles() {
-        return ResponseEntity.ok(roleService.getAllRoles());
+        return ResponseEntity.ok(userService.getAllRoles());
     }
 }

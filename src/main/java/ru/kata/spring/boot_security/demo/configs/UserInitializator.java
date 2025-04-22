@@ -8,7 +8,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.List;
+import java.util.Set;
 
 @Component
 public class UserInitializator implements CommandLineRunner {
@@ -47,7 +47,7 @@ public class UserInitializator implements CommandLineRunner {
             admin.setAge(30);
             admin.setEmail("admin@example.com");
             admin.setPassword(passwordEncoder.encode("admin"));
-            admin.setRoles(List.of(adminRole, userRole));
+            admin.setRoles(Set.of(adminRole, userRole));
             userRepository.save(admin);
 
             User user = new User();
@@ -56,7 +56,7 @@ public class UserInitializator implements CommandLineRunner {
             user.setAge(30);
             user.setEmail("user@example.com");
             user.setPassword(passwordEncoder.encode("user"));
-            user.setRoles(List.of(userRole));
+            user.setRoles(Set.of(userRole));
             userRepository.save(user);
         }
     }
