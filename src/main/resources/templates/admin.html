@@ -667,6 +667,8 @@
                     $('#userForm')[0].reset();
                     $('#rolesContainer .role-item').removeClass('selected');
                     loadUsers(); // Обновляем таблицу
+                    // Переключаем на вкладку со списком пользователей
+                    $('.nav-tabs a[href="#users"]').tab('show');
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -720,7 +722,17 @@
 
             const userId = $('#editId').val();
             const $rolesSelect = $('#editRolesSelect');
-            if (!validateRoles($rolesSelect)) return;
+
+            // Собираем выбранные роли из визуальных элементов
+            const selectedRoles = $('#editRolesContainer .role-item.selected')
+                .map(function() { return $(this).data('roleid'); })
+                .get();
+
+            // Если нет выбранных ролей - показываем ошибку
+            if (selectedRoles.length === 0) {
+                alert('Please select at least one role');
+                return;
+            }
 
             const formData = new FormData();
             formData.append('firstName', $('#editFirstName').val());
@@ -733,8 +745,11 @@
                 formData.append('password', password);
             }
 
-            $rolesSelect.val().forEach(id => {
+            // Добавляем выбранные роли
+            selectedRoles.forEach(id => {
                 formData.append('roleIds', id);
+                // Также обновляем скрытый select для согласованности
+                $(`#editRolesSelect option[value="${id}"]`).prop('selected', true);
             });
 
             const csrfToken = $('meta[name="_csrf"]').attr('content');
@@ -742,20 +757,20 @@
 
             fetch(`${API_URL}/users/${userId}`, {
                 method: 'PUT',
-                headers: {[csrfHeader]: csrfToken},
+                headers: { [csrfHeader]: csrfToken },
                 body: formData
             })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => {
-                            throw err;
-                        });
+                        return response.json().then(err => { throw err; });
                     }
                     return response.json();
                 })
                 .then(() => {
                     editModal.hide();
                     loadUsers();
+                    // Переключаем на вкладку со списком пользователей
+                    $('.nav-tabs a[href="#users"]').tab('show');
                 })
                 .catch(error => {
                     console.error('Error updating user:', error);
