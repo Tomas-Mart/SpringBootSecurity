@@ -336,7 +336,9 @@
                                     <div class="role-item" data-roleid="1">ADMIN</div>
                                     <div class="role-item" data-roleid="2">USER</div>
                                 </div>
-                                <div class="error-message" id="rolesError" style="display: none;">Please select at least one role</div>
+                                <div class="error-message" id="rolesError" style="display: none;">Please select at least
+                                    one role
+                                </div>
                             </div>
 
                             <div class="button-container">
@@ -349,12 +351,13 @@
         </div>
 
         <!-- Edit Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-modal="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit user</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                autofocus></button>
                     </div>
                     <form id="editForm">
                         <input type="hidden" name="id" id="editId">
@@ -410,13 +413,13 @@
         </div>
 
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-modal="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                autofocus></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3 text-center">
@@ -449,7 +452,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete" aria-label="Confirm deletion">
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -619,7 +624,7 @@
             $('#rolesError').hide();
 
             // Собираем выбранные roleIds
-            const roleIds = selectedRoles.map(function() {
+            const roleIds = selectedRoles.map(function () {
                 return $(this).data('roleid');
             }).get();
 
@@ -650,7 +655,9 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => { throw err; });
+                        return response.json().then(err => {
+                            throw err;
+                        });
                     }
                     return response.json();
                 })
@@ -780,7 +787,15 @@
                 const rolesText = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
                 $('#deleteUserRole').val(rolesText);
 
+                // При открытии модального окна
                 deleteModal.show();
+                // Устанавливаем фокус на первый интерактивный элемент
+                $('#deleteModal [autofocus]').focus();
+
+                // При закрытии возвращаем фокус на кнопку, которая открыла модальное окно
+                $('#deleteModal').on('hidden.bs.modal', function () {
+                    $('.delete-btn:focus').focus();
+                });
             } catch (error) {
                 console.error('Error in showDeleteModal:', error);
                 alert('Error loading user data');
