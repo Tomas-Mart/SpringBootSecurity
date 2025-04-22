@@ -486,14 +486,29 @@
 
         // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
         function setupEventHandlers() {
+            // Основные обработчики событий
             $('#logoutBtn').click(logout);
             $('#userForm').submit(handleCreateUser);
             $('#editForm').submit(handleUpdateUser);
-            $('#confirmDelete').click(handleDeleteUser);
 
+            // Обработчики для ролей и действий с пользователями
             $(document).on('click', '.role-item', toggleRoleSelection);
             $(document).on('click', '.edit-btn', showEditModal);
             $(document).on('click', '.delete-btn', showDeleteModal);
+
+            // Улучшенный обработчик удаления с индикатором загрузки
+            $('#confirmDelete').click(function() {
+                const $btn = $(this);
+                $btn.prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...'
+                );
+
+                handleDeleteUser()
+                    .finally(() => {
+                        // Восстанавливаем кнопку в любом случае (успех или ошибка)
+                        $btn.prop('disabled', false).text('Delete');
+                    });
+            });
         }
 
         // ==================== ЗАГРУЗКА ДАННЫХ ====================
@@ -803,29 +818,36 @@
         }
 
         function handleDeleteUser() {
-            const userId = $('#deleteUserId').val();
+            return new Promise((resolve, reject) => {
+                const userId = $('#deleteUserId').val();
 
-            // Получаем CSRF токен
-            const csrfToken = $('meta[name="_csrf"]').attr('content');
-            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                // Получаем CSRF токен
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-            fetch(`${API_URL}/users/${userId}`, {
-                method: 'DELETE',
-                headers: {
-                    [csrfHeader]: csrfToken
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error deleting user');
+                fetch(`${API_URL}/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        [csrfHeader]: csrfToken,
+                        'Content-Type': 'application/json'
                     }
-                    deleteModal.hide();
-                    loadUsers();
                 })
-                .catch(error => {
-                    console.error('Error deleting user:', error);
-                    alert('Error deleting user: ' + error.message);
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw err; });
+                        }
+                        deleteModal.hide();
+                        loadUsers();
+                        showSuccessNotification('User deleted successfully');
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error('Error deleting user:', error);
+                        showErrorNotification('Error deleting user: ' +
+                            (error.message || error.statusText || 'Unknown error'));
+                        reject(error);
+                    });
+            });
         }
 
         // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
@@ -874,6 +896,28 @@
         function logout() {
             sendRequest('/logout', 'POST')
                 .then(() => window.location.href = '/login');
+        }
+
+        function showSuccessNotification(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            }).showToast();
+        }
+
+        function showErrorNotification(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
+            }).showToast();
         }
 
         // Запускаем приложение

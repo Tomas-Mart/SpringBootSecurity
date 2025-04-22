@@ -30,21 +30,9 @@ public class UserRestController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping(value = "/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(
-            @RequestParam Map<String, String> params,
-            @RequestParam("roleIds") List<Long> roleIds) {
-
-        User user = new User();
-        user.setFirstName(params.get("firstName"));
-        user.setLastName(params.get("lastName"));
-        user.setAge(Integer.parseInt(params.get("age")));
-        user.setEmail(params.get("email"));
-        user.setPassword(params.get("password"));
-
-        userService.createUser(user, roleIds);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return ResponseEntity.ok(userService.getAllRoles());
     }
 
     @GetMapping("/current-user")
@@ -63,6 +51,23 @@ public class UserRestController {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping(value = "/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> createUser(
+            @RequestParam Map<String, String> params,
+            @RequestParam("roleIds") List<Long> roleIds) {
+
+        User user = new User();
+        user.setFirstName(params.get("firstName"));
+        user.setLastName(params.get("lastName"));
+        user.setAge(Integer.parseInt(params.get("age")));
+        user.setEmail(params.get("email"));
+        user.setPassword(params.get("password"));
+
+        userService.createUser(user, roleIds);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PutMapping(value = "/users/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -88,13 +93,12 @@ public class UserRestController {
 
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/roles")
-    public ResponseEntity<List<Role>> getAllRoles() {
-        return ResponseEntity.ok(userService.getAllRoles());
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
