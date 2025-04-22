@@ -362,41 +362,42 @@
                     <form id="editForm">
                         <input type="hidden" name="id" id="editId">
                         <div class="modal-body">
-                            <div class="form-group">
+                            <div class="mb-3 text-center">
                                 <label>ID</label>
                                 <input type="text" class="form-control bg-light" id="editIdDisplay" readonly>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3 text-center">
                                 <label>First Name</label>
                                 <input type="text" class="form-control" name="firstName" id="editFirstName" required>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3 text-center">
                                 <label>Last Name</label>
                                 <input type="text" class="form-control" name="lastName" id="editLastName" required>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3 text-center">
                                 <label>Age</label>
                                 <input type="number" class="form-control" name="age" id="editAge" required min="1">
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3 text-center">
                                 <label>Email</label>
                                 <input type="email" class="form-control" name="email" id="editEmail" required>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3 text-center">
                                 <label>Password</label>
                                 <input type="password" class="form-control" name="password" id="editPassword">
                             </div>
 
-                            <div class="form-group">
-                                <label>Role</label>
-                                <!-- Скрытый select для формы редактирования -->
+                            <div class="mb-3 text-center">
+                                <label class="fw-bold">Role</label>
+
+                                <!-- Скрытый select -->
                                 <select class="d-none" multiple name="roles" id="editRolesSelect">
                                     <option value="1">ADMIN</option>
                                     <option value="2">USER</option>
                                 </select>
 
-                                <!-- Визуальное представление для редактирования (вертикальное) -->
-                                <div class="role-items-container" id="editRolesContainer">
+                                <!-- Контейнер ролей с той же шириной, что и другие поля -->
+                                <div class="role-items-container mx-auto" id="editRolesContainer" style="max-width: 300px;">
                                     <div class="role-item" data-roleid="1">ADMIN</div>
                                     <div class="role-item" data-roleid="2">USER</div>
                                 </div>
