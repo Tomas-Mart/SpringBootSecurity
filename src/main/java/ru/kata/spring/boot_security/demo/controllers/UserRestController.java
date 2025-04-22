@@ -97,7 +97,7 @@ public class UserRestController {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

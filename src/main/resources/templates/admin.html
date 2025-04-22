@@ -121,7 +121,7 @@
         }
 
         .role-items-container {
-            gap: 0;
+            gap: 5px;
             padding: 0;
             display: flex;
             flex-direction: column;
@@ -322,14 +322,19 @@
                                 <input type="password" class="form-control" name="password" required>
                             </div>
 
+                            <!-- В форме добавления пользователя -->
                             <div class="form-group">
                                 <label class="bold">Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" required id="rolesSelect">
-                                    <!-- Roles will be loaded here via JS -->
+                                <!-- Скрытый select БЕЗ required -->
+                                <select class="d-none" multiple name="roles" id="mainRolesSelect">
+                                    <option value="1">ADMIN</option>
+                                    <option value="2">USER</option>
                                 </select>
 
+                                <!-- Визуальное представление ролей -->
                                 <div class="role-items-container" id="rolesContainer">
-                                    <!-- Role items will be loaded here via JS -->
+                                    <div class="role-item" data-roleid="1">ADMIN</div>
+                                    <div class="role-item" data-roleid="2">USER</div>
                                 </div>
                                 <div class="error-message" id="rolesError" style="display: none;">Please select at least one role</div>
                             </div>
@@ -381,17 +386,23 @@
 
                             <div class="form-group">
                                 <label>Role</label>
-                                <select class="d-none" multiple="multiple" name="roles" id="editRolesSelect" required>
-                                    <!-- Roles will be loaded here via JS -->
+                                <!-- Скрытый select для формы редактирования -->
+                                <select class="d-none" multiple name="roles" id="editRolesSelect">
+                                    <option value="1">ADMIN</option>
+                                    <option value="2">USER</option>
                                 </select>
+
+                                <!-- Визуальное представление для редактирования (вертикальное) -->
                                 <div class="role-items-container" id="editRolesContainer">
-                                    <!-- Role items will be loaded here via JS -->
+                                    <div class="role-item" data-roleid="1">ADMIN</div>
+                                    <div class="role-item" data-roleid="2">USER</div>
                                 </div>
                             </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">Edit</button>
                         </div>
                     </form>
                 </div>
@@ -399,7 +410,8 @@
         </div>
 
         <!-- Delete Modal -->
-        <div class="modal fade delete-modal" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -407,53 +419,32 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="fw-bold">ID:</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control bg-light text-start" id="deleteUserId" readonly>
-                            </div>
+                        <div class="mb-3 text-center">
+                            <label for="deleteUserId" class="col-form-label fw-bold">ID:</label>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserId" readonly>
+
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="fw-bold">First name:</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName" readonly>
-                            </div>
+                        <div class="mb-3 text-center">
+                            <label for="deleteUserFirstName" class="col-form-label fw-bold">First name:</label>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserFirstName"
+                                   readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="fw-bold">Last name:</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control bg-light text-start" id="deleteUserLastName" readonly>
-                            </div>
+                        <div class="mb-3 text-center">
+                            <label for="deleteUserLastName" class="col-form-label fw-bold">Last name:</label>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserLastName"
+                                   readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="fw-bold">Age:</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control bg-light text-start" id="deleteUserAge" readonly>
-                            </div>
+                        <div class="mb-3 text-center">
+                            <label for="deleteUserAge" class="col-form-label fw-bold">Age:</label>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserAge" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="fw-bold">Email:</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control bg-light text-start" id="deleteUserEmail" readonly>
-                            </div>
+                        <div class="mb-3 text-center">
+                            <label for="deleteUserEmail" class="col-form-label fw-bold">Email:</label>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserEmail" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="fw-bold">Role:</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control bg-light text-start" id="deleteUserRole" readonly>
-                            </div>
+                        <div class="mb-3 text-center">
+                            <label for="deleteUserRole" class="col-form-label fw-bold">Role:</label>
+                            <input type="text" class="form-control bg-light text-start" id="deleteUserRole" readonly>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -469,14 +460,14 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         const API_URL = '/api/rest';
         let allRoles = [];
         let currentUser = {};
         let editModal = new bootstrap.Modal(document.getElementById('editModal'));
-        let deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+        let deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
-        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+// ==================== ИНИЦИАЛИЗАЦИЯ ====================
         function init() {
             loadCurrentUser();
             loadRoles();
@@ -484,34 +475,19 @@
             setupEventHandlers();
         }
 
-        // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+// ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
         function setupEventHandlers() {
-            // Основные обработчики событий
             $('#logoutBtn').click(logout);
             $('#userForm').submit(handleCreateUser);
             $('#editForm').submit(handleUpdateUser);
+            $('#confirmDelete').click(handleDeleteUser);
 
-            // Обработчики для ролей и действий с пользователями
             $(document).on('click', '.role-item', toggleRoleSelection);
             $(document).on('click', '.edit-btn', showEditModal);
             $(document).on('click', '.delete-btn', showDeleteModal);
-
-            // Улучшенный обработчик удаления с индикатором загрузки
-            $('#confirmDelete').click(function() {
-                const $btn = $(this);
-                $btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...'
-                );
-
-                handleDeleteUser()
-                    .finally(() => {
-                        // Восстанавливаем кнопку в любом случае (успех или ошибка)
-                        $btn.prop('disabled', false).text('Delete');
-                    });
-            });
         }
 
-        // ==================== ЗАГРУЗКА ДАННЫХ ====================
+// ==================== ЗАГРУЗКА ДАННЫХ ====================
         function loadCurrentUser() {
             fetch(`${API_URL}/current-user`)
                 .then(handleResponse)
@@ -541,37 +517,29 @@
                 .catch(handleError('Error loading users', '#usersTable'));
         }
 
-        // ==================== ОТОБРАЖЕНИЕ ДАННЫХ ====================
+// ==================== ОТОБРАЖЕНИЕ ДАННЫХ ====================
         function renderRoles() {
-            const $rolesContainer = $('#rolesContainer');
-            const $rolesSelect = $('#rolesSelect');
-            const $editRolesContainer = $('#editRolesContainer');
+            const $rolesContainer = $('#rolesContainer .d-flex');
+            const $rolesSelect = $('#mainRolesSelect');
+            const $editRolesContainer = $('#editRolesContainer .d-flex');
             const $editRolesSelect = $('#editRolesSelect');
 
-            // Очищаем контейнеры
             $rolesContainer.empty();
             $rolesSelect.empty();
             $editRolesContainer.empty();
             $editRolesSelect.empty();
 
-            // Заполняем ролями
             allRoles.forEach(role => {
                 const roleName = role.name.replace('ROLE_', '');
 
-                // Для формы добавления
                 $rolesContainer.append(`
-                            <div class="role-item" data-roleid="${role.id}">
-                                <span>${roleName}</span>
-                            </div>
-                        `);
+<div class="role-item" data-roleid="${role.id}">${roleName}</div>
+`);
                 $rolesSelect.append(`<option value="${role.id}">${roleName}</option>`);
 
-                // Для формы редактирования
                 $editRolesContainer.append(`
-                            <div class="role-item" data-roleid="${role.id}">
-                                <span>${roleName}</span>
-                            </div>
-                        `);
+<div class="role-item" data-roleid="${role.id}">${roleName}</div>
+`);
                 $editRolesSelect.append(`<option value="${role.id}">${roleName}</option>`);
             });
         }
@@ -582,71 +550,78 @@
 
             users.forEach(user => {
                 $usersTable.append(`
-                            <tr>
-                                <td>${user.id}</td>
-                                <td>${user.firstName}</td>
-                                <td>${user.lastName}</td>
-                                <td>${user.age}</td>
-                                <td>${user.email}</td>
-                                <td>${formatRoles(user.roles)}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-edit edit-btn"
-            data-id="${user.id}"
-            data-firstname="${user.firstName}"
-            data-lastname="${user.lastName}"
-            data-age="${user.age}"
-            data-email="${user.email}"
-            data-roles='${JSON.stringify(user.roles)}'>
-        Edit
-    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger delete-btn"
-            data-id="${user.id}"
-            data-firstname="${user.firstName}"
-            data-lastname="${user.lastName}"
-            data-age="${user.age}"
-            data-email="${user.email}"
-            data-roles='${JSON.stringify(user.roles)}'>
-        Delete
-    </button>
-                                </td>
-                            </tr>
-                        `);
+<tr>
+    <td>${user.id}</td>
+    <td>${user.firstName}</td>
+    <td>${user.lastName}</td>
+    <td>${user.age}</td>
+    <td>${user.email}</td>
+    <td>${formatRoles(user.roles)}</td>
+    <td>
+        <button class="btn btn-sm btn-edit edit-btn"
+                data-id="${user.id}"
+                data-firstname="${user.firstName}"
+                data-lastname="${user.lastName}"
+                data-age="${user.age}"
+                data-email="${user.email}"
+                data-roles='${JSON.stringify(user.roles)}'>
+            Edit
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-sm btn-danger delete-btn"
+                data-id="${user.id}"
+                data-firstname="${user.firstName}"
+                data-lastname="${user.lastName}"
+                data-age="${user.age}"
+                data-email="${user.email}"
+                data-roles='${JSON.stringify(user.roles)}'>
+            Delete
+        </button>
+    </td>
+</tr>
+`);
             });
         }
 
-        // ==================== ОБРАБОТКА РОЛЕЙ ====================
+// ==================== ОБРАБОТКА РОЛЕЙ ====================
         function toggleRoleSelection() {
             const $item = $(this);
             const roleId = $item.data('roleid');
-            const $select = $item.closest('.form-group').find('select');
-            const $option = $select.find(`option[value="${roleId}"]`);
-
             $item.toggleClass('selected');
-            $option.prop('selected', $item.hasClass('selected'));
 
-            // Валидация ролей
-            validateRoles($select);
+            // Обновляем соответствующий option в скрытом select
+            const $select = $item.closest('.form-group').find('select');
+            const option = $select.find(`option[value="${roleId}"]`);
+            option.prop('selected', $item.hasClass('selected'));
         }
 
-        function validateRoles($select) {
-            const hasSelectedRoles = $select.val() && $select.val().length > 0;
-            $select.closest('.form-group').find('.error-message').toggle(!hasSelectedRoles);
-            return hasSelectedRoles;
+        function validateRoles($rolesSelect) {
+            const selectedRoles = $rolesSelect.val();
+            if (!selectedRoles || selectedRoles.length === 0) {
+                $('#rolesError').show();
+                return false;
+            }
+            $('#rolesError').hide();
+            return true;
         }
 
-        function formatRoles(roles) {
-            return roles.map(r => r.name.replace('ROLE_', '')).join(' ');
-        }
-
-        // ==================== СОЗДАНИЕ ПОЛЬЗОВАТЕЛЯ ====================
+// ==================== СОЗДАНИЕ ПОЛЬЗОВАТЕЛЯ ====================
         function handleCreateUser(e) {
             e.preventDefault();
 
-            // Проверяем роли
-            const $rolesSelect = $('#rolesSelect');
-            if (!validateRoles($rolesSelect)) return;
+            // Проверяем роли через видимые элементы
+            const selectedRoles = $('#rolesContainer .role-item.selected');
+            if (selectedRoles.length === 0) {
+                $('#rolesError').show();
+                return;
+            }
+            $('#rolesError').hide();
+
+            // Собираем выбранные roleIds
+            const roleIds = selectedRoles.map(function() {
+                return $(this).data('roleid');
+            }).get();
 
             // Создаем FormData
             const formData = new FormData();
@@ -656,8 +631,8 @@
             formData.append('email', $('input[name="email"]').val());
             formData.append('password', $('input[name="password"]').val());
 
-            // Добавляем roleIds как отдельные параметры
-            $rolesSelect.val().forEach(id => {
+            // Добавляем roleIds
+            roleIds.forEach(id => {
                 formData.append('roleIds', id);
             });
 
@@ -683,7 +658,6 @@
                     // Очищаем форму
                     $('#userForm')[0].reset();
                     $('#rolesContainer .role-item').removeClass('selected');
-                    $rolesSelect.val([]);
                     loadUsers(); // Обновляем таблицу
                 })
                 .catch(error => {
@@ -692,7 +666,11 @@
                 });
         }
 
-        // ==================== РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЯ ====================
+        function formatRoles(roles) {
+            return roles.map(r => r.name.replace('ROLE_', '')).join(', ');
+        }
+
+// ==================== РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЯ ====================
         function showEditModal() {
             try {
                 const rolesData = $(this).data('roles');
@@ -707,7 +685,6 @@
                     roles: roles
                 };
 
-                // Заполняем форму
                 $('#editId').val(user.id);
                 $('#editIdDisplay').val(user.id);
                 $('#editFirstName').val(user.firstName);
@@ -716,8 +693,7 @@
                 $('#editEmail').val(user.email);
                 $('#editPassword').val('');
 
-                // Устанавливаем роли
-                $('#editRolesContainer .role-item').each(function() {
+                $('#editRolesContainer .role-item').each(function () {
                     const roleId = $(this).data('roleid');
                     const isSelected = user.roles.some(r => r.id == roleId);
                     $(this).toggleClass('selected', isSelected);
@@ -735,45 +711,37 @@
             e.preventDefault();
 
             const userId = $('#editId').val();
-
-            // Проверяем роли
             const $rolesSelect = $('#editRolesSelect');
             if (!validateRoles($rolesSelect)) return;
 
-            // Создаем FormData (как в handleCreateUser)
             const formData = new FormData();
             formData.append('firstName', $('#editFirstName').val());
             formData.append('lastName', $('#editLastName').val());
             formData.append('age', $('#editAge').val());
             formData.append('email', $('#editEmail').val());
 
-            // Добавляем пароль, если он был изменен
             const password = $('#editPassword').val();
             if (password) {
                 formData.append('password', password);
             }
 
-            // Добавляем roleIds как отдельные параметры (как в handleCreateUser)
             $rolesSelect.val().forEach(id => {
                 formData.append('roleIds', id);
             });
 
-            // Получаем CSRF токен
             const csrfToken = $('meta[name="_csrf"]').attr('content');
             const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-            // Отправляем запрос (меняем только метод на PUT)
             fetch(`${API_URL}/users/${userId}`, {
-                method: 'PUT', // Отличие от handleCreateUser - используем PUT вместо POST
-                headers: {
-                    [csrfHeader]: csrfToken
-                    // Не указываем Content-Type - браузер сам установит multipart/form-data с boundary
-                },
-                body: formData // Отправляем FormData напрямую
+                method: 'PUT',
+                headers: {[csrfHeader]: csrfToken},
+                body: formData
             })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => { throw err; });
+                        return response.json().then(err => {
+                            throw err;
+                        });
                     }
                     return response.json();
                 })
@@ -787,98 +755,96 @@
                 });
         }
 
-        // ==================== УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ ====================
+// ==================== УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ ====================
         function showDeleteModal() {
             try {
-                const rolesData = $(this).data('roles');
+                const $button = $(this);
+                const rolesData = $button.data('roles');
                 const roles = typeof rolesData === 'string' ? JSON.parse(rolesData) : rolesData;
 
                 const user = {
-                    id: $(this).data('id'),
-                    firstName: $(this).data('firstname'),
-                    lastName: $(this).data('lastname'),
-                    age: $(this).data('age'),
-                    email: $(this).data('email'),
+                    id: $button.data('id'),
+                    firstName: $button.data('firstname'),
+                    lastName: $button.data('lastname'),
+                    age: $button.data('age'),
+                    email: $button.data('email'),
                     roles: roles
                 };
 
-                // Заполняем модальное окно
                 $('#deleteUserId').val(user.id);
                 $('#deleteUserFirstName').val(user.firstName);
                 $('#deleteUserLastName').val(user.lastName);
                 $('#deleteUserAge').val(user.age);
                 $('#deleteUserEmail').val(user.email);
-                $('#deleteUserRole').text(formatRoles(user.roles));
+
+                const rolesText = user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
+                $('#deleteUserRole').val(rolesText);
 
                 deleteModal.show();
             } catch (error) {
-                console.error('Error parsing user data:', error);
+                console.error('Error in showDeleteModal:', error);
                 alert('Error loading user data');
             }
         }
 
         function handleDeleteUser() {
-            return new Promise((resolve, reject) => {
-                const userId = $('#deleteUserId').val();
+            const userId = $('#deleteUserId').val();
+            const $confirmDelete = $('#confirmDelete');
 
-                // Получаем CSRF токен
-                const csrfToken = $('meta[name="_csrf"]').attr('content');
-                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+            // Блокируем кнопку на время выполнения
+            $confirmDelete.prop('disabled', true).html(
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...'
+            );
 
-                fetch(`${API_URL}/users/${userId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        [csrfHeader]: csrfToken,
-                        'Content-Type': 'application/json'
+            // Получаем CSRF токен
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            fetch(`${API_URL}/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include' // Важно для передачи кук и сессии
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Пытаемся получить текст ошибки от сервера
+                        return response.text().then(text => {
+                            throw new Error(text || 'Failed to delete user');
+                        });
                     }
+                    return response.text().then(text => text ? JSON.parse(text) : {});
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(err => { throw err; });
-                        }
-                        deleteModal.hide();
-                        loadUsers();
-                        showSuccessNotification('User deleted successfully');
-                        resolve();
-                    })
-                    .catch(error => {
-                        console.error('Error deleting user:', error);
-                        showErrorNotification('Error deleting user: ' +
-                            (error.message || error.statusText || 'Unknown error'));
-                        reject(error);
-                    });
-            });
+                .then(() => {
+                    // Закрываем модальное окно
+                    $('#deleteModal').modal('hide');
+                    // Обновляем список пользователей
+                    loadUsers();
+                    // Показываем уведомление об успехе
+                    alert('User deleted successfully');
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    // Более информативное сообщение об ошибке
+                    const errorMsg = error.message.includes('Forbidden')
+                        ? 'You don\'t have permission to delete this user'
+                        : error.message || 'Failed to delete user';
+                    alert('Error: ' + errorMsg);
+                })
+                .finally(() => {
+                    // Восстанавливаем кнопку в любом случае
+                    $confirmDelete.prop('disabled', false).text('Delete');
+                });
         }
 
-        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
-
-        // Вспомогательная функция для форматирования ролей
-        function formatRoles(roles) {
-            return roles.map(r => r.name.replace('ROLE_', '')).join(', ');
-        }
-
-        function sendRequest(url, method, data = null) {
-            const headers = {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
-            };
-
-            const options = {
-                method,
-                headers
-            };
-
-            if (data) {
-                options.body = JSON.stringify(data);
-            }
-
-            return fetch(url, options)
-                .then(handleResponse);
-        }
-
+// ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
         function handleResponse(response) {
             if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
+                return response.text().then(text => {
+                    throw new Error(text)
+                });
             }
             return response.json();
         }
@@ -894,33 +860,17 @@
         }
 
         function logout() {
-            sendRequest('/logout', 'POST')
-                .then(() => window.location.href = '/login');
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                }
+            })
+                .then(() => window.location.href = '/login')
+                .catch(error => console.error('Logout error:', error));
         }
 
-        function showSuccessNotification(message) {
-            Toastify({
-                text: message,
-                duration: 3000,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            }).showToast();
-        }
-
-        function showErrorNotification(message) {
-            Toastify({
-                text: message,
-                duration: 3000,
-                close: true,
-                gravity: "top",
-                position: "right",
-                backgroundColor: "linear-gradient(to right, #ff416c, #ff4b2b)",
-            }).showToast();
-        }
-
-        // Запускаем приложение
+// Запускаем приложение
         init();
     });
 </script>
